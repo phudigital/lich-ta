@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Lich Ta thumbnail">
+  <rect width="1200" height="630" fill="#fbfaf6"/>
+  <rect x="72" y="62" width="1056" height="506" rx="44" fill="#ffffff" stroke="#d9e1d8" stroke-width="3"/>
+  <circle cx="224" cy="170" r="62" fill="#f5d37b"/>
+  <rect x="132" y="110" width="128" height="128" rx="30" fill="#315f4b"/>
+  <circle cx="216" cy="154" r="26" fill="#f5d37b"/>
+  <path d="M174 196c32 13 60 7 84-16-9 34-36 56-74 56-20 0-38-8-51-21 16-2 29-9 41-19z" fill="#fbfaf6"/>
+  <path d="M166 136h39v12h-39zm0 24h29v12h-29z" fill="#fbfaf6"/>
+  <circle cx="216" cy="154" r="26" fill="none" stroke="#d9a441" stroke-width="6"/>
+  <text x="300" y="172" fill="#17201b" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="800">Lich Ta</text>
+  <text x="304" y="226" fill="#65736c" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">Am lich Viet Nam - Can Chi - tiet khi - ngay tot xau</text>
+  <rect x="132" y="305" width="185" height="158" rx="28" fill="#315f4b"/>
+  <text x="224" y="415" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="112" font-weight="900">25</text>
+  <text x="356" y="358" fill="#17201b" font-family="Inter, Arial, sans-serif" font-size="58" font-weight="900">Lich am hom nay</text>
+  <text x="360" y="414" fill="#315f4b" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800">Xem lich thang, doi ngay am duong</text>
+  <text x="360" y="462" fill="#65736c" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700">Nhanh, gon, mobile-first cho website Viet</text>
+</svg>

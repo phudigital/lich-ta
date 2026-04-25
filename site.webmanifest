@@ -1,0 +1,17 @@
+{
+  "name": "Lich Ta",
+  "short_name": "Lich Ta",
+  "description": "Am lich Viet Nam, Can Chi, tiet khi va doi ngay am duong.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fbfaf6",
+  "theme_color": "#315f4b",
+  "icons": [
+    {
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

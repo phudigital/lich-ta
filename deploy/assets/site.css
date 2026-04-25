@@ -1486,7 +1486,7 @@ h2 {
 }
 
 .lta-page-article {
-    max-width: 920px;
+    width: 100%;
 }
 
 .lta-page-article h1,
