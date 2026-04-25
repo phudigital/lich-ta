@@ -410,7 +410,7 @@ h2 {
 
 .lta-picker {
     grid-template-columns: minmax(130px, 1fr) minmax(120px, 0.7fr) auto;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
 }
 
 .lta-converter {
@@ -420,14 +420,16 @@ h2 {
 
 .lta-picker label,
 .lta-converter label,
-.lta-date-lookup label {
+.lta-date-lookup label,
+.lta-month-filters label {
     display: grid;
     gap: 6px;
 }
 
 .lta-picker span,
 .lta-converter span,
-.lta-date-lookup span {
+.lta-date-lookup span,
+.lta-month-filters span {
     color: var(--lta-muted);
     font-size: 0.78rem;
     font-weight: 700;
@@ -436,7 +438,8 @@ h2 {
 .lta-picker input,
 .lta-picker select,
 .lta-converter input,
-.lta-date-lookup input {
+.lta-date-lookup input,
+.lta-month-filters select {
     width: 100%;
     border: 1px solid var(--lta-line);
     border-radius: 12px;
@@ -444,6 +447,13 @@ h2 {
     padding: 0 12px;
     background: #fff;
     color: var(--lta-ink);
+}
+
+.lta-month-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
 }
 
 .lta-date-lookup {
@@ -1267,7 +1277,8 @@ pre {
 
     .lta-picker,
     .lta-converter,
-    .lta-date-fields {
+    .lta-date-fields,
+    .lta-month-filters {
         grid-template-columns: 1fr;
     }
 

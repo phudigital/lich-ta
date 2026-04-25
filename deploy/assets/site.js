@@ -104,7 +104,7 @@
                 target.searchParams.set('day', day.getAttribute('data-solar-day'));
                 target.searchParams.set('month', day.getAttribute('data-solar-month'));
                 target.searchParams.set('year', day.getAttribute('data-solar-year'));
-                target.hash = day.closest('[data-nap-am-tool]') ? 'nap-am' : 'calendar';
+                target.hash = day.closest('#nap-am') ? 'nap-am' : 'calendar';
                 window.location.href = target.toString();
                 return;
             }
@@ -137,9 +137,11 @@
     document.querySelectorAll('[data-nap-am-tool]').forEach(function (root) {
         var napButtons = root.querySelectorAll('[data-nap-filter]');
         var dongButtons = root.querySelectorAll('[data-dong-filter]');
+        var napSelect = root.querySelector('[data-nap-filter-select]');
+        var dongSelect = root.querySelector('[data-dong-filter-select]');
         var days = root.querySelectorAll('[data-lta-day]');
-        var napFilter = '';
-        var dongFilter = '';
+        var napFilter = napSelect ? napSelect.value : '';
+        var dongFilter = dongSelect ? dongSelect.value : '';
 
         function applyFilters() {
             if (napFilter === '') {
@@ -157,13 +159,19 @@
             });
         }
 
+        function syncActiveButtons(buttons, attr, value) {
+            buttons.forEach(function (candidate) {
+                candidate.classList.toggle('is-active', (candidate.getAttribute(attr) || '') === value);
+            });
+        }
+
         napButtons.forEach(function (button) {
             button.addEventListener('click', function () {
                 napFilter = button.getAttribute('data-nap-filter') || '';
-
-                napButtons.forEach(function (candidate) {
-                    candidate.classList.toggle('is-active', candidate === button);
-                });
+                if (napSelect) {
+                    napSelect.value = napFilter;
+                }
+                syncActiveButtons(napButtons, 'data-nap-filter', napFilter);
 
                 applyFilters();
             });
@@ -172,14 +180,32 @@
         dongButtons.forEach(function (button) {
             button.addEventListener('click', function () {
                 dongFilter = button.getAttribute('data-dong-filter') || '';
-
-                dongButtons.forEach(function (candidate) {
-                    candidate.classList.toggle('is-active', candidate === button);
-                });
+                if (dongSelect) {
+                    dongSelect.value = dongFilter;
+                }
+                syncActiveButtons(dongButtons, 'data-dong-filter', dongFilter);
 
                 applyFilters();
             });
         });
+
+        if (napSelect) {
+            napSelect.addEventListener('change', function () {
+                napFilter = napSelect.value || '';
+                syncActiveButtons(napButtons, 'data-nap-filter', napFilter);
+                applyFilters();
+            });
+        }
+
+        if (dongSelect) {
+            dongSelect.addEventListener('change', function () {
+                dongFilter = dongSelect.value || '';
+                syncActiveButtons(dongButtons, 'data-dong-filter', dongFilter);
+                applyFilters();
+            });
+        }
+
+        applyFilters();
     });
 
     document.querySelectorAll('[data-date-form]').forEach(function (form) {

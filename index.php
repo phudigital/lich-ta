@@ -9,6 +9,9 @@ $selectedState = lta_selected_date_state($today);
 $selected = $selectedState['date'];
 $view = (string) ($_GET['view'] ?? lta_view_from_path() ?? 'today');
 $view = in_array($view, ['today', 'month', 'nap-am', 'convert', 'embed'], true) ? $view : 'today';
+if ($view === 'nap-am') {
+    $view = 'month';
+}
 $usingLunarInput = ($_GET['date_type'] ?? '') === 'lunar';
 $month = $usingLunarInput ? $selected['month'] : lta_int_param('month', $selected['month'], 1, 12);
 $year = $usingLunarInput ? $selected['year'] : lta_int_param('year', $selected['year'], 1800, 2199);
@@ -69,7 +72,6 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
         <nav class="lta-nav" aria-label="Điều hướng">
             <a class="<?= $view === 'today' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('today', $selected)) ?>"><span aria-hidden="true">⌂</span>Hôm nay</a>
             <a class="<?= $view === 'month' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true">□</span>Lịch tháng</a>
-            <a class="<?= $view === 'nap-am' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('nap-am', $selected)) ?>"><span aria-hidden="true">◎</span>Nạp âm</a>
             <a class="<?= $view === 'convert' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('convert', $selected)) ?>"><span aria-hidden="true">⇄</span>Đổi ngày</a>
             <a class="<?= $view === 'embed' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('embed', $selected)) ?>"><span aria-hidden="true">{ }</span>Mã nhúng</a>
         </nav>
@@ -117,7 +119,7 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
             </form>
             <div class="lta-home-actions">
                 <a href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true">□</span>Xem lịch tháng</a>
-                <a href="<?= lta_h($viewUrl('nap-am', $selected)) ?>"><span aria-hidden="true">◎</span>Lọc Nạp âm</a>
+                <a href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true">◎</span>Lọc ngày</a>
                 <a href="<?= lta_h($viewUrl('convert', $selected)) ?>"><span aria-hidden="true">⇄</span>Đổi ngày</a>
             </div>
         </div>
@@ -161,7 +163,7 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
     <?php endif; ?>
 
     <?php if ($view === 'month'): ?>
-    <section class="lta-workspace" id="calendar">
+    <section class="lta-workspace" id="calendar" data-nap-am-tool>
         <div class="lta-panel lta-calendar-panel">
             <div class="lta-panel-head">
                 <div>
@@ -193,7 +195,30 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
                 <button type="submit">Xem</button>
             </form>
 
-            <?= lta_render_calendar($cells) ?>
+            <div class="lta-month-filters" aria-label="Lọc lịch tháng">
+                <label>
+                    <span>Ngũ hành ngày</span>
+                    <select data-nap-filter-select>
+                        <option value="">Tất cả ngũ hành</option>
+                        <option value="Kim">Kim</option>
+                        <option value="Mộc">Mộc</option>
+                        <option value="Thủy">Thủy</option>
+                        <option value="Hỏa">Hỏa</option>
+                        <option value="Thổ">Thổ</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Đổng Công</span>
+                    <select data-dong-filter-select>
+                        <option value="">Tất cả Đổng Công</option>
+                        <option value="good">Tốt</option>
+                        <option value="mixed">Cân nhắc</option>
+                        <option value="bad">Chưa tốt</option>
+                    </select>
+                </label>
+            </div>
+
+            <?= lta_render_calendar($cells, false, ['showNapAm' => true, 'class' => 'lta-nap-calendar']) ?>
         </div>
 
         <aside class="lta-panel lta-detail-panel" aria-label="Chi tiết ngày">
