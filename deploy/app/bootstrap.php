@@ -321,6 +321,17 @@ function lta_date_from_path(?string $path = null): ?array
 function lta_view_from_path(?string $path = null): ?string
 {
     $path = lta_normalized_path($path);
+    $pageViews = [
+        'gioi-thieu' => 'about',
+        'ma-nhung-lich-viet' => 'embed',
+        'dieu-khoan-su-dung' => 'terms',
+        'chinh-sach-bao-mat' => 'privacy',
+    ];
+
+    if (isset($pageViews[$path])) {
+        return $pageViews[$path];
+    }
+
     if (preg_match('/^\d{4}([\-\/]\d{1,2})?$/', $path) === 1) {
         return 'month';
     }

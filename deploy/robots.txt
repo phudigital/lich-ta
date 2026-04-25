@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://app.pdl.vn/lich-ta/sitemap.xml

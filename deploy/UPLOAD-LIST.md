@@ -12,6 +12,8 @@ Upload the contents of this `deploy` folder to the hosting path for:
 - `embed.js`
 - `CHANGELOG.md`
 - `llms.txt`
+- `robots.txt`
+- `sitemap.xml`
 - `app/`
 - `assets/`
 - `bin/`

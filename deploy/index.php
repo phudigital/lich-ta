@@ -8,7 +8,7 @@ $today = lta_today();
 $selectedState = lta_selected_date_state($today);
 $selected = $selectedState['date'];
 $view = (string) ($_GET['view'] ?? lta_view_from_path() ?? 'today');
-$view = in_array($view, ['today', 'month', 'nap-am', 'convert', 'embed'], true) ? $view : 'today';
+$view = in_array($view, ['today', 'month', 'nap-am', 'convert', 'embed', 'about', 'terms', 'privacy'], true) ? $view : 'today';
 if ($view === 'nap-am') {
     $view = 'month';
 }
@@ -41,7 +41,60 @@ $nextDay = $selectedDate->modify('+1 day');
 $baseUrl = 'https://app.pdl.vn/lich-ta';
 $iframeCode = '<iframe src="' . $baseUrl . '/embed.php" width="100%" height="620" style="border:0;max-width:760px;border-radius:16px;overflow:hidden" loading="lazy"></iframe>';
 $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl . '/embed.js" data-target="pdl-lich-ta" data-view="month" async></script>';
-$viewUrl = static function (string $target, array $date) use ($month, $year): string {
+$pagePaths = [
+    'today' => './',
+    'embed' => './ma-nhung-lich-viet',
+    'about' => './gioi-thieu',
+    'terms' => './dieu-khoan-su-dung',
+    'privacy' => './chinh-sach-bao-mat',
+];
+$canonicalPaths = [
+    'today' => '',
+    'month' => sprintf('%04d-%02d', $year, $month),
+    'convert' => 'index.php?view=convert',
+    'embed' => 'ma-nhung-lich-viet',
+    'about' => 'gioi-thieu',
+    'terms' => 'dieu-khoan-su-dung',
+    'privacy' => 'chinh-sach-bao-mat',
+];
+$viewMeta = [
+    'today' => [
+        'title' => 'Lịch Ta - Lịch âm Việt Nam hôm nay, đổi ngày âm dương',
+        'description' => 'Tra lịch âm hôm nay, ngày Can Chi, tiết khí, giờ hoàng đạo và đổi ngày âm dương bằng ứng dụng Lịch Ta chạy nhanh trên nền PHP.',
+    ],
+    'month' => [
+        'title' => 'Lịch âm tháng ' . (int) $month . '/' . (int) $year . ' - Lịch Việt, Can Chi, tiết khí',
+        'description' => 'Xem lịch âm tháng ' . (int) $month . ' năm ' . (int) $year . ' với ngày âm, Can Chi, nạp âm, tiết khí, ngày lễ và bộ lọc ngày tốt xấu cơ bản.',
+    ],
+    'convert' => [
+        'title' => 'Đổi ngày âm dương - Công cụ chuyển lịch âm lịch Việt Nam',
+        'description' => 'Công cụ đổi ngày dương sang âm và âm sang dương cho lịch Việt Nam, hỗ trợ tháng nhuận, Can Chi, tiết khí và thông tin ngày.',
+    ],
+    'embed' => [
+        'title' => 'Code nhúng lịch Việt - Nhúng lịch âm vào website bằng iframe hoặc JavaScript',
+        'description' => 'Lấy code nhúng lịch Việt, lịch âm Việt Nam cho website bằng iframe hoặc JavaScript. Widget responsive, có lịch tháng, ngày âm, Can Chi và thông tin ngày.',
+    ],
+    'about' => [
+        'title' => 'Giới thiệu Lịch Ta - Ứng dụng lịch âm Việt Nam có mã nhúng website',
+        'description' => 'Tìm hiểu Lịch Ta, ứng dụng lịch âm Việt Nam hỗ trợ tra ngày, đổi ngày âm dương, lịch tháng, Can Chi, tiết khí và code nhúng lịch Việt cho website.',
+    ],
+    'terms' => [
+        'title' => 'Điều khoản sử dụng - Lịch Ta',
+        'description' => 'Điều khoản sử dụng ứng dụng Lịch Ta, phạm vi thông tin lịch âm, quyền nhúng widget và giới hạn trách nhiệm khi tham khảo ngày tốt xấu.',
+    ],
+    'privacy' => [
+        'title' => 'Chính sách bảo mật - Lịch Ta',
+        'description' => 'Chính sách bảo mật của Lịch Ta: dữ liệu truy cập, cookie, mã nhúng lịch Việt và cách chúng tôi hạn chế thu thập thông tin cá nhân.',
+    ],
+];
+$meta = $viewMeta[$view] ?? $viewMeta['today'];
+$canonicalPath = $canonicalPaths[$view] ?? '';
+$canonicalUrl = rtrim($baseUrl, '/') . ($canonicalPath !== '' ? '/' . ltrim($canonicalPath, '/') : '/');
+$viewUrl = static function (string $target, array $date) use ($month, $year, $pagePaths): string {
+    if (isset($pagePaths[$target])) {
+        return $pagePaths[$target];
+    }
+
     $params = ['view' => $target];
     if ($target !== 'today') {
         $params += ['day' => $date['day'], 'month' => $month, 'year' => $year];
@@ -49,14 +102,56 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
 
     return $target === 'today' ? './' : 'index.php?' . http_build_query($params);
 };
+$faqJson = [
+    '@context' => 'https://schema.org',
+    '@type' => 'FAQPage',
+    'mainEntity' => [
+        [
+            '@type' => 'Question',
+            'name' => 'Làm sao nhúng lịch âm Việt Nam vào website?',
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => 'Bạn có thể dùng iframe hoặc file embed.js của Lịch Ta. Iframe phù hợp khi muốn copy nhanh, còn JavaScript phù hợp khi muốn widget tự tạo iframe và tự điều chỉnh chiều cao trong trang.',
+            ],
+        ],
+        [
+            '@type' => 'Question',
+            'name' => 'Widget lịch Việt có responsive trên điện thoại không?',
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => 'Có. Widget được thiết kế co theo chiều rộng container, giữ thông tin ngày dương, ngày âm và phần chi tiết ngày ở dưới khi hiển thị trên mobile.',
+            ],
+        ],
+        [
+            '@type' => 'Question',
+            'name' => 'Lịch Ta tính âm lịch dựa trên nguyên tắc nào?',
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => 'Ứng dụng dùng thuật toán lịch âm Việt Nam theo chu kỳ sóc, tiết khí, múi giờ Việt Nam và các lớp thông tin truyền thống như Can Chi, nạp âm, trực, lục diệu.',
+            ],
+        ],
+    ],
+];
 ?>
 <!doctype html>
 <html lang="vi">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lịch Ta - Lịch âm Việt Nam nhúng website</title>
-    <meta name="description" content="Lịch âm Việt Nam chạy PHP, có thể nhúng qua iframe hoặc JavaScript.">
+    <title><?= lta_h($meta['title']) ?></title>
+    <meta name="description" content="<?= lta_h($meta['description']) ?>">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="<?= lta_h($canonicalUrl) ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="vi_VN">
+    <meta property="og:site_name" content="Lịch Ta">
+    <meta property="og:title" content="<?= lta_h($meta['title']) ?>">
+    <meta property="og:description" content="<?= lta_h($meta['description']) ?>">
+    <meta property="og:url" content="<?= lta_h($canonicalUrl) ?>">
+    <meta name="twitter:card" content="summary">
+    <?php if ($view === 'embed'): ?>
+    <script type="application/ld+json"><?= json_encode($faqJson, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
+    <?php endif; ?>
     <link rel="stylesheet" href="assets/site.css?v=<?= lta_h(LTA_APP_VERSION) ?>">
 </head>
 <body>
@@ -74,6 +169,7 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
             <a class="<?= $view === 'month' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true">□</span>Lịch tháng</a>
             <a class="<?= $view === 'convert' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('convert', $selected)) ?>"><span aria-hidden="true">⇄</span>Đổi ngày</a>
             <a class="<?= $view === 'embed' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('embed', $selected)) ?>"><span aria-hidden="true">{ }</span>Mã nhúng</a>
+            <a class="<?= $view === 'about' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('about', $selected)) ?>"><span aria-hidden="true">i</span>Giới thiệu</a>
         </nav>
     </header>
 
@@ -368,7 +464,8 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
     <section class="lta-lower-grid" id="embed">
         <div class="lta-panel">
             <p class="lta-eyebrow">Nhúng vào website</p>
-            <h2>Iframe hoặc JavaScript</h2>
+            <h1>Code nhúng lịch Việt cho website</h1>
+            <p class="lta-lead">Lịch Ta cung cấp mã nhúng lịch âm Việt Nam gọn nhẹ cho landing page, website doanh nghiệp, blog phong thủy, trang tin địa phương hoặc hệ thống nội bộ cần hiển thị lịch Việt.</p>
             <div class="lta-code-tabs" data-code-tabs>
                 <div class="lta-segmented" role="tablist">
                     <button type="button" class="is-active" data-code-tab="iframe">Iframe</button>
@@ -378,8 +475,125 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
                 <pre data-code-panel="script" hidden><code><?= lta_h($scriptCode) ?></code></pre>
             </div>
         </div>
+        <aside class="lta-panel lta-seo-aside">
+            <p class="lta-eyebrow">Dành cho website</p>
+            <h2>Widget lịch âm responsive</h2>
+            <ul class="lta-check-list">
+                <li>Hiển thị lịch tháng, ngày âm, ngày dương và thông tin ngày đang chọn.</li>
+                <li>Hỗ trợ iframe hoặc JavaScript, dễ đặt trong WordPress, Ladipage, HTML tĩnh hoặc CMS riêng.</li>
+                <li>Tự co theo giao diện mobile để không mất thông tin khi khung nhúng nhỏ.</li>
+                <li>Không cần cài database riêng trên website nhúng.</li>
+            </ul>
+        </aside>
+    </section>
+
+    <section class="lta-panel lta-seo-content">
+        <p class="lta-eyebrow">Hướng dẫn SEO</p>
+        <h2>Nhúng lịch âm Việt Nam giúp website có nội dung hữu ích hơn</h2>
+        <p>Khi người dùng tìm kiếm các cụm như <strong>code nhúng lịch Việt</strong>, <strong>nhúng lịch âm vào website</strong>, <strong>lịch âm Việt Nam cho WordPress</strong> hoặc <strong>iframe lịch âm</strong>, họ thường cần một công cụ có thể copy nhanh, hiển thị ổn trên điện thoại và vẫn giữ đúng thông tin ngày âm lịch Việt Nam. Trang này được viết để giải thích rõ cách dùng Lịch Ta, phạm vi dữ liệu và những lựa chọn nhúng phù hợp cho từng loại website.</p>
+        <div class="lta-seo-grid">
+            <article>
+                <h3>Khi nào nên dùng iframe?</h3>
+                <p>Iframe phù hợp nếu bạn muốn đặt lịch âm lên trang trong vài phút. Chỉ cần copy đoạn mã, dán vào vùng HTML và chỉnh chiều cao hoặc bo góc nếu cần. Đây là cách đơn giản cho landing page, bài viết giới thiệu dự án, sidebar blog hoặc trang liên hệ.</p>
+            </article>
+            <article>
+                <h3>Khi nào nên dùng JavaScript?</h3>
+                <p>Mã JavaScript phù hợp khi bạn muốn widget tự tạo iframe trong một vùng đã định sẵn. Cách này gọn hơn cho website có nhiều block nội dung, đồng thời có thể tự nhận chiều cao thực tế của widget để hạn chế việc bị cắt nội dung khi responsive.</p>
+            </article>
+            <article>
+                <h3>Nội dung lịch gồm những gì?</h3>
+                <p>Widget hiển thị tháng dương lịch, ngày âm tương ứng, Can Chi của ngày, tiết khí, trực, lục diệu và một số ngày lễ phổ biến. Các thông tin ngày tốt xấu nên được dùng như dữ liệu tham khảo văn hóa, không thay thế tư vấn chuyên môn.</p>
+            </article>
+        </div>
+        <div class="lta-faq">
+            <h2>Câu hỏi thường gặp về code nhúng lịch Việt</h2>
+            <details open>
+                <summary>Code nhúng lịch Việt có dùng được cho WordPress không?</summary>
+                <p>Có. Bạn có thể dán iframe hoặc script vào block Custom HTML, widget HTML, template của theme hoặc một page builder hỗ trợ mã HTML.</p>
+            </details>
+            <details>
+                <summary>Có thể nhúng lịch âm vào landing page bán hàng không?</summary>
+                <p>Có. Với landing page, iframe là lựa chọn nhanh nhất. Nếu nền tảng hỗ trợ script bên ngoài, bạn có thể dùng <code>embed.js</code> để tự động tạo khung lịch và giữ chiều cao phù hợp.</p>
+            </details>
+            <details>
+                <summary>Thông tin âm lịch có dùng cho tra cứu ngày tốt xấu không?</summary>
+                <p>Lịch Ta cung cấp các lớp thông tin như Can Chi, tiết khí, trực, lục diệu, nạp âm và Đổng Công ở mức tham khảo. Người dùng nên kiểm chứng thêm nếu dùng cho quyết định quan trọng.</p>
+            </details>
+            <details>
+                <summary>Có cần ghi nguồn khi nhúng lịch không?</summary>
+                <p>Widget có thương hiệu Lịch Ta trong phần đầu. Bạn có thể giữ nguyên để người dùng biết nguồn công cụ và mở trang đầy đủ khi cần tra cứu sâu hơn.</p>
+            </details>
+        </div>
     </section>
     <?php endif; ?>
+
+    <?php if ($view === 'about'): ?>
+    <section class="lta-panel lta-page-article">
+        <p class="lta-eyebrow">Giới thiệu sản phẩm</p>
+        <h1>Lịch Ta - ứng dụng lịch âm Việt Nam và mã nhúng lịch Việt cho website</h1>
+        <p class="lta-lead">Lịch Ta là công cụ tra lịch âm Việt Nam chạy nhanh trên nền PHP, tập trung vào các nhu cầu thực tế: xem lịch hôm nay, xem lịch tháng, đổi ngày âm dương, đọc thông tin Can Chi - tiết khí và nhúng lịch âm vào website.</p>
+
+        <h2>Lịch Ta giải quyết nhu cầu gì?</h2>
+        <p>Nhiều website Việt Nam cần một block lịch âm gọn, dễ đọc và có thể đặt ngay trong trang mà không phải tự xây dựng thuật toán lịch. Lịch Ta cung cấp giao diện xem ngày trực tiếp cho người dùng cuối và một widget nhúng cho chủ website. Công cụ này phù hợp với website doanh nghiệp, blog văn hóa, trang phong thủy, cổng thông tin địa phương, landing page bất động sản, trang sự kiện và các hệ thống nội bộ cần hiển thị lịch Việt.</p>
+
+        <h2>Cách tính lịch âm ở mức cơ bản</h2>
+        <p>Âm lịch Việt Nam dựa trên chu kỳ Mặt Trăng, trong đó ngày đầu tháng âm thường gắn với thời điểm sóc. Để đồng bộ với mùa trong năm, lịch còn xét các tiết khí theo chuyển động biểu kiến của Mặt Trời. Vì một năm âm lịch ngắn hơn năm dương lịch, một số năm sẽ có tháng nhuận để giữ lịch không lệch quá xa mùa vụ. Khi chuyển đổi ngày dương sang âm, ứng dụng cần xác định ngày Julius, thời điểm sóc, tháng âm, năm âm và trường hợp tháng nhuận theo múi giờ Việt Nam.</p>
+        <p>Sau khi có ngày âm cơ bản, Lịch Ta bổ sung các lớp thông tin truyền thống như Can Chi ngày, Can Chi tháng, Can Chi năm, nạp âm, trực, lục diệu, tiết khí, giờ hoàng đạo và một số ngày lễ phổ biến. Các lớp này giúp người dùng đọc lịch Việt theo thói quen văn hóa quen thuộc hơn thay vì chỉ thấy con số ngày tháng.</p>
+
+        <h2>Vì sao có thêm mã nhúng?</h2>
+        <p>Không phải website nào cũng cần xây một app lịch riêng. Với mã nhúng của Lịch Ta, chủ website có thể thêm lịch âm bằng iframe hoặc JavaScript. Iframe phù hợp cho nhu cầu copy nhanh. JavaScript phù hợp khi muốn đặt widget vào một vùng nội dung cụ thể và để khung nhúng tự điều chỉnh chiều cao theo nội dung.</p>
+
+        <h2>Định hướng phát triển</h2>
+        <p>Lịch Ta ưu tiên tính dễ dùng, tốc độ tải nhanh, giao diện mobile rõ ràng và nội dung hữu ích cho người tìm kiếm lịch âm Việt Nam. Các phần ngày tốt xấu được trình bày như thông tin tham khảo văn hóa, không khẳng định thay cho tư vấn chuyên môn, pháp lý, y tế, tài chính hoặc quyết định cá nhân quan trọng.</p>
+    </section>
+    <?php endif; ?>
+
+    <?php if ($view === 'terms'): ?>
+    <section class="lta-panel lta-page-article">
+        <p class="lta-eyebrow">Điều khoản sử dụng</p>
+        <h1>Điều khoản sử dụng Lịch Ta</h1>
+        <p class="lta-lead">Khi truy cập, tra cứu hoặc nhúng Lịch Ta vào website, bạn đồng ý sử dụng thông tin trong phạm vi tham khảo và tôn trọng giới hạn của công cụ.</p>
+
+        <h2>1. Phạm vi thông tin</h2>
+        <p>Lịch Ta cung cấp thông tin lịch âm Việt Nam, chuyển đổi ngày âm dương, Can Chi, tiết khí, giờ hoàng đạo, trực, lục diệu, nạp âm, ngày lễ và một số lớp dữ liệu ngày tốt xấu phổ biến. Thông tin được thiết kế để tham khảo văn hóa, tra cứu lịch và hỗ trợ hiển thị nội dung trên website.</p>
+
+        <h2>2. Giới hạn trách nhiệm</h2>
+        <p>Các thông tin như ngày tốt xấu, giờ hoàng đạo, trực, lục diệu hoặc Đổng Công không phải lời khuyên bắt buộc. Người dùng chịu trách nhiệm khi áp dụng dữ liệu vào quyết định cá nhân, kinh doanh, nghi lễ, pháp lý, y tế, tài chính hoặc các tình huống quan trọng khác.</p>
+
+        <h2>3. Quyền nhúng widget</h2>
+        <p>Bạn có thể sử dụng mã iframe hoặc JavaScript được cung cấp trên trang mã nhúng để hiển thị Lịch Ta trên website. Vui lòng không sửa widget theo cách gây hiểu nhầm nguồn dữ liệu, che khuất thương hiệu hoặc làm sai lệch nội dung hiển thị.</p>
+
+        <h2>4. Thay đổi dịch vụ</h2>
+        <p>Lịch Ta có thể được cập nhật giao diện, thuật toán, dữ liệu ngày lễ, endpoint nhúng hoặc nội dung mô tả để cải thiện độ ổn định và trải nghiệm người dùng. Các thay đổi sẽ được triển khai theo hướng hạn chế phá vỡ mã nhúng hiện có.</p>
+    </section>
+    <?php endif; ?>
+
+    <?php if ($view === 'privacy'): ?>
+    <section class="lta-panel lta-page-article">
+        <p class="lta-eyebrow">Chính sách bảo mật</p>
+        <h1>Chính sách bảo mật Lịch Ta</h1>
+        <p class="lta-lead">Lịch Ta được xây dựng theo hướng thu thập tối thiểu. Công cụ tra cứu lịch và mã nhúng không yêu cầu người dùng tạo tài khoản để xem thông tin cơ bản.</p>
+
+        <h2>Dữ liệu truy cập</h2>
+        <p>Khi bạn truy cập website hoặc tải widget nhúng, máy chủ có thể ghi nhận các thông tin kỹ thuật thông thường như địa chỉ IP, thời gian truy cập, trình duyệt, trang được yêu cầu và mã phản hồi để vận hành, bảo mật và xử lý lỗi.</p>
+
+        <h2>Cookie và theo dõi</h2>
+        <p>Ở phiên bản hiện tại, Lịch Ta không yêu cầu cookie đăng nhập cho chức năng tra cứu công khai. Nếu trong tương lai có thêm phân tích truy cập hoặc tính năng cá nhân hóa, nội dung chính sách sẽ được cập nhật để mô tả rõ mục đích sử dụng.</p>
+
+        <h2>Dữ liệu từ website nhúng</h2>
+        <p>Khi một website bên thứ ba nhúng Lịch Ta, iframe hoặc script có thể tạo request tới máy chủ Lịch Ta để tải giao diện lịch. Chúng tôi không yêu cầu website nhúng gửi thông tin cá nhân của khách truy cập vào widget.</p>
+
+        <h2>Liên hệ và cập nhật</h2>
+        <p>Nếu bạn vận hành website có nhúng Lịch Ta và cần điều chỉnh cách hiển thị, vui lòng kiểm tra trang mã nhúng hoặc cập nhật lên đoạn code mới nhất. Chính sách này có thể được cập nhật khi sản phẩm bổ sung tính năng mới.</p>
+    </section>
+    <?php endif; ?>
+
+    <footer class="lta-footer">
+        <a href="<?= lta_h($viewUrl('about', $selected)) ?>">Giới thiệu</a>
+        <a href="<?= lta_h($viewUrl('embed', $selected)) ?>">Code nhúng lịch Việt</a>
+        <a href="<?= lta_h($viewUrl('terms', $selected)) ?>">Điều khoản sử dụng</a>
+        <a href="<?= lta_h($viewUrl('privacy', $selected)) ?>">Chính sách bảo mật</a>
+    </footer>
 </main>
 <div class="lta-modal" data-lta-modal hidden>
     <div class="lta-modal-backdrop" data-lta-modal-close></div>
