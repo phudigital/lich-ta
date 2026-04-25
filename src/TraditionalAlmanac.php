@@ -172,12 +172,12 @@ final class TraditionalAlmanac
         'Tan Mui' => ['level' => 'bad', 'summary' => 'Chư thần ở trên trời, không nên tế tự lễ bái.'],
         'Nham Than' => ['level' => 'good', 'summary' => 'Các thần chuyển về địa phủ, tốt cho cầu phúc, thượng biểu, cầu trai gái.'],
         'Quy Dau' => ['level' => 'mixed', 'summary' => 'Tốt riêng cho tế tự thủy quan, các lễ bái khác nên tránh.'],
-        'Binh Ty' => ['level' => 'bad', 'summary' => 'Rất xấu cho tế lễ, dễ chiêu tai họa theo bản Ngọc Hạp trong PDF.'],
-        'Dinh Suu' => ['level' => 'bad', 'summary' => 'Rất xấu cho tế lễ, dễ chiêu tai họa theo bản Ngọc Hạp trong PDF.'],
-        'Mau Dan' => ['level' => 'bad', 'summary' => 'Rất xấu cho tế lễ, dễ chiêu tai họa theo bản Ngọc Hạp trong PDF.'],
+        'Binh Ty' => ['level' => 'bad', 'summary' => 'Rất xấu cho tế lễ, dễ chiêu tai họa theo bản Ngọc Hạp đang tham khảo.'],
+        'Dinh Suu' => ['level' => 'bad', 'summary' => 'Rất xấu cho tế lễ, dễ chiêu tai họa theo bản Ngọc Hạp đang tham khảo.'],
+        'Mau Dan' => ['level' => 'bad', 'summary' => 'Rất xấu cho tế lễ, dễ chiêu tai họa theo bản Ngọc Hạp đang tham khảo.'],
         'Ky Mao' => ['level' => 'good', 'summary' => 'Các thần tại địa phủ, cầu phúc được lợi cho con cháu.'],
         'Canh Thin' => ['level' => 'good', 'summary' => 'Các thần tại địa phủ, cầu phúc được lợi cho con cháu.'],
-        'Tan Ty.' => ['level' => 'bad', 'summary' => 'Xấu cho lễ bái cầu phúc, PDF ghi dễ sinh họa.'],
+        'Tan Ty.' => ['level' => 'bad', 'summary' => 'Xấu cho lễ bái cầu phúc, nguồn tham khảo ghi dễ sinh họa.'],
         'Giap Ngo' => ['level' => 'good', 'summary' => 'Tốt cho lễ tạ thổ công, thổ địa và tiến biểu.'],
         'At Mui' => ['level' => 'mixed', 'summary' => 'Lễ bái tạm được, tốt nhỏ.'],
         'Canh Than' => ['level' => 'good', 'summary' => 'Ngày mở đường ngũ phúc, tốt cho làm chay, thượng biểu.'],
@@ -188,7 +188,7 @@ final class TraditionalAlmanac
 
     private const NAP_AM_NOTES = [
         'sourceStatus' => 'verified',
-        'summary' => 'Bảng 30 cặp nạp âm trong PDF trùng với hệ lục thập hoa giáp app đang dùng; một số tên trong PDF là diễn nghĩa nôm, app giữ tên Hán Việt thông dụng.',
+        'summary' => 'Bảng 30 cặp nạp âm đang tham khảo trùng với hệ lục thập hoa giáp app đang dùng.',
     ];
 
     /**
@@ -208,6 +208,42 @@ final class TraditionalAlmanac
             'ngocHap' => self::ngocHap($lunarMonth, $parts['branch'], $dayCanChi),
             'napAmReference' => self::NAP_AM_NOTES + ['name' => $napAm],
             'sources' => self::SOURCES,
+        ];
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public static function library(): array
+    {
+        return [
+            'sources' => self::SOURCES,
+            'starGlossary' => self::STAR_GLOSSARY,
+            'twentyEightStars' => self::TWENTY_EIGHT_STARS,
+            'lucNhan' => self::LUC_NHAM,
+            'lucNhanMonthStarts' => [
+                1 => 'Đại An', 2 => 'Lưu Niên', 3 => 'Tốc Hỷ', 4 => 'Xích Khẩu', 5 => 'Tiểu Cát', 6 => 'Không Vong',
+                7 => 'Đại An', 8 => 'Lưu Niên', 9 => 'Tốc Hỷ', 10 => 'Xích Khẩu', 11 => 'Tiểu Cát', 12 => 'Không Vong',
+            ],
+            'kyNgayRules' => [
+                ['name' => 'Nguyệt kỵ', 'rule' => 'Mùng 5, 14, 23 âm lịch hằng tháng', 'avoid' => ['cầu tài', 'xuất hành', 'giá thú', 'nhập trạch', 'cất nóc', 'hạ móng'], 'confidence' => 'high'],
+                ['name' => 'Tam nương', 'rule' => 'Mùng 3, 7, 13, 18, 22, 27 âm lịch hằng tháng', 'avoid' => ['khởi sự', 'cưới hỏi', 'xuất hành', 'việc lớn'], 'confidence' => 'high'],
+                ['name' => 'Dương Công kỵ nhật', 'rule' => 'Theo bảng ngày kỵ riêng từng tháng âm: ' . self::monthDayTable(self::DUONG_CONG), 'avoid' => ['mọi việc lớn'], 'confidence' => 'medium'],
+                ['name' => 'Vãng Vong', 'rule' => self::branchRuleText(self::BRANCH_TABOOS['vangVong']), 'avoid' => ['xuất hành', 'giá thú', 'cầu mưu'], 'confidence' => 'medium'],
+                ['name' => 'Thiên hỏa', 'rule' => self::branchRuleText(self::BRANCH_TABOOS['thienHoa']), 'avoid' => ['lợp nhà', 'mở đường', 'cất nhà'], 'confidence' => 'medium'],
+                ['name' => 'Địa hỏa', 'rule' => self::branchRuleText(self::BRANCH_TABOOS['diaHoa']), 'avoid' => ['trồng cây', 'động thổ'], 'confidence' => 'medium'],
+                ['name' => 'Hỏa tai', 'rule' => self::branchRuleText(self::BRANCH_TABOOS['hoaTai']), 'avoid' => ['việc nhà cửa', 'việc liên quan lửa bếp'], 'confidence' => 'medium'],
+                ['name' => 'Thiên Cường', 'rule' => self::branchRuleText(self::BRANCH_TABOOS['thienCuong']), 'avoid' => ['việc lớn', 'khởi sự'], 'confidence' => 'medium'],
+                ['name' => 'Thổ cấm', 'rule' => 'Tháng 1-3 kỵ Hợi; tháng 4-6 kỵ Dần; tháng 7-9 kỵ Thân. Đoạn tháng 10-12 cần đối chiếu thêm với nguồn rõ hơn.', 'avoid' => ['động thổ', 'đào giếng', 'chôn cất'], 'confidence' => 'medium'],
+                ['name' => 'Trùng tang/Trùng phục', 'rule' => 'Xét theo can ngày và tháng âm, dùng bảng can kỵ từng tháng trong thông thư truyền thống.', 'avoid' => ['hôn nhân', 'ma chay', 'cải táng'], 'confidence' => 'medium'],
+            ],
+            'ngocHap' => [
+                'nguyetDuc' => self::branchRuleText(self::NGUYET_DUC),
+                'ritual' => self::readableNgocHapRitual(),
+                'coverage' => 'partial',
+                'note' => 'Bảng Ngọc Hạp đang được bổ sung dần. Các can chi chưa đủ chắc sẽ được ghi chú để người dùng biết cần đối chiếu thêm.',
+            ],
+            'napAmReference' => self::NAP_AM_NOTES,
         ];
     }
 
@@ -236,7 +272,7 @@ final class TraditionalAlmanac
             'thienCuong' => ['Thiên Cường', ['việc lớn', 'khởi sự']],
         ] as $key => [$name, $avoid]) {
             if ((self::BRANCH_TABOOS[$key][$lunarMonth] ?? '') === $branch) {
-                $items[] = self::item($name, 'bad', $avoid, 'Chi ngày trùng bảng ' . $name . ' theo tháng âm trong PDF.', 'medium');
+                $items[] = self::item($name, 'bad', $avoid, 'Chi ngày trùng bảng ' . $name . ' theo tháng âm trong thông thư.', 'medium');
             }
         }
         if (in_array($lunarMonth, [1, 2, 3], true) && $branch === 'Hoi') {
@@ -293,7 +329,7 @@ final class TraditionalAlmanac
         }
         $ritual = self::NGOC_HAP_RITUAL[$dayCanChi] ?? [
             'level' => 'unknown',
-            'summary' => 'Chưa nhập đủ dòng Ngọc Hạp cho can chi này từ PDF; cần bổ sung nếu muốn luận tế lễ/cầu phúc chi tiết.',
+            'summary' => 'Chưa đủ dòng Ngọc Hạp cho can chi này; cần bổ sung nếu muốn luận tế lễ/cầu phúc chi tiết.',
         ];
 
         return [
@@ -327,5 +363,44 @@ final class TraditionalAlmanac
         $parts = self::splitCanChi($asciiName);
 
         return (self::STEMS_VI[$parts['stem']] ?? $parts['stem']) . ' ' . (self::BRANCHES_VI[$parts['branch']] ?? $parts['branch']);
+    }
+
+    /**
+     * @param array<int,list<int>> $table
+     */
+    private static function monthDayTable(array $table): string
+    {
+        $parts = [];
+        foreach ($table as $month => $days) {
+            $parts[] = 'tháng ' . $month . ': ngày ' . implode(', ', $days);
+        }
+
+        return implode('; ', $parts);
+    }
+
+    /**
+     * @param array<int,string> $table
+     */
+    private static function branchRuleText(array $table): string
+    {
+        $parts = [];
+        foreach ($table as $month => $branch) {
+            $parts[] = 'tháng ' . $month . ': ngày ' . (self::BRANCHES_VI[$branch] ?? $branch);
+        }
+
+        return implode('; ', $parts);
+    }
+
+    /**
+     * @return array<string,array{level:string,summary:string}>
+     */
+    private static function readableNgocHapRitual(): array
+    {
+        $items = [];
+        foreach (self::NGOC_HAP_RITUAL as $canChi => $rule) {
+            $items[self::viCanChi($canChi)] = $rule;
+        }
+
+        return $items;
     }
 }

@@ -1095,6 +1095,30 @@ h2 {
     margin-top: 16px;
 }
 
+.lta-method-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    margin-top: 16px;
+}
+
+.lta-method-grid article {
+    background: #fffaf0;
+    border: 1px solid #ead8ad;
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.lta-method-grid h3 {
+    font-size: 1rem;
+    margin: 0 0 8px;
+}
+
+.lta-method-grid p {
+    color: var(--lta-muted);
+    line-height: 1.6;
+}
+
 .lta-data-list {
     display: grid;
     gap: 8px;

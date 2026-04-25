@@ -35,6 +35,7 @@ assertSameAppValue(['day' => 1, 'month' => 1, 'year' => 2026], lta_date_from_pat
 assertSameAppValue('month', lta_view_from_path('/lich-ta/2026-04'), 'Month path view failed');
 assertSameAppValue('month', lta_view_from_path('/lich-ta/2026'), 'Year path view failed');
 assertSameAppValue(null, lta_view_from_path('/lich-ta/2026-04-25'), 'Day path should use default home view');
+assertSameAppValue('almanac', lta_view_from_path('/lich-ta/thu-vien-thong-thu'), 'Almanac path view failed');
 assertSameAppValue(['day' => 24, 'month' => 4, 'year' => 2026], lta_solar_from_lunar_input(8, 3, 2026), 'Lunar input conversion failed');
 assertSameAppValue(null, lta_solar_from_lunar_input(30, 2, 2026, 1), 'Invalid leap lunar input should fail');
 
@@ -74,6 +75,11 @@ assertSameAppValue('canChi', $april2026['fortune']['dongCong']['matched'], 'Dong
 
 $nguyetKy = lta_day_info(['day' => 19, 'month' => 6, 'year' => 2026]);
 assertSameAppValue(true, in_array('Nguyệt kỵ', array_map(static fn (array $item): string => $item['name'], $nguyetKy['fortune']['traditional']['kyNgay']), true), 'Ky ngay module failed');
+
+$library = \LichTa\TraditionalAlmanac::library();
+assertSameAppValue(true, isset($library['twentyEightStars']['Giác']), 'Almanac library 28-star data failed');
+assertSameAppValue(true, isset($library['starGlossary']['bad']['Thiên Cương']), 'Almanac library bad star data failed');
+assertSameAppValue('partial', $library['ngocHap']['coverage'], 'Almanac library Ngoc Hap note failed');
 
 $march2026 = lta_day_info(['day' => 10, 'month' => 3, 'year' => 2026]);
 assertSameAppValue('Định', $march2026['fortune']['dongCong']['truc'], 'Dong Cong month 2 truc failed');

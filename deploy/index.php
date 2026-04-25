@@ -8,7 +8,7 @@ $today = lta_today();
 $selectedState = lta_selected_date_state($today);
 $selected = $selectedState['date'];
 $view = (string) ($_GET['view'] ?? lta_view_from_path() ?? 'today');
-$view = in_array($view, ['today', 'month', 'nap-am', 'convert', 'embed', 'about', 'terms', 'privacy'], true) ? $view : 'today';
+$view = in_array($view, ['today', 'month', 'nap-am', 'convert', 'embed', 'almanac', 'about', 'terms', 'privacy'], true) ? $view : 'today';
 if ($view === 'nap-am') {
     $view = 'month';
 }
@@ -23,6 +23,13 @@ if (!checkdate($selected['month'], $selected['day'], $selected['year'])) {
 $cells = lta_month_cells($month, $year, $selected, $today);
 $dayInfo = lta_day_info($selected);
 $traditional = $dayInfo['fortune']['traditional'];
+$almanacLibrary = \LichTa\TraditionalAlmanac::library();
+$levelLabel = static fn (string $level): string => match ($level) {
+    'good' => 'Tốt',
+    'bad' => 'Xấu',
+    'mixed' => 'Cân nhắc',
+    default => 'Đang bổ sung',
+};
 $dateInputMode = $selectedState['inputMode'];
 $dateInputError = $selectedState['error'];
 $selectedLunar = $dayInfo['lunar'];
@@ -45,6 +52,7 @@ $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl
 $pagePaths = [
     'today' => './',
     'embed' => './ma-nhung-lich-viet',
+    'almanac' => './thu-vien-thong-thu',
     'about' => './gioi-thieu',
     'terms' => './dieu-khoan-su-dung',
     'privacy' => './chinh-sach-bao-mat',
@@ -54,6 +62,7 @@ $canonicalPaths = [
     'month' => sprintf('%04d-%02d', $year, $month),
     'convert' => 'index.php?view=convert',
     'embed' => 'ma-nhung-lich-viet',
+    'almanac' => 'thu-vien-thong-thu',
     'about' => 'gioi-thieu',
     'terms' => 'dieu-khoan-su-dung',
     'privacy' => 'chinh-sach-bao-mat',
@@ -75,6 +84,10 @@ $viewMeta = [
         'title' => 'Code nhúng lịch Việt - Nhúng lịch âm vào website bằng iframe hoặc JavaScript',
         'description' => 'Lấy code nhúng lịch Việt, lịch âm Việt Nam cho website bằng iframe hoặc JavaScript. Widget responsive, có lịch tháng, ngày âm, Can Chi và thông tin ngày.',
     ],
+    'almanac' => [
+        'title' => 'Thư viện Thông Thư - Cách xem ngày tốt xấu theo lịch Việt',
+        'description' => 'Tìm hiểu cách xem ngày tốt xấu theo lịch Việt: ngày kỵ, sao tốt xấu, Nhị Thập Bát Tú, Lục Nhâm xuất hành, Ngọc Hạp và nạp âm.',
+    ],
     'about' => [
         'title' => 'Giới thiệu Lịch Ta - Ứng dụng lịch âm Việt Nam có mã nhúng website',
         'description' => 'Tìm hiểu Lịch Ta, ứng dụng lịch âm Việt Nam hỗ trợ tra ngày, đổi ngày âm dương, lịch tháng, Can Chi, tiết khí và code nhúng lịch Việt cho website.',
@@ -91,6 +104,7 @@ $viewMeta = [
 $meta = $viewMeta[$view] ?? $viewMeta['today'];
 $canonicalPath = $canonicalPaths[$view] ?? '';
 $canonicalUrl = rtrim($baseUrl, '/') . ($canonicalPath !== '' ? '/' . ltrim($canonicalPath, '/') : '/');
+$thumbnailUrl = rtrim($baseUrl, '/') . '/assets/lich-ta-thumbnail.svg';
 $viewUrl = static function (string $target, array $date) use ($month, $year, $pagePaths): string {
     if (isset($pagePaths[$target])) {
         return $pagePaths[$target];
@@ -143,13 +157,23 @@ $faqJson = [
     <meta name="description" content="<?= lta_h($meta['description']) ?>">
     <meta name="robots" content="index,follow,max-image-preview:large">
     <link rel="canonical" href="<?= lta_h($canonicalUrl) ?>">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/favicon.svg">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="theme-color" content="#315f4b">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="vi_VN">
     <meta property="og:site_name" content="Lịch Ta">
     <meta property="og:title" content="<?= lta_h($meta['title']) ?>">
     <meta property="og:description" content="<?= lta_h($meta['description']) ?>">
     <meta property="og:url" content="<?= lta_h($canonicalUrl) ?>">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="<?= lta_h($thumbnailUrl) ?>">
+    <meta property="og:image:type" content="image/svg+xml">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Lịch Ta - Âm lịch Việt Nam">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="<?= lta_h($thumbnailUrl) ?>">
     <?php if ($view === 'embed'): ?>
     <script type="application/ld+json"><?= json_encode($faqJson, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
     <?php endif; ?>
@@ -169,6 +193,7 @@ $faqJson = [
             <a class="<?= $view === 'today' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('today', $selected)) ?>"><span aria-hidden="true">⌂</span>Hôm nay</a>
             <a class="<?= $view === 'month' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true">□</span>Lịch tháng</a>
             <a class="<?= $view === 'convert' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('convert', $selected)) ?>"><span aria-hidden="true">⇄</span>Đổi ngày</a>
+            <a class="<?= $view === 'almanac' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('almanac', $selected)) ?>"><span aria-hidden="true">i</span>Thông Thư</a>
             <a class="<?= $view === 'embed' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('embed', $selected)) ?>"><span aria-hidden="true">{ }</span>Mã nhúng</a>
             <a class="<?= $view === 'about' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('about', $selected)) ?>"><span aria-hidden="true">i</span>Giới thiệu</a>
         </nav>
@@ -248,19 +273,19 @@ $faqJson = [
             <details class="lta-almanac-detail lta-collapse" data-lta-icon="✦">
                 <summary>Thông tin cổ lịch</summary>
                 <article>
-                    <span>Nhị Thập Bát Tú</span>
+                    <span>Nhị Thập Bát Tú <a class="lta-info-link" href="<?= lta_h($viewUrl('almanac', $selected)) ?>#nhi-thap-bat-tu" aria-label="Xem dữ liệu Nhị Thập Bát Tú">i</a></span>
                     <strong><?= lta_h($dayInfo['fortune']['saoNhiThapBatTu']) ?> · <?= lta_h($traditional['nhiThapBatTu']['animal']) ?></strong>
                     <p><?= lta_h($traditional['nhiThapBatTu']['summary']) ?></p>
                 </article>
                 <article>
-                    <span>Lục Nhâm xuất hành</span>
+                    <span>Lục Nhâm xuất hành <a class="lta-info-link" href="<?= lta_h($viewUrl('almanac', $selected)) ?>#luc-nham" aria-label="Xem dữ liệu Lục Nhâm xuất hành">i</a></span>
                     <strong><?= lta_h($traditional['lucNhan']['dayResult']['name']) ?> · <?= lta_h($traditional['lucNhan']['dayResult']['element']) ?></strong>
                     <p><?= lta_h($traditional['lucNhan']['dayResult']['summary']) ?></p>
                     <small>Giờ tốt: <?= lta_h(implode(', ', array_map(static fn (array $hour): string => $hour['branch'] . ' ' . $hour['result']['name'], $traditional['lucNhan']['goodHours']))) ?></small>
                 </article>
                 <?php if ($traditional['kyNgay'] !== []): ?>
                     <article>
-                        <span>Các ngày kỵ</span>
+                        <span>Các ngày kỵ <a class="lta-info-link" href="<?= lta_h($viewUrl('almanac', $selected)) ?>#ngay-ky" aria-label="Xem dữ liệu các ngày kỵ">i</a></span>
                         <ul>
                             <?php foreach (array_slice($traditional['kyNgay'], 0, 4) as $kyNgay): ?>
                                 <li><strong><?= lta_h($kyNgay['name']) ?></strong>: <?= lta_h(implode(', ', $kyNgay['appliesTo'])) ?></li>
@@ -269,7 +294,7 @@ $faqJson = [
                     </article>
                 <?php endif; ?>
                 <article>
-                    <span>Ngọc Hạp</span>
+                    <span>Ngọc Hạp <a class="lta-info-link" href="<?= lta_h($viewUrl('almanac', $selected)) ?>#ngoc-hap" aria-label="Xem dữ liệu Ngọc Hạp">i</a></span>
                     <strong><?= lta_h($traditional['ngocHap']['ritual']['canChi']) ?> · <?= lta_h($traditional['ngocHap']['ritual']['level']) ?></strong>
                     <p><?= lta_h($traditional['ngocHap']['ritual']['summary']) ?></p>
                     <small><?= lta_h($traditional['ngocHap']['note']) ?></small>
@@ -395,19 +420,19 @@ $faqJson = [
             <details class="lta-almanac-detail lta-collapse">
                 <summary>Thông tin cổ lịch</summary>
                 <article>
-                    <span>Nhị Thập Bát Tú</span>
+                    <span>Nhị Thập Bát Tú <a class="lta-info-link" href="<?= lta_h($viewUrl('almanac', $selected)) ?>#nhi-thap-bat-tu" aria-label="Xem dữ liệu Nhị Thập Bát Tú">i</a></span>
                     <strong><?= lta_h($dayInfo['fortune']['saoNhiThapBatTu']) ?> · <?= lta_h($traditional['nhiThapBatTu']['animal']) ?></strong>
                     <p><?= lta_h($traditional['nhiThapBatTu']['summary']) ?></p>
                 </article>
                 <article>
-                    <span>Lục Nhâm xuất hành</span>
+                    <span>Lục Nhâm xuất hành <a class="lta-info-link" href="<?= lta_h($viewUrl('almanac', $selected)) ?>#luc-nham" aria-label="Xem dữ liệu Lục Nhâm xuất hành">i</a></span>
                     <strong><?= lta_h($traditional['lucNhan']['dayResult']['name']) ?> · <?= lta_h($traditional['lucNhan']['dayResult']['element']) ?></strong>
                     <p><?= lta_h($traditional['lucNhan']['dayResult']['summary']) ?></p>
                     <small>Giờ tốt: <?= lta_h(implode(', ', array_map(static fn (array $hour): string => $hour['branch'] . ' ' . $hour['result']['name'], $traditional['lucNhan']['goodHours']))) ?></small>
                 </article>
                 <?php if ($traditional['kyNgay'] !== []): ?>
                     <article>
-                        <span>Các ngày kỵ</span>
+                        <span>Các ngày kỵ <a class="lta-info-link" href="<?= lta_h($viewUrl('almanac', $selected)) ?>#ngay-ky" aria-label="Xem dữ liệu các ngày kỵ">i</a></span>
                         <ul>
                             <?php foreach (array_slice($traditional['kyNgay'], 0, 4) as $kyNgay): ?>
                                 <li><strong><?= lta_h($kyNgay['name']) ?></strong>: <?= lta_h(implode(', ', $kyNgay['appliesTo'])) ?></li>
@@ -416,7 +441,7 @@ $faqJson = [
                     </article>
                 <?php endif; ?>
                 <article>
-                    <span>Ngọc Hạp</span>
+                    <span>Ngọc Hạp <a class="lta-info-link" href="<?= lta_h($viewUrl('almanac', $selected)) ?>#ngoc-hap" aria-label="Xem dữ liệu Ngọc Hạp">i</a></span>
                     <strong><?= lta_h($traditional['ngocHap']['ritual']['canChi']) ?> · <?= lta_h($traditional['ngocHap']['ritual']['level']) ?></strong>
                     <p><?= lta_h($traditional['ngocHap']['ritual']['summary']) ?></p>
                     <small><?= lta_h($traditional['ngocHap']['note']) ?></small>
@@ -588,6 +613,210 @@ $faqJson = [
     </section>
     <?php endif; ?>
 
+    <?php if ($view === 'almanac'): ?>
+    <section class="lta-panel lta-page-article lta-almanac-library">
+        <p class="lta-eyebrow">Thư viện Thông Thư</p>
+        <h1>Cách xem ngày tốt xấu theo lịch Việt</h1>
+        <p class="lta-lead">Người Việt khi xem lịch âm thường không chỉ xem ngày mấy, tháng mấy, mà còn xem thêm Can Chi, sao tốt xấu, ngày kỵ, Nhị Thập Bát Tú, giờ xuất hành, Ngọc Hạp và nạp âm. Trang này gom các lớp thông tin đó vào một nơi dễ đọc hơn, để bạn hiểu vì sao một ngày được gợi ý là nên làm việc này, nên tránh việc kia.</p>
+        <div class="lta-source-note">
+            <strong>Cách tham khảo</strong>
+            <p>Nội dung được tổng hợp và đối chiếu từ nhiều nguồn lịch cổ truyền, thông thư dân gian và các tài liệu tra cứu phổ biến. Lịch Ta viết lại theo lối ngắn gọn, dễ kiểm tra, để người dùng có thể đọc nhanh thay vì phải lần từng bảng rời rạc.</p>
+        </div>
+
+        <nav class="lta-library-toc" aria-label="Mục lục Thông Thư">
+            <a href="#am-lich-ho-ngoc-duc">Âm lịch</a>
+            <a href="#gio-hoang-dao">Giờ hoàng đạo</a>
+            <a href="#sao-tot-xau">Sao tốt xấu</a>
+            <a href="#ngay-ky">Ngày kỵ</a>
+            <a href="#nhi-thap-bat-tu">Nhị Thập Bát Tú</a>
+            <a href="#luc-nham">Lục Nhâm</a>
+            <a href="#dong-cong">Đổng Công</a>
+            <a href="#ngoc-hap">Ngọc Hạp</a>
+            <a href="#nap-am">Nạp âm</a>
+        </nav>
+
+        <section id="am-lich-ho-ngoc-duc" class="lta-library-section">
+            <h2>Cách tính ngày âm theo giáo sư Hồ Ngọc Đức</h2>
+            <p>Phần lõi đổi ngày dương sang âm của Lịch Ta tham khảo thuật toán âm lịch Việt Nam do giáo sư Hồ Ngọc Đức công bố rộng rãi. Cách tính này không chỉ tra bảng ngày có sẵn, mà dựa trên các mốc thiên văn như ngày Julius, thời điểm sóc, tiết khí và múi giờ Việt Nam.</p>
+            <div class="lta-method-grid">
+                <article>
+                    <h3>1. Đổi ngày dương sang ngày Julius</h3>
+                    <p>Mỗi ngày dương lịch được quy về một số ngày liên tục gọi là Julian day. Nhờ vậy app có thể tính khoảng cách giữa các ngày, tìm ngày sóc gần nhất và xác định tháng âm chính xác hơn.</p>
+                </article>
+                <article>
+                    <h3>2. Tìm ngày sóc đầu tháng âm</h3>
+                    <p>Tháng âm bắt đầu từ ngày có trăng mới theo múi giờ Việt Nam. Lịch Ta dùng UTC+7, vì vậy một số ngày có thể khác lịch Trung Quốc nếu thời điểm sóc nằm gần ranh giới ngày.</p>
+                </article>
+                <article>
+                    <h3>3. Xác định tháng 11 và tháng nhuận</h3>
+                    <p>Tháng 11 âm lịch phải chứa tiết Đông chí. Nếu một năm có 13 tháng âm, tháng đầu tiên sau Đông chí không có trung khí sẽ được tính là tháng nhuận.</p>
+                </article>
+                <article>
+                    <h3>4. Tính Can Chi, tiết khí và lịch ngày</h3>
+                    <p>Sau khi có ngày âm, app tính tiếp Can Chi ngày/tháng/năm, 24 tiết khí, giờ đầu ngày và các lớp thông tin truyền thống khác để hiển thị trên trang ngày.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="gio-hoang-dao" class="lta-library-section">
+            <h2>Cách tính giờ hoàng đạo</h2>
+            <p>Giờ hoàng đạo trong Lịch Ta được tính theo chi của ngày. Mỗi ngày thuộc một trong 12 địa chi, sau đó tra vào 6 mẫu giờ tốt lặp lại. Mỗi chi giờ kéo dài hai tiếng: Tý từ 23-1, Sửu từ 1-3, Dần từ 3-5 và cứ thế đi tiếp đến Hợi từ 21-23.</p>
+            <div class="lta-data-table-wrap">
+                <table class="lta-data-table">
+                    <thead><tr><th>Nhóm ngày</th><th>Các giờ hoàng đạo thường gặp</th></tr></thead>
+                    <tbody>
+                        <tr><td>Ngày Tý hoặc Ngọ</td><td>Tý, Sửu, Mão, Ngọ, Thân, Dậu</td></tr>
+                        <tr><td>Ngày Sửu hoặc Mùi</td><td>Dần, Mão, Tỵ, Thân, Tuất, Hợi</td></tr>
+                        <tr><td>Ngày Dần hoặc Thân</td><td>Tý, Sửu, Thìn, Tỵ, Mùi, Tuất</td></tr>
+                        <tr><td>Ngày Mão hoặc Dậu</td><td>Tý, Dần, Mão, Ngọ, Mùi, Dậu</td></tr>
+                        <tr><td>Ngày Thìn hoặc Tuất</td><td>Dần, Thìn, Tỵ, Thân, Dậu, Hợi</td></tr>
+                        <tr><td>Ngày Tỵ hoặc Hợi</td><td>Sửu, Thìn, Ngọ, Mùi, Tuất, Hợi</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="sao-tot-xau" class="lta-library-section">
+            <h2>Sao tốt và sao xấu trong Thông Thư</h2>
+            <p>Sao tốt và sao xấu là cách người xưa gắn một ngày với những việc nên làm hoặc nên tránh. Có sao thiên về cưới hỏi, đi xa, chữa bệnh, cầu tài; cũng có sao nhắc phải cẩn trọng với kiện tụng, động thổ, an táng hoặc việc lớn trong nhà.</p>
+            <div class="lta-library-columns">
+                <article>
+                    <h3>Sao tốt</h3>
+                    <div class="lta-data-list">
+                        <?php foreach ($almanacLibrary['starGlossary']['good'] as $name => $rule): ?>
+                            <details>
+                                <summary><span><?= lta_h($name) ?></span><em>Tốt</em></summary>
+                                <p>Nên: <?= lta_h(implode(', ', $rule['goodFor'])) ?><?= $rule['avoid'] !== [] ? '. Kỵ: ' . lta_h(implode(', ', $rule['avoid'])) : '' ?>.</p>
+                            </details>
+                        <?php endforeach; ?>
+                    </div>
+                </article>
+                <article>
+                    <h3>Sao xấu</h3>
+                    <div class="lta-data-list">
+                        <?php foreach ($almanacLibrary['starGlossary']['bad'] as $name => $rule): ?>
+                            <details>
+                                <summary><span><?= lta_h($name) ?></span><em>Xấu</em></summary>
+                                <p>Kỵ: <?= lta_h(implode(', ', $rule['avoid'])) ?>.</p>
+                            </details>
+                        <?php endforeach; ?>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="ngay-ky" class="lta-library-section">
+            <h2>Các ngày kỵ thường gặp</h2>
+            <p>Một số ngày kỵ xuất hiện rất quen thuộc trong lịch Việt, như Nguyệt kỵ, Tam nương hoặc Dương Công kỵ nhật. Khi gặp những ngày này, Lịch Ta sẽ ghi rõ tên ngày và nhóm việc thường được khuyên nên tránh để người dùng tự cân nhắc.</p>
+            <div class="lta-data-table-wrap">
+                <table class="lta-data-table">
+                    <thead><tr><th>Tên</th><th>Cách nhận biết</th><th>Thường kiêng</th><th>Ghi chú</th></tr></thead>
+                    <tbody>
+                        <?php foreach ($almanacLibrary['kyNgayRules'] as $rule): ?>
+                            <tr>
+                                <td><?= lta_h($rule['name']) ?></td>
+                                <td><?= lta_h($rule['rule']) ?></td>
+                                <td><?= lta_h(implode(', ', $rule['avoid'])) ?></td>
+                                <td><?= $rule['confidence'] === 'high' ? 'Quy tắc phổ biến' : 'Nên đối chiếu thêm khi dùng cho việc lớn' ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="nhi-thap-bat-tu" class="lta-library-section">
+            <h2>Nhị Thập Bát Tú</h2>
+            <p>Nhị Thập Bát Tú gồm 28 sao luân phiên theo ngày. Mỗi sao có sắc thái riêng: có sao hợp cưới hỏi, xây cất, mở hàng, thi cử; có sao lại nghiêng về tránh động thổ, hôn nhân hoặc giao dịch lớn.</p>
+            <div class="lta-star-grid">
+                <?php foreach ($almanacLibrary['twentyEightStars'] as $name => $star): ?>
+                    <article class="lta-star-card is-<?= lta_h($star['rating']) ?>">
+                        <span><?= lta_h($levelLabel($star['rating'])) ?></span>
+                        <h3><?= lta_h($name) ?></h3>
+                        <strong><?= lta_h($star['animal']) ?></strong>
+                        <p><?= lta_h($star['summary']) ?></p>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <section id="luc-nham" class="lta-library-section">
+            <h2>Lục Nhâm Đại Độn và giờ xuất hành</h2>
+            <p>Lục Nhâm Đại Độn thường được dùng để xem nhanh giờ xuất hành. Cách đọc khá gần gũi: từ tháng âm xác định điểm khởi, tính đến ngày cần xem, rồi tính tiếp theo từng giờ. Những cung Đại An, Tốc Hỷ và Tiểu Cát thường được xem là thuận hơn cho việc đi lại, gặp gỡ hoặc cầu việc.</p>
+            <div class="lta-lucnham-grid">
+                <?php foreach ($almanacLibrary['lucNhan'] as $item): ?>
+                    <article class="is-<?= lta_h($item['level']) ?>">
+                        <span><?= lta_h($levelLabel($item['level'])) ?> · <?= lta_h($item['element']) ?></span>
+                        <h3><?= lta_h($item['name']) ?></h3>
+                        <p><?= lta_h($item['summary']) ?></p>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+            <div class="lta-data-table-wrap">
+                <table class="lta-data-table">
+                    <thead><tr><th>Tháng âm</th><th>Mùng 1 khởi tại</th></tr></thead>
+                    <tbody>
+                        <?php foreach ($almanacLibrary['lucNhanMonthStarts'] as $monthNumber => $startName): ?>
+                            <tr><td>Tháng <?= (int) $monthNumber ?></td><td><?= lta_h($startName) ?></td></tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="dong-cong" class="lta-library-section">
+            <h2>Cách tính ngày tốt theo Đổng Công tuyển trạch</h2>
+            <p>Đổng Công tuyển trạch là một lớp xem ngày khá riêng. Điểm quan trọng là tháng Đổng Công đi theo tiết khí, không phải chỉ lấy tháng âm. Ví dụ tháng 1 bắt đầu quanh Lập xuân, tháng 2 quanh Kinh trập, tháng 3 quanh Thanh minh. Vì vậy cùng một tháng âm nhưng nếu đã qua tiết khí mới, cách xét Đổng Công có thể đổi sang tháng khác.</p>
+            <div class="lta-method-grid">
+                <article>
+                    <h3>1. Xác định tháng theo tiết khí</h3>
+                    <p>Lịch Ta lấy tiết khí hiện tại của ngày dương lịch, rồi quy về tháng Đổng Công tương ứng: Lập xuân/Vũ thủy là tháng 1, Kinh trập/Xuân phân là tháng 2, Thanh minh/Cốc vũ là tháng 3, tiếp tục như vậy đến Tiểu hàn/Đại hàn là tháng 12.</p>
+                </article>
+                <article>
+                    <h3>2. Tính trực theo nguyệt kiến và chi ngày</h3>
+                    <p>Mỗi tháng có một nguyệt kiến, như tháng 1 kiến Dần, tháng 2 kiến Mão, tháng 3 kiến Thìn. Từ chi ngày và nguyệt kiến, app tính ra một trong 12 trực: Kiến, Trừ, Mãn, Bình, Định, Chấp, Phá, Nguy, Thành, Thu, Khai, Bế.</p>
+                </article>
+                <article>
+                    <h3>3. Tra bảng tốt xấu của từng tháng</h3>
+                    <p>Sau khi biết tháng và trực, Lịch Ta tra bảng Đổng Công để phân loại ngày thành Tốt, Cân nhắc hoặc Chưa tốt. Một số ngày Can Chi riêng có ngoại lệ tốt/xấu khác với mức mặc định của trực.</p>
+                </article>
+                <article>
+                    <h3>4. Dùng như bộ lọc tham khảo</h3>
+                    <p>Đổng Công có nhiều ngoại lệ theo việc cụ thể, nên Lịch Ta hiện dùng như lớp lọc nhanh trên lịch tháng. Nếu ngày được đánh dấu Cân nhắc, người dùng nên đọc thêm các lớp sao tốt xấu, ngày kỵ và mục đích việc cần làm.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="ngoc-hap" class="lta-library-section">
+            <h2>Ngọc Hạp Thông Thư</h2>
+            <p>Ngọc Hạp là nhóm thông tin sâu hơn, thường gắn với sao tốt, sao xấu và những việc lễ nghi, cầu phúc, nhập trạch hoặc việc trong gia đình. Lịch Ta ưu tiên hiển thị phần có thể kiểm tra rõ ràng, còn những mục chưa đủ chắc sẽ được ghi chú để tránh làm người đọc hiểu nhầm.</p>
+            <div class="lta-source-note">
+                <strong>Nguyệt Đức</strong>
+                <p><?= lta_h($almanacLibrary['ngocHap']['nguyetDuc']) ?></p>
+            </div>
+            <div class="lta-data-list lta-ngoc-hap-list">
+                <?php foreach ($almanacLibrary['ngocHap']['ritual'] as $canChi => $rule): ?>
+                    <details>
+                        <summary><span><?= lta_h($canChi) ?></span><em><?= lta_h($levelLabel($rule['level'])) ?></em></summary>
+                        <p><?= lta_h($rule['summary']) ?></p>
+                    </details>
+                <?php endforeach; ?>
+            </div>
+            <p class="lta-data-warning">Một số mục Ngọc Hạp cần thêm bản đối chiếu rõ hơn trước khi đưa vào phần luận ngày. Nếu bạn có tài liệu đáng tin cậy, có thể bổ sung để Lịch Ta hoàn thiện dần.</p>
+        </section>
+
+        <section id="nap-am" class="lta-library-section">
+            <h2>Nạp âm lục thập hoa giáp</h2>
+            <p>Nạp âm là cách gọi mệnh ngũ hành của từng cặp Can Chi trong lục thập hoa giáp, ví dụ Hải Trung Kim, Lư Trung Hỏa, Đại Lâm Mộc. Trên Lịch Ta, nạp âm không chỉ để đọc thông tin ngày mà còn giúp tạo tông màu ngũ hành cho trang hôm nay và bộ lọc lịch tháng.</p>
+        </section>
+
+        <section class="lta-library-section lta-disclaimer">
+            <h2>Lưu ý khi sử dụng</h2>
+            <p>Các thông tin ngày tốt xấu trên Lịch Ta chỉ mang tính chất tham khảo văn hóa và tra cứu truyền thống. Nội dung này không phải lời khuyên bắt buộc, không thay thế tư vấn chuyên môn, pháp lý, y tế, tài chính hoặc quyết định cá nhân quan trọng. Khi cần dùng cho việc lớn, bạn nên đối chiếu thêm nhiều nguồn và tự chịu trách nhiệm với lựa chọn của mình.</p>
+        </section>
+    </section>
+    <?php endif; ?>
+
     <?php if ($view === 'about'): ?>
     <section class="lta-panel lta-page-article">
         <p class="lta-eyebrow">Giới thiệu sản phẩm</p>
@@ -599,6 +828,7 @@ $faqJson = [
 
         <h2>Cách tính lịch âm ở mức cơ bản</h2>
         <p>Âm lịch Việt Nam dựa trên chu kỳ Mặt Trăng, trong đó ngày đầu tháng âm thường gắn với thời điểm sóc. Để đồng bộ với mùa trong năm, lịch còn xét các tiết khí theo chuyển động biểu kiến của Mặt Trời. Vì một năm âm lịch ngắn hơn năm dương lịch, một số năm sẽ có tháng nhuận để giữ lịch không lệch quá xa mùa vụ. Khi chuyển đổi ngày dương sang âm, ứng dụng cần xác định ngày Julius, thời điểm sóc, tháng âm, năm âm và trường hợp tháng nhuận theo múi giờ Việt Nam.</p>
+        <p>Phần lõi tính ngày âm của Lịch Ta tham khảo thư viện và thuật toán âm lịch Việt Nam do giáo sư Hồ Ngọc Đức công bố rộng rãi. Đây là nền tảng chính để app tính ngày âm, tháng nhuận, Can Chi, 24 tiết khí, giờ hoàng đạo và các mốc liên quan theo múi giờ Việt Nam UTC+7.</p>
         <p>Sau khi có ngày âm cơ bản, Lịch Ta bổ sung các lớp thông tin truyền thống như Can Chi ngày, Can Chi tháng, Can Chi năm, nạp âm, trực, lục diệu, tiết khí, giờ hoàng đạo và một số ngày lễ phổ biến. Các lớp này giúp người dùng đọc lịch Việt theo thói quen văn hóa quen thuộc hơn thay vì chỉ thấy con số ngày tháng.</p>
 
         <h2>Vì sao có thêm mã nhúng?</h2>
@@ -651,6 +881,7 @@ $faqJson = [
 
     <footer class="lta-footer">
         <a href="<?= lta_h($viewUrl('about', $selected)) ?>">Giới thiệu</a>
+        <a href="<?= lta_h($viewUrl('almanac', $selected)) ?>">Thư viện Thông Thư</a>
         <a href="<?= lta_h($viewUrl('embed', $selected)) ?>">Code nhúng lịch Việt</a>
         <a href="<?= lta_h($viewUrl('terms', $selected)) ?>">Điều khoản sử dụng</a>
         <a href="<?= lta_h($viewUrl('privacy', $selected)) ?>">Chính sách bảo mật</a>

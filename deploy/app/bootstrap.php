@@ -27,7 +27,7 @@ const LTA_MONTHS = [
 
 const LTA_WEEKDAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 const LTA_WEEKDAYS_FULL = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-const LTA_APP_VERSION = '1.2.0';
+const LTA_APP_VERSION = '1.2.1';
 const LTA_CACHE_VERSION = 2;
 
 const LTA_STEMS_VI = [
@@ -325,6 +325,7 @@ function lta_view_from_path(?string $path = null): ?string
     $pageViews = [
         'gioi-thieu' => 'about',
         'ma-nhung-lich-viet' => 'embed',
+        'thu-vien-thong-thu' => 'almanac',
         'dieu-khoan-su-dung' => 'terms',
         'chinh-sach-bao-mat' => 'privacy',
     ];
