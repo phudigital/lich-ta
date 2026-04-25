@@ -38,6 +38,23 @@
     iframe.style.overflow = 'hidden';
     iframe.style.display = 'block';
 
+    if (script.getAttribute('data-auto-height') !== 'false') {
+        window.addEventListener('message', function (event) {
+            if (event.source !== iframe.contentWindow) {
+                return;
+            }
+
+            if (!event.data || event.data.type !== 'lta:embed-height') {
+                return;
+            }
+
+            var height = parseInt(event.data.height, 10);
+            if (height > 0) {
+                iframe.style.height = Math.max(height, 360) + 'px';
+            }
+        });
+    }
+
     mount.innerHTML = '';
     mount.appendChild(iframe);
 })();

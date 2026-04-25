@@ -263,4 +263,34 @@
             closeModal();
         }
     });
+
+    if (document.body && document.body.classList.contains('lta-embed-body') && window.parent !== window) {
+        var lastEmbedHeight = 0;
+
+        function postEmbedHeight() {
+            var height = Math.ceil(Math.max(
+                document.documentElement.scrollHeight,
+                document.body.scrollHeight
+            ));
+
+            if (Math.abs(height - lastEmbedHeight) < 2) {
+                return;
+            }
+
+            lastEmbedHeight = height;
+            window.parent.postMessage({
+                type: 'lta:embed-height',
+                height: height
+            }, '*');
+        }
+
+        window.addEventListener('load', postEmbedHeight);
+        window.addEventListener('resize', postEmbedHeight);
+
+        if ('ResizeObserver' in window) {
+            new ResizeObserver(postEmbedHeight).observe(document.body);
+        }
+
+        postEmbedHeight();
+    }
 })();

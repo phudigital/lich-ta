@@ -1173,6 +1173,8 @@ pre {
 
 .lta-embed-body {
     background: transparent;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .lta-widget {
@@ -1180,6 +1182,7 @@ pre {
     box-shadow: none;
     max-width: 760px;
     padding: 16px;
+    width: 100%;
 }
 
 .lta-widget-head,
@@ -1220,6 +1223,11 @@ pre {
 .lta-widget .lta-day {
     border-radius: 12px;
     padding: 8px;
+}
+
+.lta-widget .lta-solar-day,
+.lta-widget .lta-lunar-day {
+    line-height: 1.05;
 }
 
 .lta-widget-detail {
@@ -1405,6 +1413,10 @@ pre {
         padding: 12px;
     }
 
+    .lta-widget .lta-calendar-grid {
+        gap: 6px;
+    }
+
     .lta-widget-head {
         align-items: stretch;
         display: grid;
@@ -1426,5 +1438,30 @@ pre {
 
     .lta-widget-detail p {
         text-align: left;
+    }
+}
+
+@media (max-width: 380px) {
+    .lta-widget {
+        border-radius: 14px;
+        padding: 10px;
+    }
+
+    .lta-widget .lta-calendar-grid {
+        gap: 4px;
+    }
+
+    .lta-widget .lta-day {
+        aspect-ratio: 1 / 1;
+        border-radius: 9px;
+        padding: 5px;
+    }
+
+    .lta-widget .lta-solar-day {
+        font-size: 0.96rem;
+    }
+
+    .lta-widget .lta-lunar-day {
+        font-size: 0.6rem;
     }
 }
