@@ -123,14 +123,17 @@ final class DayFortune
         $isHoangDao = $quality !== null && in_array($quality, self::HOANG_DAO_STARS, true);
         $isHacDao = $quality !== null && in_array($quality, self::HAC_DAO_STARS, true);
 
+        $saoNhiThapBatTu = self::TWENTY_EIGHT_STARS[((int) $lunar['julianDay'] + 11) % 28];
+        $napAm = self::NAP_AM[$dayName] ?? '';
+
         return [
             'julianDay' => (int) $lunar['julianDay'],
             'truc' => $truc,
             'lucDieu' => $lucDieu,
             'lucDieuHint' => self::LUC_DIEU_HINTS[$lucDieu],
-            'saoNhiThapBatTu' => self::TWENTY_EIGHT_STARS[((int) $lunar['julianDay'] + 11) % 28],
-            'napAm' => self::NAP_AM[$dayName] ?? '',
-            'napAmElement' => self::elementFromNapAm(self::NAP_AM[$dayName] ?? ''),
+            'saoNhiThapBatTu' => $saoNhiThapBatTu,
+            'napAm' => $napAm,
+            'napAmElement' => self::elementFromNapAm($napAm),
             'hoangHacDao' => $quality === null ? 'Bình thường' : ($isHoangDao ? 'Hoàng đạo' : ($isHacDao ? 'Hắc đạo' : 'Bình thường')),
             'hoangHacDaoStar' => $quality,
             'ngayXung' => self::oppositeBranchLabel($dayParts['branch']),
@@ -138,6 +141,7 @@ final class DayFortune
             'ngayTot' => self::goodDayMarkers((int) $lunar['day'], (int) $lunar['month'], $truc, $isHoangDao),
             'ngayXau' => self::badDayMarkers((int) $lunar['day'], $truc, $isHacDao),
             'dongCong' => DongCongCalendar::evaluate($day, $month, $year, $canChi['day']),
+            'traditional' => TraditionalAlmanac::evaluate($lunar, $canChi['day'], $saoNhiThapBatTu, $napAm),
             'sourceNote' => 'Bộ trường được thiết kế lại từ các quy tắc lịch Việt truyền thống; không copy dữ liệu JS obfuscated của bên thứ ba.',
         ];
     }

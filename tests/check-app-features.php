@@ -63,9 +63,17 @@ assertSameAppValue('Tiểu Cát', $april2026['fortune']['lucDieu'], 'Fortune luc
 assertSameAppValue('Đại Lâm Mộc', $april2026['fortune']['napAm'], 'Fortune nap am failed');
 assertSameAppValue('Mộc', $april2026['fortune']['napAmElement'], 'Fortune nap am element failed');
 assertSameAppValue(['Tân Hợi', 'Đinh Hợi'], $april2026['fortune']['tuoiXung'], 'Fortune conflict ages failed');
+assertSameAppValue('Liễu Thổ Chương', $april2026['fortune']['traditional']['nhiThapBatTu']['animal'], '28-star detail failed');
+assertSameAppValue('Tiểu Cát', $april2026['fortune']['traditional']['lucNhan']['dayResult']['name'], 'Luc Nham day result failed');
+assertSameAppValue('verified', $april2026['fortune']['traditional']['napAmReference']['sourceStatus'], 'Nap am reference failed');
+assertSameAppValue('partial', $april2026['fortune']['traditional']['ngocHap']['coverage'], 'Ngoc Hap coverage failed');
+assertSameAppValue(true, isset($april2026['fortune']['traditional']['starGlossary']['good']['Thiên hỷ']), 'Good star glossary failed');
 assertSameAppValue('Trừ', $april2026['fortune']['dongCong']['truc'], 'Dong Cong truc failed');
 assertSameAppValue('good', $april2026['fortune']['dongCong']['level'], 'Dong Cong level failed');
 assertSameAppValue('canChi', $april2026['fortune']['dongCong']['matched'], 'Dong Cong matched source failed');
+
+$nguyetKy = lta_day_info(['day' => 19, 'month' => 6, 'year' => 2026]);
+assertSameAppValue(true, in_array('Nguyệt kỵ', array_map(static fn (array $item): string => $item['name'], $nguyetKy['fortune']['traditional']['kyNgay']), true), 'Ky ngay module failed');
 
 $march2026 = lta_day_info(['day' => 10, 'month' => 3, 'year' => 2026]);
 assertSameAppValue('Định', $march2026['fortune']['dongCong']['truc'], 'Dong Cong month 2 truc failed');

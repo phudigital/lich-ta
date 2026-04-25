@@ -22,6 +22,7 @@ if (!checkdate($selected['month'], $selected['day'], $selected['year'])) {
 }
 $cells = lta_month_cells($month, $year, $selected, $today);
 $dayInfo = lta_day_info($selected);
+$traditional = $dayInfo['fortune']['traditional'];
 $dateInputMode = $selectedState['inputMode'];
 $dateInputError = $selectedState['error'];
 $selectedLunar = $dayInfo['lunar'];
@@ -244,6 +245,35 @@ $faqJson = [
                 <p><?= lta_h(implode(', ', $dayInfo['fortune']['tuoiXung'])) ?> · xung chi <?= lta_h($dayInfo['fortune']['ngayXung']) ?></p>
                 <small><?= lta_h($dayInfo['fortune']['lucDieuHint']) ?></small>
             </div>
+            <div class="lta-almanac-detail">
+                <article>
+                    <span>Nhị Thập Bát Tú</span>
+                    <strong><?= lta_h($dayInfo['fortune']['saoNhiThapBatTu']) ?> · <?= lta_h($traditional['nhiThapBatTu']['animal']) ?></strong>
+                    <p><?= lta_h($traditional['nhiThapBatTu']['summary']) ?></p>
+                </article>
+                <article>
+                    <span>Lục Nhâm xuất hành</span>
+                    <strong><?= lta_h($traditional['lucNhan']['dayResult']['name']) ?> · <?= lta_h($traditional['lucNhan']['dayResult']['element']) ?></strong>
+                    <p><?= lta_h($traditional['lucNhan']['dayResult']['summary']) ?></p>
+                    <small>Giờ tốt: <?= lta_h(implode(', ', array_map(static fn (array $hour): string => $hour['branch'] . ' ' . $hour['result']['name'], $traditional['lucNhan']['goodHours']))) ?></small>
+                </article>
+                <?php if ($traditional['kyNgay'] !== []): ?>
+                    <article>
+                        <span>Các ngày kỵ</span>
+                        <ul>
+                            <?php foreach (array_slice($traditional['kyNgay'], 0, 4) as $kyNgay): ?>
+                                <li><strong><?= lta_h($kyNgay['name']) ?></strong>: <?= lta_h(implode(', ', $kyNgay['appliesTo'])) ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </article>
+                <?php endif; ?>
+                <article>
+                    <span>Ngọc Hạp</span>
+                    <strong><?= lta_h($traditional['ngocHap']['ritual']['canChi']) ?> · <?= lta_h($traditional['ngocHap']['ritual']['level']) ?></strong>
+                    <p><?= lta_h($traditional['ngocHap']['ritual']['summary']) ?></p>
+                    <small><?= lta_h($traditional['ngocHap']['note']) ?></small>
+                </article>
+            </div>
             <?php if ($dayInfo['events'] !== []): ?>
                 <div class="lta-events">
                     <span>Sự kiện</span>
@@ -259,14 +289,14 @@ $faqJson = [
     <?php endif; ?>
 
     <?php if ($view === 'month'): ?>
-    <section class="lta-workspace" id="calendar" data-nap-am-tool>
+    <section class="lta-workspace" id="calendar" data-nap-am-tool data-month-app data-month="<?= (int) $month ?>" data-year="<?= (int) $year ?>">
         <div class="lta-panel lta-calendar-panel">
             <div class="lta-panel-head">
                 <div>
                     <p class="lta-eyebrow">Lịch tháng</p>
                     <h1><?= lta_h(LTA_MONTHS[$month]) ?> năm <?= (int) $year ?></h1>
                 </div>
-                <div class="lta-month-actions" aria-label="Chuyển tháng">
+                <div class="lta-month-actions" aria-label="Chuyển tháng" data-month-nav>
                     <a href="<?= lta_h(lta_build_url(['month' => $prev['month'], 'year' => $prev['year'], 'day' => 1])) ?>" aria-label="Tháng trước">‹</a>
                     <a href="<?= lta_h(lta_build_url(['month' => $today['month'], 'year' => $today['year'], 'day' => $today['day']])) ?>">Hôm nay</a>
                     <a href="<?= lta_h(lta_build_url(['month' => $next['month'], 'year' => $next['year'], 'day' => 1])) ?>" aria-label="Tháng sau">›</a>
@@ -274,7 +304,7 @@ $faqJson = [
             </div>
 
             <div class="lta-month-controls">
-                <form class="lta-picker" method="get" action="">
+                <form class="lta-picker" method="get" action="" data-month-picker>
                     <input name="view" type="hidden" value="month">
                     <label>
                         <span>Tháng</span>
@@ -360,6 +390,35 @@ $faqJson = [
                 <span>Tuổi xung</span>
                 <p><?= lta_h(implode(', ', $dayInfo['fortune']['tuoiXung'])) ?> · xung chi <?= lta_h($dayInfo['fortune']['ngayXung']) ?></p>
                 <small><?= lta_h($dayInfo['fortune']['lucDieuHint']) ?></small>
+            </div>
+            <div class="lta-almanac-detail">
+                <article>
+                    <span>Nhị Thập Bát Tú</span>
+                    <strong><?= lta_h($dayInfo['fortune']['saoNhiThapBatTu']) ?> · <?= lta_h($traditional['nhiThapBatTu']['animal']) ?></strong>
+                    <p><?= lta_h($traditional['nhiThapBatTu']['summary']) ?></p>
+                </article>
+                <article>
+                    <span>Lục Nhâm xuất hành</span>
+                    <strong><?= lta_h($traditional['lucNhan']['dayResult']['name']) ?> · <?= lta_h($traditional['lucNhan']['dayResult']['element']) ?></strong>
+                    <p><?= lta_h($traditional['lucNhan']['dayResult']['summary']) ?></p>
+                    <small>Giờ tốt: <?= lta_h(implode(', ', array_map(static fn (array $hour): string => $hour['branch'] . ' ' . $hour['result']['name'], $traditional['lucNhan']['goodHours']))) ?></small>
+                </article>
+                <?php if ($traditional['kyNgay'] !== []): ?>
+                    <article>
+                        <span>Các ngày kỵ</span>
+                        <ul>
+                            <?php foreach (array_slice($traditional['kyNgay'], 0, 4) as $kyNgay): ?>
+                                <li><strong><?= lta_h($kyNgay['name']) ?></strong>: <?= lta_h(implode(', ', $kyNgay['appliesTo'])) ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </article>
+                <?php endif; ?>
+                <article>
+                    <span>Ngọc Hạp</span>
+                    <strong><?= lta_h($traditional['ngocHap']['ritual']['canChi']) ?> · <?= lta_h($traditional['ngocHap']['ritual']['level']) ?></strong>
+                    <p><?= lta_h($traditional['ngocHap']['ritual']['summary']) ?></p>
+                    <small><?= lta_h($traditional['ngocHap']['note']) ?></small>
+                </article>
             </div>
 
             <?php if ($dayInfo['events'] !== []): ?>

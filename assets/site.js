@@ -134,7 +134,11 @@
 
     document.addEventListener('scroll', removeTooltip, true);
 
-    document.querySelectorAll('[data-nap-am-tool]').forEach(function (root) {
+    function initNapTool(root) {
+        if (root.getAttribute('data-nap-tool-ready') === '1') {
+            return;
+        }
+        root.setAttribute('data-nap-tool-ready', '1');
         var napButtons = root.querySelectorAll('[data-nap-filter]');
         var dongButtons = root.querySelectorAll('[data-dong-filter]');
         var napSelect = root.querySelector('[data-nap-filter-select]');
@@ -206,6 +210,153 @@
         }
 
         applyFilters();
+    }
+
+    document.querySelectorAll('[data-nap-am-tool]').forEach(initNapTool);
+
+    var monthCache = {};
+    var monthRequest;
+
+    function cacheKey(url) {
+        var target = new URL(url, window.location.href);
+        target.hash = '';
+        target.searchParams.set('view', 'month');
+        return target.toString();
+    }
+
+    function setMonthLoading(root, loading) {
+        root.classList.toggle('is-month-loading', loading);
+        root.setAttribute('aria-busy', loading ? 'true' : 'false');
+    }
+
+    function refreshPageMeta(doc) {
+        var title = doc.querySelector('title');
+        var canonical = doc.querySelector('link[rel="canonical"]');
+        var description = doc.querySelector('meta[name="description"]');
+
+        if (title) {
+            document.title = title.textContent;
+        }
+        if (canonical && document.querySelector('link[rel="canonical"]')) {
+            document.querySelector('link[rel="canonical"]').setAttribute('href', canonical.getAttribute('href') || '');
+        }
+        if (description && document.querySelector('meta[name="description"]')) {
+            document.querySelector('meta[name="description"]').setAttribute('content', description.getAttribute('content') || '');
+        }
+    }
+
+    function replaceMonthWorkspace(html, url, pushState) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        var nextWorkspace = doc.querySelector('[data-month-app]');
+        var currentWorkspace = document.querySelector('[data-month-app]');
+        var nextNav = doc.querySelector('.lta-nav');
+        var currentNav = document.querySelector('.lta-nav');
+
+        if (!nextWorkspace || !currentWorkspace) {
+            window.location.href = url;
+            return;
+        }
+
+        currentWorkspace.replaceWith(nextWorkspace);
+        initNapTool(nextWorkspace);
+        refreshPageMeta(doc);
+
+        if (nextNav && currentNav) {
+            currentNav.innerHTML = nextNav.innerHTML;
+        }
+
+        if (pushState) {
+            window.history.pushState({ ltaMonthUrl: url }, '', url);
+        }
+
+        var calendar = document.getElementById('calendar');
+        if (calendar) {
+            calendar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function loadMonth(url, pushState) {
+        var currentWorkspace = document.querySelector('[data-month-app]');
+        var key = cacheKey(url);
+
+        if (!currentWorkspace) {
+            window.location.href = url;
+            return;
+        }
+
+        if (monthCache[key]) {
+            replaceMonthWorkspace(monthCache[key], url, pushState);
+            return;
+        }
+
+        if (monthRequest && typeof monthRequest.abort === 'function') {
+            monthRequest.abort();
+        }
+        monthRequest = new AbortController();
+        setMonthLoading(currentWorkspace, true);
+
+        fetch(url, {
+            headers: {
+                'Accept': 'text/html',
+                'X-Lich-Ta-Partial': 'month'
+            },
+            signal: monthRequest.signal
+        })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('Không tải được lịch tháng.');
+                }
+                return response.text();
+            })
+            .then(function (html) {
+                monthCache[key] = html;
+                replaceMonthWorkspace(html, url, pushState);
+            })
+            .catch(function (error) {
+                if (error.name === 'AbortError') {
+                    return;
+                }
+                window.location.href = url;
+            })
+            .finally(function () {
+                var activeWorkspace = document.querySelector('[data-month-app]');
+                if (activeWorkspace) {
+                    setMonthLoading(activeWorkspace, false);
+                }
+            });
+    }
+
+    document.addEventListener('click', function (event) {
+        var monthLink = event.target.closest('[data-month-nav] a');
+        if (!monthLink || event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) {
+            return;
+        }
+
+        event.preventDefault();
+        loadMonth(monthLink.href, true);
+    });
+
+    document.addEventListener('submit', function (event) {
+        var form = event.target.closest('[data-month-picker]');
+        if (!form) {
+            return;
+        }
+
+        event.preventDefault();
+        var formData = new FormData(form);
+        var target = new URL(form.action || window.location.href, window.location.href);
+        formData.forEach(function (value, key) {
+            target.searchParams.set(key, value);
+        });
+        target.searchParams.set('view', 'month');
+        loadMonth(target.toString(), true);
+    });
+
+    window.addEventListener('popstate', function () {
+        if (document.querySelector('[data-month-app]')) {
+            loadMonth(window.location.href, false);
+        }
     });
 
     document.querySelectorAll('[data-date-form]').forEach(function (form) {

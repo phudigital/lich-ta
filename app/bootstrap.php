@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../src/LunarCalendar.php';
 require_once __DIR__ . '/../src/DongCongCalendar.php';
+require_once __DIR__ . '/../src/TraditionalAlmanac.php';
 require_once __DIR__ . '/../src/DayFortune.php';
 
 use LichTa\DayFortune;
@@ -26,8 +27,8 @@ const LTA_MONTHS = [
 
 const LTA_WEEKDAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 const LTA_WEEKDAYS_FULL = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-const LTA_APP_VERSION = '1.1.0';
-const LTA_CACHE_VERSION = 1;
+const LTA_APP_VERSION = '1.2.0';
+const LTA_CACHE_VERSION = 2;
 
 const LTA_STEMS_VI = [
     'Giap' => 'Giáp',
@@ -628,6 +629,9 @@ function lta_render_text(array $date, bool $markdown = false): string
     $cells = lta_month_cells($date['month'], $date['year'], $date, lta_today());
     $eventNames = array_map(static fn (array $event): string => $event['name'], $info['events']);
     $lunarLabel = $info['lunar']['day'] . '/' . $info['lunar']['month'] . '/' . $info['lunar']['year'] . ((int) $info['lunar']['leap'] === 1 ? ' nhuận' : '');
+    $traditional = $info['fortune']['traditional'];
+    $kyNgay = array_map(static fn (array $item): string => $item['name'], $traditional['kyNgay']);
+    $lucNhanGoodHours = array_map(static fn (array $hour): string => $hour['branch'] . ' ' . $hour['result']['name'], $traditional['lucNhan']['goodHours']);
 
     if ($markdown) {
         $lines = [
@@ -644,6 +648,11 @@ function lta_render_text(array $date, bool $markdown = false): string
             '- Nạp âm ngày: ' . $info['fortune']['napAm'],
             '- Hoàng/Hắc đạo: ' . $info['fortune']['hoangHacDao'] . ($info['fortune']['hoangHacDaoStar'] !== null ? ' - ' . $info['fortune']['hoangHacDaoStar'] : ''),
             '- Đổng Công: ' . $info['fortune']['dongCong']['label'] . ' - trực ' . $info['fortune']['dongCong']['truc'],
+            '- Nhị thập bát tú: ' . $info['fortune']['saoNhiThapBatTu'] . ' - ' . $traditional['nhiThapBatTu']['summary'],
+            '- Lục Nhâm xuất hành: ' . $traditional['lucNhan']['dayResult']['name'] . ' - ' . $traditional['lucNhan']['dayResult']['summary'],
+            '- Giờ xuất hành tốt theo Lục Nhâm: ' . implode(', ', $lucNhanGoodHours),
+            '- Các ngày kỵ: ' . ($kyNgay === [] ? 'Không có mục kỵ phổ biến trong bộ dữ liệu đã nhập' : implode(', ', $kyNgay)),
+            '- Ngọc Hạp: ' . $traditional['ngocHap']['ritual']['summary'],
         ];
         if ($eventNames !== []) {
             $lines[] = '- Sự kiện: ' . implode('; ', $eventNames);
@@ -671,6 +680,11 @@ function lta_render_text(array $date, bool $markdown = false): string
         'Nạp âm ngày: ' . $info['fortune']['napAm'],
         'Hoàng/Hắc đạo: ' . $info['fortune']['hoangHacDao'] . ($info['fortune']['hoangHacDaoStar'] !== null ? ' - ' . $info['fortune']['hoangHacDaoStar'] : ''),
         'Đổng Công: ' . $info['fortune']['dongCong']['label'] . ' - trực ' . $info['fortune']['dongCong']['truc'],
+        'Nhị thập bát tú: ' . $info['fortune']['saoNhiThapBatTu'] . ' - ' . $traditional['nhiThapBatTu']['summary'],
+        'Lục Nhâm xuất hành: ' . $traditional['lucNhan']['dayResult']['name'] . ' - ' . $traditional['lucNhan']['dayResult']['summary'],
+        'Giờ xuất hành tốt theo Lục Nhâm: ' . implode(', ', $lucNhanGoodHours),
+        'Các ngày kỵ: ' . ($kyNgay === [] ? 'Không có mục kỵ phổ biến trong bộ dữ liệu đã nhập' : implode(', ', $kyNgay)),
+        'Ngọc Hạp: ' . $traditional['ngocHap']['ritual']['summary'],
     ];
     if ($eventNames !== []) {
         $lines[] = 'Sự kiện: ' . implode('; ', $eventNames);
