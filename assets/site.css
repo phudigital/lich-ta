@@ -1,0 +1,619 @@
+:root {
+    --lta-ink: #17201b;
+    --lta-muted: #65736c;
+    --lta-line: #d9e1d8;
+    --lta-paper: #fbfaf6;
+    --lta-panel: #ffffff;
+    --lta-sage: #315f4b;
+    --lta-sage-strong: #214535;
+    --lta-coral: #bd4d35;
+    --lta-gold: #d9a441;
+    --lta-blue: #305f8f;
+    --lta-shadow: 0 22px 50px rgba(32, 54, 43, 0.13);
+    color-scheme: light;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--lta-paper);
+    color: var(--lta-ink);
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+.lta-shell {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 24px 0 56px;
+}
+
+.lta-topbar,
+.lta-panel,
+.lta-widget {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--lta-line);
+    box-shadow: var(--lta-shadow);
+}
+
+.lta-topbar {
+    position: sticky;
+    top: 14px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 12px 14px;
+    border-radius: 18px;
+    backdrop-filter: blur(14px);
+}
+
+.lta-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.lta-brand img {
+    flex: 0 0 auto;
+    display: block;
+}
+
+.lta-brand strong,
+.lta-brand small {
+    display: block;
+}
+
+.lta-brand strong {
+    font-size: 1rem;
+    line-height: 1.1;
+}
+
+.lta-brand small {
+    color: var(--lta-muted);
+    font-size: 0.78rem;
+    margin-top: 2px;
+}
+
+.lta-nav {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: #eef3ee;
+    border-radius: 999px;
+}
+
+.lta-nav a {
+    border-radius: 999px;
+    color: #41504a;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+}
+
+.lta-nav a:hover {
+    background: #fff;
+    color: var(--lta-sage-strong);
+}
+
+.lta-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.9fr);
+    gap: 18px;
+    margin-top: 22px;
+}
+
+.lta-panel {
+    border-radius: 24px;
+    padding: 22px;
+}
+
+.lta-panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.lta-eyebrow {
+    color: var(--lta-coral);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0;
+    margin: 0 0 6px;
+    text-transform: uppercase;
+}
+
+h1,
+h2 {
+    letter-spacing: 0;
+    line-height: 1.08;
+    margin: 0;
+}
+
+h1 {
+    font-size: clamp(2rem, 4vw, 4rem);
+}
+
+h2 {
+    font-size: clamp(1.35rem, 2vw, 2rem);
+}
+
+.lta-month-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.lta-month-actions a,
+.lta-picker button,
+.lta-converter button,
+.lta-segmented button {
+    border: 1px solid var(--lta-line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--lta-ink);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 14px;
+}
+
+.lta-month-actions a:first-child,
+.lta-month-actions a:last-child {
+    font-size: 1.5rem;
+    min-width: 42px;
+    padding: 0;
+}
+
+.lta-month-actions a:hover,
+.lta-picker button:hover,
+.lta-converter button:hover {
+    background: var(--lta-sage);
+    border-color: var(--lta-sage);
+    color: #fff;
+}
+
+.lta-picker,
+.lta-converter {
+    display: grid;
+    gap: 10px;
+}
+
+.lta-picker {
+    grid-template-columns: minmax(130px, 1fr) minmax(120px, 0.7fr) auto;
+    margin-bottom: 18px;
+}
+
+.lta-converter {
+    grid-template-columns: repeat(3, minmax(86px, 1fr)) auto;
+    margin-top: 16px;
+}
+
+.lta-picker label,
+.lta-converter label {
+    display: grid;
+    gap: 6px;
+}
+
+.lta-picker span,
+.lta-converter span {
+    color: var(--lta-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.lta-picker input,
+.lta-picker select,
+.lta-converter input {
+    width: 100%;
+    border: 1px solid var(--lta-line);
+    border-radius: 12px;
+    min-height: 44px;
+    padding: 0 12px;
+    background: #fff;
+    color: var(--lta-ink);
+}
+
+.lta-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.lta-weekday {
+    color: var(--lta-muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+.lta-day {
+    aspect-ratio: 1 / 0.78;
+    border: 1px solid #e3e8e2;
+    border-radius: 14px;
+    display: grid;
+    align-content: space-between;
+    min-width: 0;
+    padding: 10px;
+    background: #fff;
+    transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.lta-day:hover {
+    border-color: #a8bcae;
+    transform: translateY(-1px);
+}
+
+.lta-day-empty {
+    background: transparent;
+    border-color: transparent;
+    pointer-events: none;
+}
+
+.lta-solar-day {
+    font-size: clamp(1rem, 2.4vw, 1.5rem);
+    font-weight: 800;
+}
+
+.lta-lunar-day {
+    color: var(--lta-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    justify-self: end;
+}
+
+.lta-day.is-selected {
+    background: var(--lta-sage);
+    border-color: var(--lta-sage);
+    color: #fff;
+}
+
+.lta-day.is-selected .lta-lunar-day {
+    color: rgba(255, 255, 255, 0.76);
+}
+
+.lta-day.is-today:not(.is-selected) {
+    border-color: var(--lta-gold);
+    background: #fff8e8;
+}
+
+.lta-day.is-tet:not(.is-selected) {
+    background: #fff0ea;
+    border-color: #edc4b9;
+}
+
+.lta-detail-panel {
+    display: grid;
+    align-content: start;
+    gap: 18px;
+}
+
+.lta-date-hero {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.lta-date-hero > span {
+    align-items: center;
+    aspect-ratio: 1;
+    background: var(--lta-sage);
+    border-radius: 18px;
+    color: #fff;
+    display: inline-flex;
+    font-size: 2.4rem;
+    font-weight: 900;
+    justify-content: center;
+    width: 86px;
+}
+
+.lta-date-hero strong,
+.lta-date-hero small,
+.lta-lunar-result span,
+.lta-lunar-result strong {
+    display: block;
+}
+
+.lta-date-hero strong {
+    font-size: 1.05rem;
+}
+
+.lta-date-hero small {
+    color: var(--lta-muted);
+    margin-top: 4px;
+}
+
+.lta-lunar-result {
+    background: #eef5f0;
+    border: 1px solid #d4e5d8;
+    border-radius: 18px;
+    padding: 16px;
+}
+
+.lta-lunar-result span,
+.lta-hours span {
+    color: var(--lta-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.lta-lunar-result strong {
+    color: var(--lta-sage-strong);
+    font-size: 1.8rem;
+    line-height: 1.1;
+    margin-top: 6px;
+}
+
+.lta-facts {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+}
+
+.lta-facts div {
+    align-items: center;
+    border-bottom: 1px solid var(--lta-line);
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding-bottom: 10px;
+}
+
+.lta-facts dt {
+    color: var(--lta-muted);
+    font-weight: 700;
+}
+
+.lta-facts dd {
+    font-weight: 800;
+    margin: 0;
+    text-align: right;
+}
+
+.lta-hours {
+    background: #f7f3e8;
+    border: 1px solid #e7d8b8;
+    border-radius: 18px;
+    padding: 16px;
+}
+
+.lta-hours p {
+    line-height: 1.55;
+    margin: 6px 0 0;
+}
+
+.lta-lower-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.lta-code-tabs {
+    margin-top: 16px;
+}
+
+.lta-segmented {
+    display: inline-flex;
+    gap: 6px;
+    padding: 4px;
+    background: #eef3ee;
+    border-radius: 999px;
+}
+
+.lta-segmented button {
+    min-height: 34px;
+    border: 0;
+    background: transparent;
+}
+
+.lta-segmented button.is-active {
+    background: #fff;
+    color: var(--lta-sage-strong);
+    box-shadow: 0 8px 20px rgba(32, 54, 43, 0.12);
+}
+
+pre {
+    background: #17201b;
+    border-radius: 16px;
+    color: #f6f1df;
+    line-height: 1.55;
+    margin: 12px 0 0;
+    overflow: auto;
+    padding: 16px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.lta-embed-body {
+    background: transparent;
+}
+
+.lta-widget {
+    border-radius: 18px;
+    box-shadow: none;
+    max-width: 760px;
+    padding: 16px;
+}
+
+.lta-widget-head,
+.lta-widget-title,
+.lta-widget-detail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.lta-brand-small strong {
+    font-size: 0.94rem;
+}
+
+.lta-brand-small small {
+    font-size: 0.72rem;
+}
+
+.lta-widget-month {
+    margin-top: 14px;
+}
+
+.lta-widget-title {
+    margin-bottom: 12px;
+}
+
+.lta-widget-title strong {
+    font-size: 1.28rem;
+}
+
+.lta-widget-title span {
+    color: var(--lta-muted);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.lta-widget .lta-day {
+    border-radius: 12px;
+    padding: 8px;
+}
+
+.lta-widget-detail {
+    border-top: 1px solid var(--lta-line);
+    margin-top: 14px;
+    padding-top: 14px;
+}
+
+.lta-widget-detail span,
+.lta-widget-detail strong,
+.lta-widget-detail p {
+    display: block;
+    margin: 0;
+}
+
+.lta-widget-detail span {
+    color: var(--lta-coral);
+    font-size: 0.78rem;
+    font-weight: 900;
+}
+
+.lta-widget-detail strong {
+    font-size: 1.1rem;
+}
+
+.lta-widget-detail p {
+    color: var(--lta-muted);
+    font-size: 0.88rem;
+    text-align: right;
+}
+
+@media (max-width: 860px) {
+    .lta-shell {
+        width: min(100% - 18px, 680px);
+        padding-top: 10px;
+    }
+
+    .lta-topbar,
+    .lta-workspace,
+    .lta-lower-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .lta-topbar {
+        position: static;
+    }
+
+    .lta-nav {
+        justify-content: stretch;
+        overflow-x: auto;
+    }
+
+    .lta-nav a {
+        flex: 1 0 auto;
+        text-align: center;
+    }
+
+    .lta-panel {
+        border-radius: 20px;
+        padding: 16px;
+    }
+
+    .lta-panel-head {
+        align-items: stretch;
+        display: grid;
+    }
+
+    .lta-month-actions {
+        justify-content: space-between;
+    }
+
+    .lta-picker,
+    .lta-converter {
+        grid-template-columns: 1fr;
+    }
+
+    .lta-day {
+        aspect-ratio: 1 / 0.92;
+        border-radius: 10px;
+        padding: 7px;
+    }
+
+    .lta-solar-day {
+        font-size: 1rem;
+    }
+
+    .lta-lunar-day {
+        font-size: 0.68rem;
+    }
+}
+
+@media (max-width: 520px) {
+    .lta-widget {
+        padding: 12px;
+    }
+
+    .lta-widget-head {
+        align-items: stretch;
+        display: grid;
+    }
+
+    .lta-widget .lta-month-actions {
+        justify-content: stretch;
+    }
+
+    .lta-widget .lta-month-actions a {
+        flex: 1;
+    }
+
+    .lta-widget-title,
+    .lta-widget-detail {
+        align-items: flex-start;
+        display: grid;
+    }
+
+    .lta-widget-detail p {
+        text-align: left;
+    }
+}
