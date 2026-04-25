@@ -53,7 +53,16 @@ assertSameAppValue('Đại Lâm Mộc', $april2026['fortune']['napAm'], 'Fortune
 assertSameAppValue('Mộc', $april2026['fortune']['napAmElement'], 'Fortune nap am element failed');
 assertSameAppValue(['Tân Hợi', 'Đinh Hợi'], $april2026['fortune']['tuoiXung'], 'Fortune conflict ages failed');
 assertSameAppValue('Trừ', $april2026['fortune']['dongCong']['truc'], 'Dong Cong truc failed');
-assertSameAppValue('mixed', $april2026['fortune']['dongCong']['level'], 'Dong Cong level failed');
+assertSameAppValue('good', $april2026['fortune']['dongCong']['level'], 'Dong Cong level failed');
+assertSameAppValue('canChi', $april2026['fortune']['dongCong']['matched'], 'Dong Cong matched source failed');
+
+$march2026 = lta_day_info(['day' => 10, 'month' => 3, 'year' => 2026]);
+assertSameAppValue('Định', $march2026['fortune']['dongCong']['truc'], 'Dong Cong month 2 truc failed');
+assertSameAppValue('good', $march2026['fortune']['dongCong']['level'], 'Dong Cong Quý Mùi override failed');
+
+$june2026 = lta_day_info(['day' => 29, 'month' => 6, 'year' => 2026]);
+assertSameAppValue('Định', $june2026['fortune']['dongCong']['truc'], 'Dong Cong month 5 truc failed');
+assertSameAppValue('good', $june2026['fortune']['dongCong']['level'], 'Dong Cong Giáp Tuất override failed');
 
 $calendar = lta_render_calendar(
     lta_month_cells(4, 2026, ['day' => 25, 'month' => 4, 'year' => 2026], ['day' => 25, 'month' => 4, 'year' => 2026]),
@@ -63,7 +72,7 @@ $calendar = lta_render_calendar(
 assertContainsText('data-popup-title="Thứ Bảy 25/4/2026"', $calendar, 'Calendar popup title failed');
 assertContainsText('data-nap-am="Đại Lâm Mộc"', $calendar, 'Calendar nap am data failed');
 assertContainsText('data-nap-element="Mộc"', $calendar, 'Calendar nap am element failed');
-assertContainsText('data-dong-cong="mixed"', $calendar, 'Calendar dong cong data failed');
+assertContainsText('data-dong-cong="good"', $calendar, 'Calendar dong cong data failed');
 assertContainsText('class="lta-nap-label">Đại Lâm Mộc</span>', $calendar, 'Calendar nap am label failed');
 
 echo "App feature checks passed.\n";
