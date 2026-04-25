@@ -26,6 +26,7 @@ const LTA_MONTHS = [
 
 const LTA_WEEKDAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 const LTA_WEEKDAYS_FULL = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+const LTA_APP_VERSION = '1.1.0';
 const LTA_CACHE_VERSION = 1;
 
 const LTA_STEMS_VI = [

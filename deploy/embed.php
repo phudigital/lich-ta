@@ -24,14 +24,14 @@ $next = lta_next_month($month, $year);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lịch Ta Widget</title>
-    <link rel="stylesheet" href="assets/site.css">
+    <link rel="stylesheet" href="assets/site.css?v=<?= lta_h(LTA_APP_VERSION) ?>">
 </head>
 <body class="lta-embed-body">
 <main class="lta-widget" data-lta-widget>
     <header class="lta-widget-head">
         <a class="lta-brand lta-brand-small" href="index.php" target="_blank" rel="noopener">
             <img src="assets/lich-ta-mark.svg" alt="" width="34" height="34">
-            <span><strong>Lịch Ta</strong><small>Âm lịch Việt Nam</small></span>
+            <span><strong>Lịch Ta</strong><small>Âm lịch Việt Nam · v<?= lta_h(LTA_APP_VERSION) ?></small></span>
         </a>
         <div class="lta-month-actions">
             <a href="<?= lta_h(lta_build_url(['month' => $prev['month'], 'year' => $prev['year'], 'day' => 1])) ?>" aria-label="Tháng trước">‹</a>

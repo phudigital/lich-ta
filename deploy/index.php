@@ -57,7 +57,7 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lịch Ta - Lịch âm Việt Nam nhúng website</title>
     <meta name="description" content="Lịch âm Việt Nam chạy PHP, có thể nhúng qua iframe hoặc JavaScript.">
-    <link rel="stylesheet" href="assets/site.css">
+    <link rel="stylesheet" href="assets/site.css?v=<?= lta_h(LTA_APP_VERSION) ?>">
 </head>
 <body>
 <main class="lta-shell">
@@ -66,7 +66,7 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
             <img src="assets/lich-ta-mark.svg" alt="" width="42" height="42">
             <span>
                 <strong>Lịch Ta</strong>
-                <small>Âm lịch Việt Nam</small>
+                <small>Âm lịch Việt Nam · v<?= lta_h(LTA_APP_VERSION) ?></small>
             </span>
         </a>
         <nav class="lta-nav" aria-label="Điều hướng">
@@ -389,6 +389,6 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
         <pre data-lta-modal-content></pre>
     </section>
 </div>
-<script src="assets/site.js"></script>
+<script src="assets/site.js?v=<?= lta_h(LTA_APP_VERSION) ?>"></script>
 </body>
 </html>

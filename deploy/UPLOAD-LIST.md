@@ -10,6 +10,7 @@ Upload the contents of this `deploy` folder to the hosting path for:
 - `.htaccess` if the hosting uses Apache or LiteSpeed
 - `embed.php`
 - `embed.js`
+- `CHANGELOG.md`
 - `llms.txt`
 - `app/`
 - `assets/`
