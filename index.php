@@ -125,18 +125,37 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
         <aside class="lta-panel lta-detail-panel" aria-label="Chi tiết ngày hôm nay">
             <p class="lta-eyebrow">Thông tin ngày</p>
             <dl class="lta-facts">
-                <div><dt><span aria-hidden="true">☰</span>Ngày</dt><dd><?= lta_h($dayInfo['canChi']['day']) ?></dd></div>
-                <div><dt><span aria-hidden="true">☷</span>Tháng</dt><dd><?= lta_h($dayInfo['canChi']['month']) ?></dd></div>
                 <div><dt><span aria-hidden="true">✦</span>Năm</dt><dd><?= lta_h($dayInfo['canChi']['year']) ?></dd></div>
+                <div><dt><span aria-hidden="true">☷</span>Tháng</dt><dd><?= lta_h($dayInfo['canChi']['month']) ?></dd></div>
+                <div><dt><span aria-hidden="true">☰</span>Ngày</dt><dd><?= lta_h($dayInfo['canChi']['day']) ?></dd></div>
+                <div><dt><span aria-hidden="true">◷</span>Giờ đầu ngày</dt><dd><?= lta_h($dayInfo['firstHour']) ?></dd></div>
                 <div><dt><span aria-hidden="true">◐</span>Tiết khí</dt><dd><?= lta_h($dayInfo['term']) ?></dd></div>
                 <div><dt><span aria-hidden="true">⌁</span>Trực</dt><dd><?= lta_h($dayInfo['fortune']['truc']) ?></dd></div>
-                <div><dt><span aria-hidden="true">◎</span>Nạp âm</dt><dd><?= lta_h($dayInfo['fortune']['napAm']) ?></dd></div>
+                <div><dt><span aria-hidden="true">✧</span>Sao</dt><dd><?= lta_h($dayInfo['fortune']['saoNhiThapBatTu']) ?></dd></div>
+                <div><dt><span aria-hidden="true">◎</span>Lục diệu</dt><dd><?= lta_h($dayInfo['fortune']['lucDieu']) ?></dd></div>
+                <div><dt><span aria-hidden="true">◇</span>Nạp âm</dt><dd><?= lta_h($dayInfo['fortune']['napAm']) ?></dd></div>
+                <div><dt><span aria-hidden="true">☯</span>Ngày</dt><dd><?= lta_h($dayInfo['fortune']['hoangHacDao']) ?><?= $dayInfo['fortune']['hoangHacDaoStar'] !== null ? ' - ' . lta_h($dayInfo['fortune']['hoangHacDaoStar']) : '' ?></dd></div>
                 <div><dt><span aria-hidden="true">✓</span>Đổng Công</dt><dd><?= lta_h($dayInfo['fortune']['dongCong']['label']) ?> · trực <?= lta_h($dayInfo['fortune']['dongCong']['truc']) ?></dd></div>
             </dl>
             <div class="lta-hours">
                 <span>Giờ hoàng đạo</span>
                 <p><?= lta_h(implode(', ', $dayInfo['hours'])) ?></p>
             </div>
+            <div class="lta-fortune-note">
+                <span>Tuổi xung</span>
+                <p><?= lta_h(implode(', ', $dayInfo['fortune']['tuoiXung'])) ?> · xung chi <?= lta_h($dayInfo['fortune']['ngayXung']) ?></p>
+                <small><?= lta_h($dayInfo['fortune']['lucDieuHint']) ?></small>
+            </div>
+            <?php if ($dayInfo['events'] !== []): ?>
+                <div class="lta-events">
+                    <span>Sự kiện</span>
+                    <ul>
+                        <?php foreach ($dayInfo['events'] as $event): ?>
+                            <li><?= lta_h($event['name']) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </aside>
     </section>
     <?php endif; ?>
