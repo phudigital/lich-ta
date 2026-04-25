@@ -30,6 +30,11 @@ function assertSameAppValue(mixed $expected, mixed $actual, string $message): vo
 
 assertSameAppValue(['day' => 17, 'month' => 2, 'year' => 2026], lta_date_from_path('/lich-ta/2026-02-17'), 'Solar path parsing failed');
 assertSameAppValue(['day' => 17, 'month' => 2, 'year' => 2026], lta_date_from_path('/lich-ta/l2026-01-01'), 'Lunar path parsing failed');
+assertSameAppValue(['day' => 1, 'month' => 4, 'year' => 2026], lta_date_from_path('/lich-ta/2026-04'), 'Month path parsing failed');
+assertSameAppValue(['day' => 1, 'month' => 1, 'year' => 2026], lta_date_from_path('/lich-ta/2026'), 'Year path parsing failed');
+assertSameAppValue('month', lta_view_from_path('/lich-ta/2026-04'), 'Month path view failed');
+assertSameAppValue('month', lta_view_from_path('/lich-ta/2026'), 'Year path view failed');
+assertSameAppValue(null, lta_view_from_path('/lich-ta/2026-04-25'), 'Day path should use default home view');
 
 $popup = lta_popup_text(['day' => 25, 'month' => 6, 'year' => 2019]);
 assertContainsText('Thứ Ba 25/6/2019 -+- Ngày 23 tháng 5 âm lịch', $popup, 'Popup heading failed');

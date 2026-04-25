@@ -100,7 +100,7 @@
                 target.searchParams.set('day', day.getAttribute('data-solar-day'));
                 target.searchParams.set('month', day.getAttribute('data-solar-month'));
                 target.searchParams.set('year', day.getAttribute('data-solar-year'));
-                target.hash = 'calendar';
+                target.hash = day.closest('[data-nap-am-tool]') ? 'nap-am' : 'calendar';
                 window.location.href = target.toString();
                 return;
             }
@@ -138,6 +138,12 @@
         var dongFilter = '';
 
         function applyFilters() {
+            if (napFilter === '') {
+                root.removeAttribute('data-active-nap');
+            } else {
+                root.setAttribute('data-active-nap', napFilter);
+            }
+
             days.forEach(function (day) {
                 var napMatches = napFilter === '' || day.getAttribute('data-nap-element') === napFilter;
                 var dongMatches = dongFilter === '' || day.getAttribute('data-dong-cong') === dongFilter;

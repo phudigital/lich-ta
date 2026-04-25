@@ -113,9 +113,17 @@ select {
     padding: 8px 12px;
 }
 
-.lta-nav a:hover {
+.lta-nav a:hover,
+.lta-nav a.is-active {
     background: #fff;
     color: var(--lta-sage-strong);
+}
+
+.lta-home {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+    gap: 18px;
+    margin-top: 22px;
 }
 
 .lta-workspace {
@@ -136,6 +144,99 @@ select {
     justify-content: space-between;
     gap: 16px;
     margin-bottom: 18px;
+}
+
+.lta-today-panel {
+    display: grid;
+    align-content: start;
+    gap: 18px;
+}
+
+.lta-today-hero {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.lta-today-hero > span {
+    align-items: center;
+    aspect-ratio: 1;
+    background: var(--lta-sage);
+    border-radius: 22px;
+    color: #fff;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: clamp(3.5rem, 12vw, 7rem);
+    font-weight: 900;
+    justify-content: center;
+    line-height: 1;
+    width: min(34vw, 180px);
+}
+
+.lta-today-hero p {
+    color: var(--lta-muted);
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin: 12px 0 0;
+}
+
+.lta-day-nav {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #dfe8df;
+    border-radius: 18px;
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr) 64px;
+    min-height: 58px;
+    overflow: hidden;
+}
+
+.lta-day-nav a {
+    align-items: center;
+    color: var(--lta-ink);
+    display: flex;
+    font-size: 1.8rem;
+    font-weight: 900;
+    height: 100%;
+    justify-content: center;
+}
+
+.lta-day-nav a:hover {
+    background: #eef5f0;
+    color: var(--lta-sage-strong);
+}
+
+.lta-day-nav-today {
+    border-inline: 1px solid #dfe8df;
+    font-size: 0.95rem !important;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.lta-home-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.lta-home-actions a {
+    align-items: center;
+    background: #eef5f0;
+    border: 1px solid #d4e5d8;
+    border-radius: 16px;
+    color: var(--lta-sage-strong);
+    display: flex;
+    font-weight: 900;
+    justify-content: center;
+    min-height: 54px;
+    padding: 0 12px;
+    text-align: center;
+}
+
+.lta-home-actions a:hover {
+    background: var(--lta-sage);
+    border-color: var(--lta-sage);
+    color: #fff;
 }
 
 .lta-eyebrow {
@@ -554,30 +655,106 @@ h2 {
     margin-top: 18px;
 }
 
-.lta-element-filter {
-    display: flex;
-    flex-wrap: wrap;
+.lta-nap-controls {
+    align-items: flex-end;
+    display: grid;
     gap: 8px;
-    justify-content: flex-end;
-    margin-top: 8px;
+    justify-items: end;
+}
+
+.lta-element-filter {
+    display: grid;
+    gap: 8px;
+    justify-content: end;
+}
+
+.lta-nap-filter {
+    grid-template-columns: repeat(6, minmax(0, auto));
+}
+
+.lta-dong-filter {
+    grid-template-columns: repeat(4, minmax(0, auto));
 }
 
 .lta-element-filter button {
-    border: 1px solid var(--lta-line);
+    --filter-color: var(--lta-sage);
+    --filter-soft: #eef5f0;
+    align-items: center;
+    border: 1px solid color-mix(in srgb, var(--filter-color) 34%, #dfe8df);
     border-radius: 999px;
-    background: #fff;
+    background: color-mix(in srgb, var(--filter-color) 10%, #fff);
     color: var(--lta-ink);
     cursor: pointer;
+    display: inline-flex;
+    gap: 6px;
     font-weight: 800;
-    min-height: 38px;
-    padding: 0 13px;
+    justify-content: center;
+    min-height: 36px;
+    min-width: 0;
+    padding: 0 11px;
+    white-space: nowrap;
+}
+
+.lta-element-filter button span {
+    align-items: center;
+    background: var(--filter-color);
+    border-radius: 999px;
+    color: #fff;
+    display: inline-flex;
+    font-size: 0.72rem;
+    font-weight: 900;
+    height: 18px;
+    justify-content: center;
+    line-height: 1;
+    width: 18px;
 }
 
 .lta-element-filter button.is-active,
 .lta-element-filter button:hover {
-    background: var(--lta-sage);
-    border-color: var(--lta-sage);
+    background: var(--filter-color);
+    border-color: var(--filter-color);
     color: #fff;
+}
+
+.lta-element-filter button.is-active span,
+.lta-element-filter button:hover span {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.lta-nap-filter button[data-nap-filter=""] {
+    --filter-color: var(--lta-sage);
+}
+
+.lta-nap-filter button[data-nap-filter="Kim"] {
+    --filter-color: #7f8792;
+}
+
+.lta-nap-filter button[data-nap-filter="Mộc"] {
+    --filter-color: #2f8f58;
+}
+
+.lta-nap-filter button[data-nap-filter="Thủy"] {
+    --filter-color: #2176ae;
+}
+
+.lta-nap-filter button[data-nap-filter="Hỏa"] {
+    --filter-color: #d94832;
+}
+
+.lta-nap-filter button[data-nap-filter="Thổ"] {
+    --filter-color: #a9792b;
+}
+
+.lta-dong-filter button[data-dong-filter="good"] {
+    --filter-color: #2f8f58;
+}
+
+.lta-dong-filter button[data-dong-filter="mixed"] {
+    --filter-color: #d99b2b;
+}
+
+.lta-dong-filter button[data-dong-filter="bad"] {
+    --filter-color: #c94f4f;
 }
 
 .lta-nap-calendar .lta-day {
@@ -588,6 +765,36 @@ h2 {
     background: #fff8e8;
     border-color: var(--lta-gold);
     box-shadow: inset 0 0 0 2px rgba(217, 164, 65, 0.34);
+}
+
+.lta-nap-panel[data-active-nap="Kim"] .lta-day.is-nap-match {
+    background: #f2f4f7;
+    border-color: #7f8792;
+    box-shadow: inset 0 0 0 2px rgba(127, 135, 146, 0.3);
+}
+
+.lta-nap-panel[data-active-nap="Mộc"] .lta-day.is-nap-match {
+    background: #eef8f1;
+    border-color: #2f8f58;
+    box-shadow: inset 0 0 0 2px rgba(47, 143, 88, 0.28);
+}
+
+.lta-nap-panel[data-active-nap="Thủy"] .lta-day.is-nap-match {
+    background: #eef6fb;
+    border-color: #2176ae;
+    box-shadow: inset 0 0 0 2px rgba(33, 118, 174, 0.28);
+}
+
+.lta-nap-panel[data-active-nap="Hỏa"] .lta-day.is-nap-match {
+    background: #fff0ed;
+    border-color: #d94832;
+    box-shadow: inset 0 0 0 2px rgba(217, 72, 50, 0.28);
+}
+
+.lta-nap-panel[data-active-nap="Thổ"] .lta-day.is-nap-match {
+    background: #fbf3e6;
+    border-color: #a9792b;
+    box-shadow: inset 0 0 0 2px rgba(169, 121, 43, 0.3);
 }
 
 .lta-nap-calendar .lta-day.is-nap-dim {
@@ -724,6 +931,7 @@ pre {
     }
 
     .lta-topbar,
+    .lta-home,
     .lta-workspace,
     .lta-lower-grid {
         display: grid;
@@ -735,6 +943,7 @@ pre {
     }
 
     .lta-nav {
+        border-radius: 18px;
         justify-content: stretch;
         overflow-x: auto;
     }
@@ -754,8 +963,49 @@ pre {
         display: grid;
     }
 
+    .lta-today-hero {
+        align-items: flex-start;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .lta-today-hero > span {
+        border-radius: 18px;
+        font-size: 3.6rem;
+        width: 96px;
+    }
+
+    .lta-today-hero h1 {
+        font-size: 1.75rem;
+    }
+
+    .lta-home-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .lta-day-nav {
+        grid-template-columns: 56px minmax(0, 1fr) 56px;
+        min-height: 54px;
+    }
+
     .lta-month-actions {
         justify-content: space-between;
+    }
+
+    .lta-nap-controls {
+        justify-items: stretch;
+    }
+
+    .lta-nap-filter {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .lta-dong-filter {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lta-element-filter button {
+        padding-inline: 8px;
     }
 
     .lta-picker,
@@ -779,6 +1029,48 @@ pre {
 }
 
 @media (max-width: 520px) {
+    .lta-shell {
+        width: min(100% - 12px, 680px);
+    }
+
+    .lta-topbar {
+        gap: 12px;
+        padding: 10px;
+    }
+
+    .lta-nav a {
+        font-size: 0.82rem;
+        padding: 8px 10px;
+    }
+
+    .lta-today-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .lta-today-hero > span {
+        width: 100%;
+    }
+
+    .lta-today-hero h1 {
+        font-size: 1.55rem;
+    }
+
+    .lta-day-nav {
+        border-radius: 16px;
+    }
+
+    .lta-nap-filter {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lta-nap-calendar .lta-day {
+        aspect-ratio: 1 / 1.2;
+    }
+
+    .lta-nap-label {
+        font-size: 0.58rem;
+    }
+
     .lta-widget {
         padding: 12px;
     }

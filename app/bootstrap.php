@@ -190,12 +190,7 @@ function lta_selected_date(array $today): array
 
 function lta_date_from_path(?string $path = null): ?array
 {
-    $path ??= parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-    $base = lta_base_url();
-    if ($base !== '' && str_starts_with($path, $base)) {
-        $path = substr($path, strlen($base));
-    }
-    $path = trim($path, '/');
+    $path = lta_normalized_path($path);
     if ($path === '' || in_array($path, ['index.php', 'embed.php'], true)) {
         return null;
     }
@@ -209,6 +204,21 @@ function lta_date_from_path(?string $path = null): ?array
         }
     }
 
+    if (preg_match('/^(\d{4})[-\/](\d{1,2})$/', $path, $matches) === 1) {
+        $year = (int) $matches[1];
+        $month = (int) $matches[2];
+        if (checkdate($month, 1, $year)) {
+            return ['day' => 1, 'month' => $month, 'year' => $year];
+        }
+    }
+
+    if (preg_match('/^(\d{4})$/', $path, $matches) === 1) {
+        $year = (int) $matches[1];
+        if (checkdate(1, 1, $year)) {
+            return ['day' => 1, 'month' => 1, 'year' => $year];
+        }
+    }
+
     if (preg_match('/^[lL](\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/', $path, $matches) === 1) {
         $solar = LunarCalendar::lunarToSolar((int) $matches[3], (int) $matches[2], (int) $matches[1]);
         if ($solar['day'] > 0 && checkdate($solar['month'], $solar['day'], $solar['year'])) {
@@ -217,6 +227,27 @@ function lta_date_from_path(?string $path = null): ?array
     }
 
     return null;
+}
+
+function lta_view_from_path(?string $path = null): ?string
+{
+    $path = lta_normalized_path($path);
+    if (preg_match('/^\d{4}([\-\/]\d{1,2})?$/', $path) === 1) {
+        return 'month';
+    }
+
+    return null;
+}
+
+function lta_normalized_path(?string $path = null): string
+{
+    $path ??= parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+    $base = lta_base_url();
+    if ($base !== '' && str_starts_with($path, $base)) {
+        $path = substr($path, strlen($base));
+    }
+
+    return trim($path, '/');
 }
 
 function lta_is_programmatic_request(): bool
