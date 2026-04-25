@@ -18,6 +18,7 @@ Keep these paths available under the `/lich-ta` URL prefix:
 - `.htaccess` if the server is Apache/LiteSpeed
 - `app/`
 - `assets/`
+- `bin/`
 - `src/`
 
 The old source/reference files can remain in the repo, but only the files above are needed to serve the app.
@@ -43,6 +44,21 @@ location ~ ^/lich-ta/(.+\.php)$ {
 ```
 
 If the site already has a generic PHP handler, only the static `/lich-ta/` mapping may be needed.
+
+## Month Cache
+
+The app writes month cache files under:
+
+```text
+app/cache/months/
+```
+
+Make that directory writable by the PHP-FPM user. You can also precompute cache files after upload:
+
+```bash
+php bin/precompute-cache.php 2026
+php bin/precompute-cache.php 2026-04
+```
 
 ## Smoke Checks After Deploy
 

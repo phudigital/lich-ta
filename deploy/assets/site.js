@@ -178,6 +178,55 @@
         });
     });
 
+    document.querySelectorAll('[data-date-form]').forEach(function (form) {
+        var dayInput = form.querySelector('input[name="day"]');
+        var monthInput = form.querySelector('input[name="month"]');
+        var yearInput = form.querySelector('input[name="year"]');
+        var leapLabel = form.querySelector('.lta-lunar-leap');
+        var leapInput = form.querySelector('input[name="lunar_leap"]');
+
+        function inputMode() {
+            var checked = form.querySelector('input[name="date_type"]:checked');
+            return checked ? checked.value : 'solar';
+        }
+
+        function solarDaysInMonth(month, year) {
+            return new Date(year, month, 0).getDate();
+        }
+
+        function syncDateLimits() {
+            if (!dayInput || !monthInput || !yearInput) {
+                return;
+            }
+
+            var mode = inputMode();
+            var month = Math.max(1, Math.min(12, parseInt(monthInput.value, 10) || 1));
+            var year = Math.max(1800, Math.min(2199, parseInt(yearInput.value, 10) || 1800));
+            var maxDay = mode === 'lunar' ? 30 : solarDaysInMonth(month, year);
+            dayInput.max = String(maxDay);
+            if ((parseInt(dayInput.value, 10) || 1) > maxDay) {
+                dayInput.value = String(maxDay);
+            }
+
+            if (leapLabel) {
+                leapLabel.classList.toggle('is-hidden', mode !== 'lunar');
+            }
+            if (leapInput && mode !== 'lunar') {
+                leapInput.checked = false;
+            }
+        }
+
+        form.querySelectorAll('input[name="date_type"]').forEach(function (radio) {
+            radio.addEventListener('change', syncDateLimits);
+        });
+        [dayInput, monthInput, yearInput].forEach(function (input) {
+            if (input) {
+                input.addEventListener('input', syncDateLimits);
+            }
+        });
+        syncDateLimits();
+    });
+
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') {
             removeTooltip();

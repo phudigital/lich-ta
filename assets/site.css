@@ -371,6 +371,7 @@ h2 {
 .lta-month-actions a,
 .lta-picker button,
 .lta-converter button,
+.lta-date-lookup button,
 .lta-segmented button {
     border: 1px solid var(--lta-line);
     border-radius: 999px;
@@ -393,14 +394,16 @@ h2 {
 
 .lta-month-actions a:hover,
 .lta-picker button:hover,
-.lta-converter button:hover {
+.lta-converter button:hover,
+.lta-date-lookup button:hover {
     background: var(--lta-sage);
     border-color: var(--lta-sage);
     color: #fff;
 }
 
 .lta-picker,
-.lta-converter {
+.lta-converter,
+.lta-date-lookup {
     display: grid;
     gap: 10px;
 }
@@ -411,18 +414,20 @@ h2 {
 }
 
 .lta-converter {
-    grid-template-columns: repeat(3, minmax(86px, 1fr)) auto;
+    grid-template-columns: minmax(100%, 1fr);
     margin-top: 16px;
 }
 
 .lta-picker label,
-.lta-converter label {
+.lta-converter label,
+.lta-date-lookup label {
     display: grid;
     gap: 6px;
 }
 
 .lta-picker span,
-.lta-converter span {
+.lta-converter span,
+.lta-date-lookup span {
     color: var(--lta-muted);
     font-size: 0.78rem;
     font-weight: 700;
@@ -430,7 +435,8 @@ h2 {
 
 .lta-picker input,
 .lta-picker select,
-.lta-converter input {
+.lta-converter input,
+.lta-date-lookup input {
     width: 100%;
     border: 1px solid var(--lta-line);
     border-radius: 12px;
@@ -438,6 +444,100 @@ h2 {
     padding: 0 12px;
     background: #fff;
     color: var(--lta-ink);
+}
+
+.lta-date-lookup {
+    border: 1px solid var(--home-element-line);
+    border-radius: 18px;
+    padding: 14px;
+}
+
+.lta-date-fields,
+.lta-converter {
+    align-items: end;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(3, minmax(76px, 1fr)) minmax(112px, auto) auto;
+}
+
+.lta-converter > .lta-toggle,
+.lta-converter > .lta-form-error {
+    grid-column: 1 / -1;
+}
+
+.lta-toggle {
+    border: 0;
+    display: inline-flex;
+    gap: 6px;
+    margin: 0;
+    padding: 4px;
+    background: #eef3ee;
+    border-radius: 999px;
+    width: fit-content;
+}
+
+.lta-toggle legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+
+.lta-toggle label {
+    display: inline-flex;
+}
+
+.lta-toggle input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lta-toggle span {
+    align-items: center;
+    border-radius: 999px;
+    color: #41504a;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.84rem;
+    font-weight: 900;
+    justify-content: center;
+    min-height: 34px;
+    padding: 0 12px;
+}
+
+.lta-toggle input:checked + span {
+    background: #fff;
+    color: var(--lta-sage-strong);
+    box-shadow: 0 8px 20px rgba(32, 54, 43, 0.12);
+}
+
+.lta-lunar-leap {
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--lta-line);
+    border-radius: 12px;
+    display: flex !important;
+    gap: 8px !important;
+    min-height: 44px;
+    padding: 0 12px;
+}
+
+.lta-lunar-leap input {
+    min-height: auto;
+    width: auto;
+}
+
+.lta-lunar-leap.is-hidden {
+    display: none !important;
+}
+
+.lta-form-error {
+    color: var(--lta-coral);
+    font-size: 0.86rem;
+    font-weight: 800;
+    margin: 0;
 }
 
 .lta-calendar-grid {
@@ -1123,7 +1223,8 @@ pre {
     }
 
     .lta-picker,
-    .lta-converter {
+    .lta-converter,
+    .lta-date-fields {
         grid-template-columns: 1fr;
     }
 

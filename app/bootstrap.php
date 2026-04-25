@@ -26,6 +26,7 @@ const LTA_MONTHS = [
 
 const LTA_WEEKDAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 const LTA_WEEKDAYS_FULL = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+const LTA_CACHE_VERSION = 1;
 
 const LTA_STEMS_VI = [
     'Giap' => 'Giáp',
@@ -123,6 +124,16 @@ function lta_int_param(string $key, int $default, int $min, int $max): int
     return max($min, min($max, $value));
 }
 
+function lta_int_query(string $key, int $default, int $min, int $max): int
+{
+    $value = $_GET[$key] ?? null;
+    if (!is_scalar($value) || filter_var($value, FILTER_VALIDATE_INT) === false) {
+        return $default;
+    }
+
+    return max($min, min($max, (int) $value));
+}
+
 function lta_h(string $value): string
 {
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
@@ -172,20 +183,85 @@ function lta_vi_hours(array $hours): array
 
 function lta_selected_date(array $today): array
 {
+    return lta_selected_date_state($today)['date'];
+}
+
+function lta_selected_date_state(array $today): array
+{
     $pathDate = lta_date_from_path();
     if ($pathDate !== null) {
-        return $pathDate;
+        return [
+            'date' => $pathDate,
+            'inputMode' => str_starts_with(lta_normalized_path(), 'l') ? 'lunar' : 'solar',
+            'lunarLeap' => 0,
+            'error' => '',
+        ];
     }
 
-    $day = lta_int_param('day', $today['day'], 1, 31);
-    $month = lta_int_param('month', $today['month'], 1, 12);
-    $year = lta_int_param('year', $today['year'], 1800, 2199);
+    $inputMode = ($_GET['date_type'] ?? 'solar') === 'lunar' ? 'lunar' : 'solar';
+    $day = lta_int_query('day', $today['day'], 1, 31);
+    $month = lta_int_query('month', $today['month'], 1, 12);
+    $year = lta_int_query('year', $today['year'], 1800, 2199);
+    $lunarLeap = isset($_GET['lunar_leap']) && (string) $_GET['lunar_leap'] === '1' ? 1 : 0;
+
+    if ($inputMode === 'lunar') {
+        $solar = lta_solar_from_lunar_input($day, $month, $year, $lunarLeap);
+        if ($solar !== null) {
+            return [
+                'date' => $solar,
+                'inputMode' => 'lunar',
+                'lunarLeap' => $lunarLeap,
+                'error' => '',
+            ];
+        }
+
+        return [
+            'date' => $today,
+            'inputMode' => 'lunar',
+            'lunarLeap' => $lunarLeap,
+            'error' => 'Ngày âm lịch không tồn tại trong dữ liệu hiện tại.',
+        ];
+    }
 
     if (!checkdate($month, $day, $year)) {
-        $day = min($day, cal_days_in_month(CAL_GREGORIAN, $month, $year));
+        return [
+            'date' => $today,
+            'inputMode' => 'solar',
+            'lunarLeap' => 0,
+            'error' => 'Ngày dương lịch không tồn tại.',
+        ];
     }
 
-    return ['day' => $day, 'month' => $month, 'year' => $year];
+    return [
+        'date' => ['day' => $day, 'month' => $month, 'year' => $year],
+        'inputMode' => 'solar',
+        'lunarLeap' => 0,
+        'error' => '',
+    ];
+}
+
+function lta_solar_from_lunar_input(int $day, int $month, int $year, int $leap = 0): ?array
+{
+    if ($day < 1 || $day > 30 || $month < 1 || $month > 12 || $year < 1800 || $year > 2199 || !in_array($leap, [0, 1], true)) {
+        return null;
+    }
+
+    try {
+        $solar = LunarCalendar::lunarToSolar($day, $month, $year, $leap);
+    } catch (InvalidArgumentException) {
+        return null;
+    }
+
+    if (($solar['day'] ?? 0) < 1 || !checkdate((int) $solar['month'], (int) $solar['day'], (int) $solar['year'])) {
+        return null;
+    }
+
+    $roundTrip = LunarCalendar::solarToLunar((int) $solar['day'], (int) $solar['month'], (int) $solar['year']);
+    if ((int) $roundTrip['day'] !== $day || (int) $roundTrip['month'] !== $month || (int) $roundTrip['year'] !== $year || (int) $roundTrip['leap'] !== $leap) {
+        return null;
+    }
+
+    return ['day' => (int) $solar['day'], 'month' => (int) $solar['month'], 'year' => (int) $solar['year']];
 }
 
 function lta_date_from_path(?string $path = null): ?array
@@ -334,26 +410,23 @@ function lta_month_cells(int $month, int $year, array $selected, array $today): 
 {
     $firstJd = LunarCalendar::julianDayFromDate(1, $month, $year);
     $offset = ($firstJd + 1) % 7;
-    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    $monthDays = lta_month_days($month, $year);
     $cells = [];
 
     for ($i = 0; $i < $offset; $i++) {
         $cells[] = null;
     }
 
-    for ($day = 1; $day <= $daysInMonth; $day++) {
-        $lunar = LunarCalendar::solarToLunar($day, $month, $year);
-        $events = lta_find_events($day, $month, $year, $lunar);
-        $fortune = DayFortune::forSolarDate($day, $month, $year);
+    foreach ($monthDays as $day => $dayInfo) {
         $cells[] = [
-            'solarDay' => $day,
+            'solarDay' => (int) $day,
             'solarMonth' => $month,
             'solarYear' => $year,
-            'lunar' => $lunar,
-            'fortune' => $fortune,
-            'events' => $events,
-            'isToday' => $day === $today['day'] && $month === $today['month'] && $year === $today['year'],
-            'isSelected' => $day === $selected['day'] && $month === $selected['month'] && $year === $selected['year'],
+            'lunar' => $dayInfo['lunar'],
+            'fortune' => $dayInfo['fortune'],
+            'events' => $dayInfo['events'],
+            'isToday' => (int) $day === $today['day'] && $month === $today['month'] && $year === $today['year'],
+            'isSelected' => (int) $day === $selected['day'] && $month === $selected['month'] && $year === $selected['year'],
         ];
     }
 
@@ -365,6 +438,90 @@ function lta_month_cells(int $month, int $year, array $selected, array $today): 
 }
 
 function lta_day_info(array $date): array
+{
+    $monthDays = lta_month_days((int) $date['month'], (int) $date['year']);
+    if (isset($monthDays[(int) $date['day']])) {
+        return $monthDays[(int) $date['day']]['info'];
+    }
+
+    return lta_compute_day_info($date);
+}
+
+function lta_month_days(int $month, int $year): array
+{
+    $cached = lta_read_month_cache($month, $year);
+    if (is_array($cached)) {
+        return $cached;
+    }
+
+    $days = [];
+    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    for ($day = 1; $day <= $daysInMonth; $day++) {
+        $info = lta_compute_day_info(['day' => $day, 'month' => $month, 'year' => $year]);
+        $days[$day] = [
+            'lunar' => $info['lunar'],
+            'fortune' => $info['fortune'],
+            'events' => $info['events'],
+            'info' => $info,
+        ];
+    }
+
+    lta_write_month_cache($month, $year, $days);
+
+    return $days;
+}
+
+function lta_cache_months_dir(): string
+{
+    return __DIR__ . '/cache/months';
+}
+
+function lta_month_cache_file(int $month, int $year): string
+{
+    return lta_cache_months_dir() . '/' . sprintf('%04d-%02d.php', $year, $month);
+}
+
+function lta_read_month_cache(int $month, int $year): ?array
+{
+    $file = lta_month_cache_file($month, $year);
+    if (!is_file($file)) {
+        return null;
+    }
+
+    $payload = require $file;
+    if (!is_array($payload) || ($payload['version'] ?? null) !== LTA_CACHE_VERSION || ($payload['month'] ?? null) !== $month || ($payload['year'] ?? null) !== $year || !is_array($payload['days'] ?? null)) {
+        return null;
+    }
+
+    return $payload['days'];
+}
+
+function lta_write_month_cache(int $month, int $year, array $days): void
+{
+    $dir = lta_cache_months_dir();
+    if (!is_dir($dir) && !mkdir($dir, 0775, true) && !is_dir($dir)) {
+        return;
+    }
+    if (!is_writable($dir)) {
+        return;
+    }
+
+    $payload = [
+        'version' => LTA_CACHE_VERSION,
+        'month' => $month,
+        'year' => $year,
+        'generatedAt' => gmdate('c'),
+        'days' => $days,
+    ];
+    $file = lta_month_cache_file($month, $year);
+    $tmp = $file . '.' . getmypid() . '.tmp';
+    $php = "<?php\n\nreturn " . var_export($payload, true) . ";\n";
+    if (file_put_contents($tmp, $php, LOCK_EX) !== false) {
+        rename($tmp, $file);
+    }
+}
+
+function lta_compute_day_info(array $date): array
 {
     $lunar = LunarCalendar::solarToLunar($date['day'], $date['month'], $date['year']);
     $canChi = LunarCalendar::canChiForSolarDate($date['day'], $date['month'], $date['year']);

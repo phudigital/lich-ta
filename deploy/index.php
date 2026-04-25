@@ -5,11 +5,13 @@ declare(strict_types=1);
 require_once __DIR__ . '/app/bootstrap.php';
 
 $today = lta_today();
-$selected = lta_selected_date($today);
+$selectedState = lta_selected_date_state($today);
+$selected = $selectedState['date'];
 $view = (string) ($_GET['view'] ?? lta_view_from_path() ?? 'today');
 $view = in_array($view, ['today', 'month', 'nap-am', 'convert', 'embed'], true) ? $view : 'today';
-$month = lta_int_param('month', $selected['month'], 1, 12);
-$year = lta_int_param('year', $selected['year'], 1800, 2199);
+$usingLunarInput = ($_GET['date_type'] ?? '') === 'lunar';
+$month = $usingLunarInput ? $selected['month'] : lta_int_param('month', $selected['month'], 1, 12);
+$year = $usingLunarInput ? $selected['year'] : lta_int_param('year', $selected['year'], 1800, 2199);
 $selected['month'] = $month;
 $selected['year'] = $year;
 if (!checkdate($selected['month'], $selected['day'], $selected['year'])) {
@@ -17,6 +19,9 @@ if (!checkdate($selected['month'], $selected['day'], $selected['year'])) {
 }
 $cells = lta_month_cells($month, $year, $selected, $today);
 $dayInfo = lta_day_info($selected);
+$dateInputMode = $selectedState['inputMode'];
+$dateInputError = $selectedState['error'];
+$selectedLunar = $dayInfo['lunar'];
 
 if (lta_is_programmatic_request()) {
     $markdown = lta_prefers_markdown();
@@ -87,6 +92,29 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
                 <a class="lta-day-nav-today" href="./">Hôm nay</a>
                 <a href="<?= lta_h(lta_date_url((int) $nextDay->format('j'), (int) $nextDay->format('n'), (int) $nextDay->format('Y'))) ?>" aria-label="Ngày sau">›</a>
             </nav>
+            <form class="lta-date-lookup" method="get" action="" data-date-form>
+                <fieldset class="lta-toggle">
+                    <legend>Chọn loại ngày</legend>
+                    <label>
+                        <input type="radio" name="date_type" value="solar" <?= $dateInputMode === 'solar' ? 'checked' : '' ?>>
+                        <span>Dương lịch</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="date_type" value="lunar" <?= $dateInputMode === 'lunar' ? 'checked' : '' ?>>
+                        <span>Âm lịch</span>
+                    </label>
+                </fieldset>
+                <div class="lta-date-fields">
+                    <label><span>Ngày</span><input name="day" type="number" min="1" max="<?= $dateInputMode === 'lunar' ? 30 : cal_days_in_month(CAL_GREGORIAN, $selected['month'], $selected['year']) ?>" value="<?= (int) ($dateInputMode === 'lunar' ? $selectedLunar['day'] : $selected['day']) ?>" required></label>
+                    <label><span>Tháng</span><input name="month" type="number" min="1" max="12" value="<?= (int) ($dateInputMode === 'lunar' ? $selectedLunar['month'] : $selected['month']) ?>" required></label>
+                    <label><span>Năm</span><input name="year" type="number" min="1800" max="2199" value="<?= (int) ($dateInputMode === 'lunar' ? $selectedLunar['year'] : $selected['year']) ?>" required></label>
+                    <label class="lta-lunar-leap <?= $dateInputMode === 'lunar' ? '' : 'is-hidden' ?>"><input name="lunar_leap" type="checkbox" value="1" <?= $dateInputMode === 'lunar' && (int) $selectedLunar['leap'] === 1 ? 'checked' : '' ?>><span>Tháng nhuận</span></label>
+                    <button type="submit">Xem ngày</button>
+                </div>
+                <?php if ($dateInputError !== ''): ?>
+                    <p class="lta-form-error"><?= lta_h($dateInputError) ?></p>
+                <?php endif; ?>
+            </form>
             <div class="lta-home-actions">
                 <a href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true">□</span>Xem lịch tháng</a>
                 <a href="<?= lta_h($viewUrl('nap-am', $selected)) ?>"><span aria-hidden="true">◎</span>Lọc Nạp âm</a>
@@ -243,18 +271,40 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
     <section class="lta-lower-grid" id="convert">
         <div class="lta-panel">
             <p class="lta-eyebrow">Đổi ngày nhanh</p>
-            <h2>Dương lịch sang âm lịch</h2>
-            <form class="lta-converter" method="get" action="">
+            <h2><?= $dateInputMode === 'lunar' ? 'Âm lịch sang dương lịch' : 'Dương lịch sang âm lịch' ?></h2>
+            <form class="lta-converter" method="get" action="" data-date-form>
                 <input name="view" type="hidden" value="convert">
-                <label><span>Ngày</span><input name="day" type="number" min="1" max="31" value="<?= (int) $selected['day'] ?>"></label>
-                <label><span>Tháng</span><input name="month" type="number" min="1" max="12" value="<?= (int) $selected['month'] ?>"></label>
-                <label><span>Năm</span><input name="year" type="number" min="1800" max="2199" value="<?= (int) $selected['year'] ?>"></label>
+                <fieldset class="lta-toggle">
+                    <legend>Kiểu đổi</legend>
+                    <label>
+                        <input type="radio" name="date_type" value="solar" <?= $dateInputMode === 'solar' ? 'checked' : '' ?>>
+                        <span>Dương sang âm</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="date_type" value="lunar" <?= $dateInputMode === 'lunar' ? 'checked' : '' ?>>
+                        <span>Âm sang dương</span>
+                    </label>
+                </fieldset>
+                <label><span>Ngày</span><input name="day" type="number" min="1" max="<?= $dateInputMode === 'lunar' ? 30 : cal_days_in_month(CAL_GREGORIAN, $selected['month'], $selected['year']) ?>" value="<?= (int) ($dateInputMode === 'lunar' ? $selectedLunar['day'] : $selected['day']) ?>" required></label>
+                <label><span>Tháng</span><input name="month" type="number" min="1" max="12" value="<?= (int) ($dateInputMode === 'lunar' ? $selectedLunar['month'] : $selected['month']) ?>" required></label>
+                <label><span>Năm</span><input name="year" type="number" min="1800" max="2199" value="<?= (int) ($dateInputMode === 'lunar' ? $selectedLunar['year'] : $selected['year']) ?>" required></label>
+                <label class="lta-lunar-leap <?= $dateInputMode === 'lunar' ? '' : 'is-hidden' ?>"><input name="lunar_leap" type="checkbox" value="1" <?= $dateInputMode === 'lunar' && (int) $selectedLunar['leap'] === 1 ? 'checked' : '' ?>><span>Tháng nhuận</span></label>
                 <button type="submit">Đổi ngày</button>
+                <?php if ($dateInputError !== ''): ?>
+                    <p class="lta-form-error"><?= lta_h($dateInputError) ?></p>
+                <?php endif; ?>
             </form>
         </div>
 
         <aside class="lta-panel lta-detail-panel" aria-label="Kết quả đổi ngày">
             <p class="lta-eyebrow">Kết quả</p>
+            <div class="lta-date-hero">
+                <span><?= (int) $dayInfo['solar']['day'] ?></span>
+                <div>
+                    <strong><?= lta_h($dayInfo['weekdayFull']) ?>, <?= (int) $dayInfo['solar']['day'] ?>/<?= (int) $dayInfo['solar']['month'] ?>/<?= (int) $dayInfo['solar']['year'] ?></strong>
+                    <small>Dương lịch</small>
+                </div>
+            </div>
             <div class="lta-lunar-result">
                 <span>Âm lịch</span>
                 <strong><?= (int) $dayInfo['lunar']['day'] ?>/<?= (int) $dayInfo['lunar']['month'] ?>/<?= (int) $dayInfo['lunar']['year'] ?><?= (int) $dayInfo['lunar']['leap'] === 1 ? ' nhuận' : '' ?></strong>
