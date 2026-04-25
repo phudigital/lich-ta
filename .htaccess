@@ -1,0 +1,13 @@
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /lich-ta/
+
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    RewriteRule ^(?:[0-9]{4}(?:[-/][0-9]{1,2})?(?:[-/][0-9]{1,2})?|[lL][0-9]{4}[-/][0-9]{1,2}[-/][0-9]{1,2})/?$ index.php [L,QSA]
+    RewriteRule ^$ index.php [L,QSA]
+</IfModule>

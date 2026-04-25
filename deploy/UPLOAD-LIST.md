@@ -7,6 +7,7 @@ Upload the contents of this `deploy` folder to the hosting path for:
 ## Files and folders to upload
 
 - `index.php`
+- `.htaccess` if the hosting uses Apache or LiteSpeed
 - `embed.php`
 - `embed.js`
 - `llms.txt`
@@ -17,5 +18,6 @@ Upload the contents of this `deploy` folder to the hosting path for:
 ## Notes
 
 - Keep the folder structure exactly as-is.
-- Nginx should route deep links like `/lich-ta/2026-04-25`, `/lich-ta/2026-04`, and `/lich-ta/2026` back to `index.php`.
+- Nginx should route deep links like `/lich-ta/2026-04-25`, `/lich-ta/2026-04`, `/lich-ta/2026`, and `/lich-ta/l2026-03-08` back to `index.php`.
+- Apache/LiteSpeed hosting should upload the hidden `.htaccess` file in this package. Some FTP clients hide dotfiles by default.
 - This package intentionally excludes tests, source notes, PDF references, backup archives, and local-only files.

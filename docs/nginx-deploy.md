@@ -15,6 +15,7 @@ Keep these paths available under the `/lich-ta` URL prefix:
 - `index.php`
 - `embed.php`
 - `embed.js`
+- `.htaccess` if the server is Apache/LiteSpeed
 - `app/`
 - `assets/`
 - `src/`
@@ -49,12 +50,16 @@ If the site already has a generic PHP handler, only the static `/lich-ta/` mappi
 curl -I https://app.pdl.vn/lich-ta/
 curl -I https://app.pdl.vn/lich-ta/embed.php
 curl -I https://app.pdl.vn/lich-ta/embed.js
+curl -I https://app.pdl.vn/lich-ta/2026-04-25
+curl -I https://app.pdl.vn/lich-ta/2026-04
+curl -I https://app.pdl.vn/lich-ta/l2026-03-08
 ```
 
 Open:
 
 ```text
 https://app.pdl.vn/lich-ta/?day=17&month=2&year=2026
+https://app.pdl.vn/lich-ta/2026-02-17
 https://app.pdl.vn/lich-ta/embed.php?day=17&month=2&year=2026
 ```
 
