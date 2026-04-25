@@ -556,7 +556,7 @@ h2 {
 .lta-day {
     --day-element: var(--lta-sage);
     --day-element-strong: var(--lta-sage-strong);
-    --day-element-soft: #f4f8f5;
+    --day-element-soft: #eaf3ed;
     --day-element-line: #d7e5da;
     aspect-ratio: 1 / 0.78;
     border: 1px solid var(--day-element-line);
@@ -564,49 +564,61 @@ h2 {
     display: grid;
     align-content: space-between;
     min-width: 0;
+    overflow: hidden;
     padding: 10px;
+    position: relative;
     background: var(--day-element-soft);
     transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 
+.lta-day::before {
+    background: var(--day-element);
+    content: "";
+    height: 4px;
+    inset: 0 0 auto;
+    opacity: 0.82;
+    position: absolute;
+}
+
 .lta-day:hover {
     border-color: var(--day-element);
+    box-shadow: inset 0 0 0 1px var(--day-element);
     transform: translateY(-1px);
 }
 
 .lta-day.lta-element-kim {
     --day-element: #7f8792;
     --day-element-strong: #4f5864;
-    --day-element-soft: #f3f5f7;
-    --day-element-line: #d5dbe1;
+    --day-element-soft: #e8ecef;
+    --day-element-line: #c7cfd8;
 }
 
 .lta-day.lta-element-moc {
     --day-element: #2f8f58;
     --day-element-strong: #1f613c;
-    --day-element-soft: #eef8f1;
-    --day-element-line: #c9e6d2;
+    --day-element-soft: #def3e5;
+    --day-element-line: #b4dfc2;
 }
 
 .lta-day.lta-element-thuy {
     --day-element: #2176ae;
     --day-element-strong: #164f76;
-    --day-element-soft: #eef6fb;
-    --day-element-line: #c5deee;
+    --day-element-soft: #dceef8;
+    --day-element-line: #afd4e9;
 }
 
 .lta-day.lta-element-hoa {
     --day-element: #d94832;
     --day-element-strong: #943223;
-    --day-element-soft: #fff0ed;
-    --day-element-line: #f0c6bd;
+    --day-element-soft: #ffe1dc;
+    --day-element-line: #eeb4aa;
 }
 
 .lta-day.lta-element-tho {
     --day-element: #a9792b;
     --day-element-strong: #74511c;
-    --day-element-soft: #fbf3e6;
-    --day-element-line: #e7d3ad;
+    --day-element-soft: #f5e6ca;
+    --day-element-line: #dfc18d;
 }
 
 .lta-day-empty {
@@ -631,6 +643,10 @@ h2 {
     background: var(--day-element);
     border-color: var(--day-element);
     color: #fff;
+}
+
+.lta-day.is-selected::before {
+    background: rgba(255, 255, 255, 0.55);
 }
 
 .lta-day.is-selected .lta-lunar-day {
