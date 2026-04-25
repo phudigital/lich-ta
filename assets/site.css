@@ -571,15 +571,6 @@ h2 {
     transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 
-.lta-day::before {
-    background: var(--day-element);
-    content: "";
-    height: 4px;
-    inset: 0 0 auto;
-    opacity: 0.82;
-    position: absolute;
-}
-
 .lta-day:hover {
     border-color: var(--day-element);
     box-shadow: inset 0 0 0 1px var(--day-element);
@@ -643,10 +634,6 @@ h2 {
     background: var(--day-element);
     border-color: var(--day-element);
     color: #fff;
-}
-
-.lta-day.is-selected::before {
-    background: rgba(255, 255, 255, 0.55);
 }
 
 .lta-day.is-selected .lta-lunar-day {
@@ -908,12 +895,13 @@ h2 {
     position: absolute;
     z-index: 1200;
     width: min(360px, calc(100vw - 16px));
-    background: #17201b;
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: var(--tooltip-bg, #17201b);
+    border: 1px solid var(--tooltip-border, rgba(255, 255, 255, 0.16));
     border-radius: 14px;
-    box-shadow: 0 18px 46px rgba(23, 32, 27, 0.28);
-    color: #fffaf0;
+    box-shadow: 0 18px 46px rgba(23, 32, 27, 0.18);
+    color: var(--tooltip-ink, #17201b);
     font-size: 0.86rem;
+    font-weight: 650;
     line-height: 1.5;
     padding: 12px 14px;
     pointer-events: none;

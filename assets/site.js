@@ -72,6 +72,10 @@
         activeTooltip = document.createElement('div');
         activeTooltip.className = 'lta-day-tooltip';
         activeTooltip.textContent = day.getAttribute('data-popup') || day.textContent.trim();
+        var dayStyle = window.getComputedStyle(day);
+        activeTooltip.style.setProperty('--tooltip-bg', dayStyle.getPropertyValue('--day-element-soft').trim() || '#fff');
+        activeTooltip.style.setProperty('--tooltip-ink', dayStyle.getPropertyValue('--day-element-strong').trim() || '#17201b');
+        activeTooltip.style.setProperty('--tooltip-border', dayStyle.getPropertyValue('--day-element-line').trim() || 'rgba(255, 255, 255, 0.16)');
         document.body.appendChild(activeTooltip);
 
         var rect = day.getBoundingClientRect();
