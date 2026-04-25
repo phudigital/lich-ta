@@ -83,6 +83,7 @@ $calendar = lta_render_calendar(
 assertContainsText('data-popup-title="Thứ Bảy 25/4/2026"', $calendar, 'Calendar popup title failed');
 assertContainsText('data-nap-am="Đại Lâm Mộc"', $calendar, 'Calendar nap am data failed');
 assertContainsText('data-nap-element="Mộc"', $calendar, 'Calendar nap am element failed');
+assertContainsText('lta-element-moc', $calendar, 'Calendar element class failed');
 assertContainsText('data-dong-cong="good"', $calendar, 'Calendar dong cong data failed');
 assertContainsText('class="lta-nap-label">Đại Lâm Mộc</span>', $calendar, 'Calendar nap am label failed');
 

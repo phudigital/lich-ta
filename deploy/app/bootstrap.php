@@ -139,6 +139,18 @@ function lta_h(string $value): string
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 }
 
+function lta_element_class(string $element): string
+{
+    return match ($element) {
+        'Kim' => 'lta-element-kim',
+        'Mộc' => 'lta-element-moc',
+        'Thủy' => 'lta-element-thuy',
+        'Hỏa' => 'lta-element-hoa',
+        'Thổ' => 'lta-element-tho',
+        default => '',
+    };
+}
+
 function lta_base_url(): string
 {
     $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/'));
@@ -717,6 +729,10 @@ function lta_render_calendar(array $cells, bool $isEmbed = false, array $options
             }
             if ($cell['events'] !== []) {
                 $classes[] = 'has-event';
+            }
+            $elementClass = lta_element_class((string) $fortune['napAmElement']);
+            if ($elementClass !== '') {
+                $classes[] = $elementClass;
             }
             $eventLabel = implode(', ', array_map(static fn (array $event): string => $event['name'], $cell['events']));
             $popupText = lta_popup_text($cellDate);

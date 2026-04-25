@@ -554,20 +554,59 @@ h2 {
 }
 
 .lta-day {
+    --day-element: var(--lta-sage);
+    --day-element-strong: var(--lta-sage-strong);
+    --day-element-soft: #f4f8f5;
+    --day-element-line: #d7e5da;
     aspect-ratio: 1 / 0.78;
-    border: 1px solid #e3e8e2;
+    border: 1px solid var(--day-element-line);
     border-radius: 14px;
     display: grid;
     align-content: space-between;
     min-width: 0;
     padding: 10px;
-    background: #fff;
+    background: var(--day-element-soft);
     transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 
 .lta-day:hover {
-    border-color: #a8bcae;
+    border-color: var(--day-element);
     transform: translateY(-1px);
+}
+
+.lta-day.lta-element-kim {
+    --day-element: #7f8792;
+    --day-element-strong: #4f5864;
+    --day-element-soft: #f3f5f7;
+    --day-element-line: #d5dbe1;
+}
+
+.lta-day.lta-element-moc {
+    --day-element: #2f8f58;
+    --day-element-strong: #1f613c;
+    --day-element-soft: #eef8f1;
+    --day-element-line: #c9e6d2;
+}
+
+.lta-day.lta-element-thuy {
+    --day-element: #2176ae;
+    --day-element-strong: #164f76;
+    --day-element-soft: #eef6fb;
+    --day-element-line: #c5deee;
+}
+
+.lta-day.lta-element-hoa {
+    --day-element: #d94832;
+    --day-element-strong: #943223;
+    --day-element-soft: #fff0ed;
+    --day-element-line: #f0c6bd;
+}
+
+.lta-day.lta-element-tho {
+    --day-element: #a9792b;
+    --day-element-strong: #74511c;
+    --day-element-soft: #fbf3e6;
+    --day-element-line: #e7d3ad;
 }
 
 .lta-day-empty {
@@ -582,15 +621,15 @@ h2 {
 }
 
 .lta-lunar-day {
-    color: var(--lta-muted);
+    color: color-mix(in srgb, var(--day-element-strong) 72%, var(--lta-muted));
     font-size: 0.78rem;
     font-weight: 700;
     justify-self: end;
 }
 
 .lta-day.is-selected {
-    background: var(--lta-sage);
-    border-color: var(--lta-sage);
+    background: var(--day-element);
+    border-color: var(--day-element);
     color: #fff;
 }
 
@@ -600,12 +639,12 @@ h2 {
 
 .lta-day.is-today:not(.is-selected) {
     border-color: var(--lta-gold);
-    background: #fff8e8;
+    box-shadow: inset 0 0 0 2px rgba(217, 164, 65, 0.36);
 }
 
 .lta-day.is-tet:not(.is-selected) {
-    background: #fff0ea;
     border-color: #edc4b9;
+    box-shadow: inset 0 0 0 2px rgba(189, 77, 53, 0.2);
 }
 
 .lta-day.has-event:not(.is-selected) {
