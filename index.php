@@ -113,11 +113,22 @@ $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl
                 <div><dt>Ngày</dt><dd><?= lta_h($dayInfo['canChi']['day']) ?></dd></div>
                 <div><dt>Giờ đầu ngày</dt><dd><?= lta_h($dayInfo['firstHour']) ?></dd></div>
                 <div><dt>Tiết khí</dt><dd><?= lta_h($dayInfo['term']) ?></dd></div>
+                <div><dt>Trực</dt><dd><?= lta_h($dayInfo['fortune']['truc']) ?></dd></div>
+                <div><dt>Sao</dt><dd><?= lta_h($dayInfo['fortune']['saoNhiThapBatTu']) ?></dd></div>
+                <div><dt>Lục diệu</dt><dd><?= lta_h($dayInfo['fortune']['lucDieu']) ?></dd></div>
+                <div><dt>Nạp âm</dt><dd><?= lta_h($dayInfo['fortune']['napAm']) ?></dd></div>
+                <div><dt>Ngày</dt><dd><?= lta_h($dayInfo['fortune']['hoangHacDao']) ?><?= $dayInfo['fortune']['hoangHacDaoStar'] !== null ? ' - ' . lta_h($dayInfo['fortune']['hoangHacDaoStar']) : '' ?></dd></div>
             </dl>
 
             <div class="lta-hours">
                 <span>Giờ hoàng đạo</span>
                 <p><?= lta_h(implode(', ', $dayInfo['hours'])) ?></p>
+            </div>
+
+            <div class="lta-fortune-note">
+                <span>Tuổi xung</span>
+                <p><?= lta_h(implode(', ', $dayInfo['fortune']['tuoiXung'])) ?> · xung chi <?= lta_h($dayInfo['fortune']['ngayXung']) ?></p>
+                <small><?= lta_h($dayInfo['fortune']['lucDieuHint']) ?></small>
             </div>
 
             <?php if ($dayInfo['events'] !== []): ?>

@@ -412,7 +412,8 @@ h2 {
 }
 
 .lta-hours,
-.lta-events {
+.lta-events,
+.lta-fortune-note {
     background: #f7f3e8;
     border: 1px solid #e7d8b8;
     border-radius: 18px;
@@ -425,7 +426,8 @@ h2 {
 }
 
 .lta-hours p,
-.lta-events ul {
+.lta-events ul,
+.lta-fortune-note p {
     line-height: 1.55;
     margin: 6px 0 0;
 }
@@ -438,6 +440,19 @@ h2 {
     color: var(--lta-coral);
     font-size: 0.78rem;
     font-weight: 800;
+}
+
+.lta-fortune-note span {
+    color: var(--lta-blue);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.lta-fortune-note small {
+    color: var(--lta-muted);
+    display: block;
+    line-height: 1.5;
+    margin-top: 8px;
 }
 
 .lta-modal[hidden] {

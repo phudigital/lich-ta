@@ -37,10 +37,18 @@ assertContainsText('Ngày Quý Tỵ, tháng Canh Ngọ, năm Kỷ Hợi', $popup
 assertContainsText('Giờ đầu ngày: Nhâm Tý', $popup, 'Popup first hour failed');
 assertContainsText('Tiết: Hạ chí', $popup, 'Popup solar term failed');
 assertContainsText('Giờ hoàng đạo: Sửu (1-3), Thìn (7-9), Ngọ (11-13), Mùi (13-15), Tuất (19-21), Hợi (21-23)', $popup, 'Popup auspicious hours failed');
+assertContainsText('Trực: Bế; Sao: Chủy; Lục diệu: Tốc Hỷ', $popup, 'Popup fortune line failed');
 
 $markdown = lta_render_text(['day' => 17, 'month' => 2, 'year' => 2026], true);
 assertContainsText('# Thứ Ba, 17/2/2026', $markdown, 'Markdown heading failed');
 assertContainsText('Tết Nguyên Đán', $markdown, 'Markdown event failed');
 assertContainsText('https://app.pdl.vn/lich-ta/2026-02-17', $markdown, 'Markdown solar link failed');
+
+$april2026 = lta_day_info(['day' => 25, 'month' => 4, 'year' => 2026]);
+assertSameAppValue('Trừ', $april2026['fortune']['truc'], 'Fortune truc failed');
+assertSameAppValue('Liễu', $april2026['fortune']['saoNhiThapBatTu'], 'Fortune 28-star failed');
+assertSameAppValue('Tiểu Cát', $april2026['fortune']['lucDieu'], 'Fortune luc dieu failed');
+assertSameAppValue('Đại Lâm Mộc', $april2026['fortune']['napAm'], 'Fortune nap am failed');
+assertSameAppValue(['Tân Hợi', 'Đinh Hợi'], $april2026['fortune']['tuoiXung'], 'Fortune conflict ages failed');
 
 echo "App feature checks passed.\n";

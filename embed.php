@@ -53,7 +53,7 @@ $next = lta_next_month($month, $year);
             <span><?= (int) $dayInfo['solar']['day'] ?>/<?= (int) $dayInfo['solar']['month'] ?></span>
             <strong><?= lta_h($dayInfo['canChi']['day']) ?></strong>
         </div>
-        <p><?= lta_h($dayInfo['term']) ?> · <?= lta_h($dayInfo['canChi']['year']) ?></p>
+        <p><?= lta_h($dayInfo['fortune']['truc']) ?> · <?= lta_h($dayInfo['fortune']['lucDieu']) ?> · <?= lta_h($dayInfo['term']) ?></p>
     </section>
 </main>
 <div class="lta-modal" data-lta-modal hidden>

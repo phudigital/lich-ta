@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../src/LunarCalendar.php';
+require_once __DIR__ . '/../src/DayFortune.php';
 
+use LichTa\DayFortune;
 use LichTa\LunarCalendar;
 
 const LTA_MONTHS = [
@@ -334,6 +336,7 @@ function lta_day_info(array $date): array
     $canChi = LunarCalendar::canChiForSolarDate($date['day'], $date['month'], $date['year']);
     $weekdayIndex = (LunarCalendar::julianDayFromDate($date['day'], $date['month'], $date['year']) + 1) % 7;
     $events = lta_find_events($date['day'], $date['month'], $date['year'], $lunar);
+    $fortune = DayFortune::forSolarDate($date['day'], $date['month'], $date['year']);
 
     return [
         'solar' => $date,
@@ -349,6 +352,7 @@ function lta_day_info(array $date): array
         'firstHour' => lta_first_hour_can_chi((int) $lunar['julianDay']),
         'hours' => lta_vi_hours(LunarCalendar::auspiciousHours($date['day'], $date['month'], $date['year'])),
         'events' => $events,
+        'fortune' => $fortune,
     ];
 }
 
@@ -374,6 +378,7 @@ function lta_popup_text(array $date): string
         'Giờ đầu ngày: ' . $info['firstHour'],
         'Tiết: ' . $info['term'],
         'Giờ hoàng đạo: ' . implode(', ', $info['hours']),
+        'Trực: ' . $info['fortune']['truc'] . '; Sao: ' . $info['fortune']['saoNhiThapBatTu'] . '; Lục diệu: ' . $info['fortune']['lucDieu'],
     ];
 
     if ($info['events'] !== []) {
@@ -417,6 +422,11 @@ function lta_render_text(array $date, bool $markdown = false): string
             '- Giờ đầu ngày: ' . $info['firstHour'],
             '- Tiết khí: ' . $info['term'],
             '- Giờ hoàng đạo: ' . implode(', ', $info['hours']),
+            '- Trực: ' . $info['fortune']['truc'],
+            '- Sao nhị thập bát tú: ' . $info['fortune']['saoNhiThapBatTu'],
+            '- Lục diệu: ' . $info['fortune']['lucDieu'],
+            '- Nạp âm ngày: ' . $info['fortune']['napAm'],
+            '- Hoàng/Hắc đạo: ' . $info['fortune']['hoangHacDao'] . ($info['fortune']['hoangHacDaoStar'] !== null ? ' - ' . $info['fortune']['hoangHacDaoStar'] : ''),
         ];
         if ($eventNames !== []) {
             $lines[] = '- Sự kiện: ' . implode('; ', $eventNames);
@@ -438,6 +448,11 @@ function lta_render_text(array $date, bool $markdown = false): string
         'Giờ đầu ngày: ' . $info['firstHour'],
         'Tiết khí: ' . $info['term'],
         'Giờ hoàng đạo: ' . implode(', ', $info['hours']),
+        'Trực: ' . $info['fortune']['truc'],
+        'Sao nhị thập bát tú: ' . $info['fortune']['saoNhiThapBatTu'],
+        'Lục diệu: ' . $info['fortune']['lucDieu'],
+        'Nạp âm ngày: ' . $info['fortune']['napAm'],
+        'Hoàng/Hắc đạo: ' . $info['fortune']['hoangHacDao'] . ($info['fortune']['hoangHacDaoStar'] !== null ? ' - ' . $info['fortune']['hoangHacDaoStar'] : ''),
     ];
     if ($eventNames !== []) {
         $lines[] = 'Sự kiện: ' . implode('; ', $eventNames);
