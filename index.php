@@ -15,6 +15,14 @@ if (!checkdate($selected['month'], $selected['day'], $selected['year'])) {
 }
 $cells = lta_month_cells($month, $year, $selected, $today);
 $dayInfo = lta_day_info($selected);
+
+if (lta_is_programmatic_request()) {
+    $markdown = lta_prefers_markdown();
+    header('Content-Type: ' . ($markdown ? 'text/markdown' : 'text/plain') . '; charset=UTF-8');
+    echo lta_render_text($selected, $markdown);
+    exit;
+}
+
 $prev = lta_prev_month($month, $year);
 $next = lta_next_month($month, $year);
 $baseUrl = 'https://app.pdl.vn/lich-ta';
@@ -103,6 +111,7 @@ $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl
                 <div><dt>Năm</dt><dd><?= lta_h($dayInfo['canChi']['year']) ?></dd></div>
                 <div><dt>Tháng</dt><dd><?= lta_h($dayInfo['canChi']['month']) ?></dd></div>
                 <div><dt>Ngày</dt><dd><?= lta_h($dayInfo['canChi']['day']) ?></dd></div>
+                <div><dt>Giờ đầu ngày</dt><dd><?= lta_h($dayInfo['firstHour']) ?></dd></div>
                 <div><dt>Tiết khí</dt><dd><?= lta_h($dayInfo['term']) ?></dd></div>
             </dl>
 
@@ -110,6 +119,17 @@ $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl
                 <span>Giờ hoàng đạo</span>
                 <p><?= lta_h(implode(', ', $dayInfo['hours'])) ?></p>
             </div>
+
+            <?php if ($dayInfo['events'] !== []): ?>
+                <div class="lta-events">
+                    <span>Sự kiện</span>
+                    <ul>
+                        <?php foreach ($dayInfo['events'] as $event): ?>
+                            <li><?= lta_h($event['name']) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </aside>
     </section>
 
@@ -139,6 +159,14 @@ $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl
         </div>
     </section>
 </main>
+<div class="lta-modal" data-lta-modal hidden>
+    <div class="lta-modal-backdrop" data-lta-modal-close></div>
+    <section class="lta-modal-card" role="dialog" aria-modal="true" aria-labelledby="lta-modal-title">
+        <button class="lta-modal-close" type="button" aria-label="Đóng" data-lta-modal-close>×</button>
+        <h2 id="lta-modal-title">Chi tiết ngày</h2>
+        <pre data-lta-modal-content></pre>
+    </section>
+</div>
 <script src="assets/site.js"></script>
 </body>
 </html>

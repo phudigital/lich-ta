@@ -1,0 +1,53 @@
+# Lịch Ta
+
+Lịch Ta is a Vietnamese lunar calendar tool served at:
+
+```text
+https://app.pdl.vn/lich-ta
+```
+
+It supports browser, iframe, JavaScript embed, plain text, and Markdown output.
+
+## URL Patterns
+
+- `/lich-ta/` shows today's month.
+- `/lich-ta/YYYY-MM-DD` shows a solar Gregorian date.
+- `/lich-ta/lYYYY-MM-DD` shows a lunar date and converts it to the matching solar date.
+
+Examples:
+
+```text
+https://app.pdl.vn/lich-ta/2026-02-17
+https://app.pdl.vn/lich-ta/l2026-01-01
+```
+
+Both examples point to Tết Nguyên Đán 2026.
+
+## Programmatic Use
+
+Ask for Markdown:
+
+```bash
+curl -H "Accept: text/markdown" https://app.pdl.vn/lich-ta/2026-02-17
+```
+
+Ask for plain text:
+
+```bash
+curl -H "Accept: text/plain" https://app.pdl.vn/lich-ta/2026-02-17
+```
+
+## Embed
+
+Iframe:
+
+```html
+<iframe src="https://app.pdl.vn/lich-ta/embed.php" width="100%" height="620" style="border:0;max-width:760px;border-radius:16px;overflow:hidden" loading="lazy"></iframe>
+```
+
+JavaScript:
+
+```html
+<div id="pdl-lich-ta"></div>
+<script src="https://app.pdl.vn/lich-ta/embed.js" data-target="pdl-lich-ta" async></script>
+```

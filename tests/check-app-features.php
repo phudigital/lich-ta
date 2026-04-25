@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../app/bootstrap.php';
+
+$_SERVER['SCRIPT_NAME'] = '/lich-ta/index.php';
+$_SERVER['HTTP_HOST'] = 'app.pdl.vn';
+$_SERVER['HTTPS'] = 'on';
+
+function assertContainsText(string $needle, string $haystack, string $message): void
+{
+    if (!str_contains($haystack, $needle)) {
+        fwrite(STDERR, $message . PHP_EOL);
+        fwrite(STDERR, 'Missing: ' . $needle . PHP_EOL);
+        fwrite(STDERR, 'Actual: ' . $haystack . PHP_EOL);
+        exit(1);
+    }
+}
+
+function assertSameAppValue(mixed $expected, mixed $actual, string $message): void
+{
+    if ($expected !== $actual) {
+        fwrite(STDERR, $message . PHP_EOL);
+        fwrite(STDERR, 'Expected: ' . var_export($expected, true) . PHP_EOL);
+        fwrite(STDERR, 'Actual:   ' . var_export($actual, true) . PHP_EOL);
+        exit(1);
+    }
+}
+
+assertSameAppValue(['day' => 17, 'month' => 2, 'year' => 2026], lta_date_from_path('/lich-ta/2026-02-17'), 'Solar path parsing failed');
+assertSameAppValue(['day' => 17, 'month' => 2, 'year' => 2026], lta_date_from_path('/lich-ta/l2026-01-01'), 'Lunar path parsing failed');
+
+$popup = lta_popup_text(['day' => 25, 'month' => 6, 'year' => 2019]);
+assertContainsText('Thứ Ba 25/6/2019 -+- Ngày 23 tháng 5 âm lịch', $popup, 'Popup heading failed');
+assertContainsText('Ngày Quý Tỵ, tháng Canh Ngọ, năm Kỷ Hợi', $popup, 'Popup can-chi failed');
+assertContainsText('Giờ đầu ngày: Nhâm Tý', $popup, 'Popup first hour failed');
+assertContainsText('Tiết: Hạ chí', $popup, 'Popup solar term failed');
+assertContainsText('Giờ hoàng đạo: Sửu (1-3), Thìn (7-9), Ngọ (11-13), Mùi (13-15), Tuất (19-21), Hợi (21-23)', $popup, 'Popup auspicious hours failed');
+
+$markdown = lta_render_text(['day' => 17, 'month' => 2, 'year' => 2026], true);
+assertContainsText('# Thứ Ba, 17/2/2026', $markdown, 'Markdown heading failed');
+assertContainsText('Tết Nguyên Đán', $markdown, 'Markdown event failed');
+assertContainsText('https://app.pdl.vn/lich-ta/2026-02-17', $markdown, 'Markdown solar link failed');
+
+echo "App feature checks passed.\n";

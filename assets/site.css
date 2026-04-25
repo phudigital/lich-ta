@@ -28,6 +28,10 @@ body {
     min-width: 320px;
 }
 
+.lta-modal-open body {
+    overflow: hidden;
+}
+
 a {
     color: inherit;
     text-decoration: none;
@@ -305,6 +309,20 @@ h2 {
     border-color: #edc4b9;
 }
 
+.lta-day.has-event:not(.is-selected) {
+    border-color: #d9c387;
+}
+
+.lta-event-dot {
+    align-self: end;
+    background: var(--lta-coral);
+    border-radius: 999px;
+    display: inline-block;
+    height: 6px;
+    justify-self: start;
+    width: 6px;
+}
+
 .lta-detail-panel {
     display: grid;
     align-content: start;
@@ -393,16 +411,103 @@ h2 {
     text-align: right;
 }
 
-.lta-hours {
+.lta-hours,
+.lta-events {
     background: #f7f3e8;
     border: 1px solid #e7d8b8;
     border-radius: 18px;
     padding: 16px;
 }
 
-.lta-hours p {
+.lta-events {
+    background: #fff0ea;
+    border-color: #edc4b9;
+}
+
+.lta-hours p,
+.lta-events ul {
     line-height: 1.55;
     margin: 6px 0 0;
+}
+
+.lta-events ul {
+    padding-left: 18px;
+}
+
+.lta-events span {
+    color: var(--lta-coral);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.lta-modal[hidden] {
+    display: none;
+}
+
+.lta-modal {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+}
+
+.lta-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(23, 32, 27, 0.48);
+    backdrop-filter: blur(6px);
+}
+
+.lta-modal-card {
+    position: relative;
+    width: min(560px, 100%);
+    background: #fff;
+    border: 1px solid var(--lta-line);
+    border-radius: 22px;
+    box-shadow: 0 30px 80px rgba(23, 32, 27, 0.26);
+    padding: 22px;
+}
+
+.lta-modal-card h2 {
+    font-size: 1.3rem;
+    margin-right: 42px;
+}
+
+.lta-modal-card pre {
+    background: #f7f3e8;
+    color: var(--lta-ink);
+    border: 1px solid #e7d8b8;
+    border-radius: 16px;
+    font-family: inherit;
+    line-height: 1.65;
+    margin-top: 14px;
+    max-height: min(70vh, 520px);
+    overflow: auto;
+    padding: 16px;
+    white-space: pre-wrap;
+}
+
+.lta-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--lta-line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--lta-ink);
+    cursor: pointer;
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.lta-modal-close:hover {
+    background: var(--lta-sage);
+    border-color: var(--lta-sage);
+    color: #fff;
 }
 
 .lta-lower-grid {

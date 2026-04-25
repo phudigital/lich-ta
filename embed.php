@@ -10,6 +10,9 @@ $month = lta_int_param('month', $selected['month'], 1, 12);
 $year = lta_int_param('year', $selected['year'], 1800, 2199);
 $selected['month'] = $month;
 $selected['year'] = $year;
+if (!checkdate($selected['month'], $selected['day'], $selected['year'])) {
+    $selected['day'] = min($selected['day'], cal_days_in_month(CAL_GREGORIAN, $selected['month'], $selected['year']));
+}
 $cells = lta_month_cells($month, $year, $selected, $today);
 $dayInfo = lta_day_info($selected);
 $prev = lta_prev_month($month, $year);
@@ -53,5 +56,14 @@ $next = lta_next_month($month, $year);
         <p><?= lta_h($dayInfo['term']) ?> · <?= lta_h($dayInfo['canChi']['year']) ?></p>
     </section>
 </main>
+<div class="lta-modal" data-lta-modal hidden>
+    <div class="lta-modal-backdrop" data-lta-modal-close></div>
+    <section class="lta-modal-card" role="dialog" aria-modal="true" aria-labelledby="lta-modal-title">
+        <button class="lta-modal-close" type="button" aria-label="Đóng" data-lta-modal-close>×</button>
+        <h2 id="lta-modal-title">Chi tiết ngày</h2>
+        <pre data-lta-modal-content></pre>
+    </section>
+</div>
+<script src="assets/site.js"></script>
 </body>
 </html>
