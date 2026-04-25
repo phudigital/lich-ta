@@ -1056,6 +1056,30 @@ h2 {
     margin: 6px 0 0;
 }
 
+.lta-source-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.lta-source-links a,
+.lta-citation-link {
+    color: var(--lta-sage-strong);
+    font-weight: 900;
+    text-decoration: underline;
+    text-decoration-color: #b6d0a4;
+    text-underline-offset: 3px;
+}
+
+.lta-source-links a {
+    background: #fff;
+    border: 1px solid var(--lta-line);
+    border-radius: 999px;
+    padding: 7px 10px;
+    text-decoration: none;
+}
+
 .lta-library-toc {
     display: flex;
     flex-wrap: wrap;

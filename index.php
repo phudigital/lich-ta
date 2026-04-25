@@ -620,11 +620,19 @@ $faqJson = [
         <p class="lta-lead">Người Việt khi xem lịch âm thường không chỉ xem ngày mấy, tháng mấy, mà còn xem thêm Can Chi, sao tốt xấu, ngày kỵ, Nhị Thập Bát Tú, giờ xuất hành, Ngọc Hạp và nạp âm. Trang này gom các lớp thông tin đó vào một nơi dễ đọc hơn, để bạn hiểu vì sao một ngày được gợi ý là nên làm việc này, nên tránh việc kia.</p>
         <div class="lta-source-note">
             <strong>Cách tham khảo</strong>
-            <p>Nội dung được tổng hợp và đối chiếu từ nhiều nguồn lịch cổ truyền, thông thư dân gian và các tài liệu tra cứu phổ biến. Lịch Ta viết lại theo lối ngắn gọn, dễ kiểm tra, để người dùng có thể đọc nhanh thay vì phải lần từng bảng rời rạc.</p>
+            <p>Nội dung được tổng hợp và đối chiếu từ nhiều nguồn lịch cổ truyền, thông thư dân gian, tài liệu tra cứu phổ biến và các nguồn thiên văn công khai. Lịch Ta viết lại theo lối ngắn gọn, dễ kiểm tra, để người dùng có thể đọc nhanh thay vì phải lần từng bảng rời rạc.</p>
+            <div class="lta-source-links" aria-label="Nguồn tham khảo">
+                <a href="https://vi.wikipedia.org/wiki/Ti%E1%BA%BFt_kh%C3%AD" target="_blank" rel="noopener">Tiết khí - Wikipedia</a>
+                <a href="https://vi.wikipedia.org/wiki/M%C3%B9a" target="_blank" rel="noopener">Mùa - Wikipedia</a>
+                <a href="https://science.nasa.gov/solar-system/skywatching/night-sky-network/embracing-the-equinox/" target="_blank" rel="noopener">NASA: Equinox</a>
+                <a href="https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice" target="_blank" rel="noopener">NOAA: Solstice</a>
+                <a href="https://www.xemamlich.uhm.vn/vncal_en.html" target="_blank" rel="noopener">Hồ Ngọc Đức: Vietnamese lunar calendar</a>
+            </div>
         </div>
 
         <nav class="lta-library-toc" aria-label="Mục lục Thông Thư">
             <a href="#am-lich-ho-ngoc-duc">Âm lịch</a>
+            <a href="#tiet-khi-mua">Tiết khí và mùa</a>
             <a href="#gio-hoang-dao">Giờ hoàng đạo</a>
             <a href="#sao-tot-xau">Sao tốt xấu</a>
             <a href="#ngay-ky">Ngày kỵ</a>
@@ -637,7 +645,7 @@ $faqJson = [
 
         <section id="am-lich-ho-ngoc-duc" class="lta-library-section">
             <h2>Cách tính ngày âm theo giáo sư Hồ Ngọc Đức</h2>
-            <p>Phần lõi đổi ngày dương sang âm của Lịch Ta tham khảo thuật toán âm lịch Việt Nam do giáo sư Hồ Ngọc Đức công bố rộng rãi. Cách tính này không chỉ tra bảng ngày có sẵn, mà dựa trên các mốc thiên văn như ngày Julius, thời điểm sóc, tiết khí và múi giờ Việt Nam.</p>
+            <p>Phần lõi đổi ngày dương sang âm của Lịch Ta tham khảo thuật toán âm lịch Việt Nam do giáo sư Hồ Ngọc Đức công bố rộng rãi, trong đó các phép tính được điều chỉnh theo giờ Hà Nội GMT+7 và có xét tiết khí. Cách tính này không chỉ tra bảng ngày có sẵn, mà dựa trên các mốc thiên văn như ngày Julius, thời điểm sóc, tiết khí và múi giờ Việt Nam. <a class="lta-citation-link" href="https://www.xemamlich.uhm.vn/vncal_en.html" target="_blank" rel="noopener">Nguồn thuật toán</a></p>
             <div class="lta-method-grid">
                 <article>
                     <h3>1. Đổi ngày dương sang ngày Julius</h3>
@@ -656,6 +664,12 @@ $faqJson = [
                     <p>Sau khi có ngày âm, app tính tiếp Can Chi ngày/tháng/năm, 24 tiết khí, giờ đầu ngày và các lớp thông tin truyền thống khác để hiển thị trên trang ngày.</p>
                 </article>
             </div>
+        </section>
+
+        <section id="tiet-khi-mua" class="lta-library-section">
+            <h2>Tiết khí, mùa và điểm phân chí</h2>
+            <p>Tiết khí là hệ 24 mốc trên vòng chuyển động biểu kiến của Mặt Trời, thường được chia theo mỗi 15 độ kinh độ Mặt Trời để đồng bộ lịch với mùa. Vì quỹ đạo Trái Đất là elip và thời điểm bắt đầu tiết khí được làm tròn theo ngày địa phương, khoảng cách giữa hai tiết khí liền nhau không luôn bằng nhau tuyệt đối. <a class="lta-citation-link" href="https://vi.wikipedia.org/wiki/Ti%E1%BA%BFt_kh%C3%AD" target="_blank" rel="noopener">Tham khảo 24 tiết khí</a></p>
+            <p>Các mùa thiên văn gắn với điểm phân và điểm chí: điểm phân xảy ra khi Mặt Trời đi qua mặt phẳng xích đạo Trái Đất, còn điểm chí là lúc độ nghiêng trục Trái Đất tạo ra ngày dài nhất hoặc ngắn nhất trong năm ở mỗi bán cầu. Vì vậy Lịch Ta dùng tiết khí như một lớp neo mùa vụ, còn thông tin ngày tốt xấu chỉ nên đọc như dữ liệu văn hóa tham khảo. <a class="lta-citation-link" href="https://science.nasa.gov/solar-system/skywatching/night-sky-network/embracing-the-equinox/" target="_blank" rel="noopener">NASA về điểm phân</a> <a class="lta-citation-link" href="https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice" target="_blank" rel="noopener">NOAA về điểm chí</a> <a class="lta-citation-link" href="https://vi.wikipedia.org/wiki/M%C3%B9a" target="_blank" rel="noopener">Khái niệm mùa</a></p>
         </section>
 
         <section id="gio-hoang-dao" class="lta-library-section">
@@ -827,8 +841,8 @@ $faqJson = [
         <p>Nhiều website Việt Nam cần một block lịch âm gọn, dễ đọc và có thể đặt ngay trong trang mà không phải tự xây dựng thuật toán lịch. Lịch Ta cung cấp giao diện xem ngày trực tiếp cho người dùng cuối và một widget nhúng cho chủ website. Công cụ này phù hợp với website doanh nghiệp, blog văn hóa, trang phong thủy, cổng thông tin địa phương, landing page bất động sản, trang sự kiện và các hệ thống nội bộ cần hiển thị lịch Việt.</p>
 
         <h2>Cách tính lịch âm ở mức cơ bản</h2>
-        <p>Âm lịch Việt Nam dựa trên chu kỳ Mặt Trăng, trong đó ngày đầu tháng âm thường gắn với thời điểm sóc. Để đồng bộ với mùa trong năm, lịch còn xét các tiết khí theo chuyển động biểu kiến của Mặt Trời. Vì một năm âm lịch ngắn hơn năm dương lịch, một số năm sẽ có tháng nhuận để giữ lịch không lệch quá xa mùa vụ. Khi chuyển đổi ngày dương sang âm, ứng dụng cần xác định ngày Julius, thời điểm sóc, tháng âm, năm âm và trường hợp tháng nhuận theo múi giờ Việt Nam.</p>
-        <p>Phần lõi tính ngày âm của Lịch Ta tham khảo thư viện và thuật toán âm lịch Việt Nam do giáo sư Hồ Ngọc Đức công bố rộng rãi. Đây là nền tảng chính để app tính ngày âm, tháng nhuận, Can Chi, 24 tiết khí, giờ hoàng đạo và các mốc liên quan theo múi giờ Việt Nam UTC+7.</p>
+        <p>Âm lịch Việt Nam dựa trên chu kỳ Mặt Trăng, trong đó ngày đầu tháng âm thường gắn với thời điểm sóc. Để đồng bộ với mùa trong năm, lịch còn xét các tiết khí theo chuyển động biểu kiến của Mặt Trời; hệ 24 tiết khí thường được hiểu là các mốc cách nhau 15 độ trên kinh độ Mặt Trời. Vì một năm âm lịch ngắn hơn năm dương lịch, một số năm sẽ có tháng nhuận để giữ lịch không lệch quá xa mùa vụ. Khi chuyển đổi ngày dương sang âm, ứng dụng cần xác định ngày Julius, thời điểm sóc, tháng âm, năm âm và trường hợp tháng nhuận theo múi giờ Việt Nam. <a class="lta-citation-link" href="https://vi.wikipedia.org/wiki/Ti%E1%BA%BFt_kh%C3%AD" target="_blank" rel="noopener">Tham khảo tiết khí</a></p>
+        <p>Phần lõi tính ngày âm của Lịch Ta tham khảo thư viện và thuật toán âm lịch Việt Nam do giáo sư Hồ Ngọc Đức công bố rộng rãi, kết hợp nguyên lý mùa thiên văn từ độ nghiêng trục Trái Đất và các điểm phân chí. Đây là nền tảng chính để app tính ngày âm, tháng nhuận, Can Chi, 24 tiết khí, giờ hoàng đạo và các mốc liên quan theo múi giờ Việt Nam UTC+7. <a class="lta-citation-link" href="https://www.xemamlich.uhm.vn/vncal_en.html" target="_blank" rel="noopener">Thuật toán âm lịch</a> <a class="lta-citation-link" href="https://science.nasa.gov/solar-system/skywatching/night-sky-network/embracing-the-equinox/" target="_blank" rel="noopener">NASA về mùa</a></p>
         <p>Sau khi có ngày âm cơ bản, Lịch Ta bổ sung các lớp thông tin truyền thống như Can Chi ngày, Can Chi tháng, Can Chi năm, nạp âm, trực, lục diệu, tiết khí, giờ hoàng đạo và một số ngày lễ phổ biến. Các lớp này giúp người dùng đọc lịch Việt theo thói quen văn hóa quen thuộc hơn thay vì chỉ thấy con số ngày tháng.</p>
 
         <h2>Vì sao có thêm mã nhúng?</h2>
