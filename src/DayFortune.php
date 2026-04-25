@@ -130,6 +130,7 @@ final class DayFortune
             'lucDieuHint' => self::LUC_DIEU_HINTS[$lucDieu],
             'saoNhiThapBatTu' => self::TWENTY_EIGHT_STARS[((int) $lunar['julianDay'] + 11) % 28],
             'napAm' => self::NAP_AM[$dayName] ?? '',
+            'napAmElement' => self::elementFromNapAm(self::NAP_AM[$dayName] ?? ''),
             'hoangHacDao' => $quality === null ? 'Bình thường' : ($isHoangDao ? 'Hoàng đạo' : ($isHacDao ? 'Hắc đạo' : 'Bình thường')),
             'hoangHacDaoStar' => $quality,
             'ngayXung' => self::oppositeBranchLabel($dayParts['branch']),
@@ -138,6 +139,17 @@ final class DayFortune
             'ngayXau' => self::badDayMarkers((int) $lunar['day'], $truc, $isHacDao),
             'sourceNote' => 'Bộ trường được thiết kế lại từ các quy tắc lịch Việt truyền thống; không copy dữ liệu JS obfuscated của bên thứ ba.',
         ];
+    }
+
+    public static function elementFromNapAm(string $napAm): string
+    {
+        foreach (['Kim', 'Mộc', 'Thủy', 'Hỏa', 'Thổ'] as $element) {
+            if (str_ends_with($napAm, $element)) {
+                return $element;
+            }
+        }
+
+        return '';
     }
 
     /**

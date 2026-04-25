@@ -49,6 +49,17 @@ assertSameAppValue('Trừ', $april2026['fortune']['truc'], 'Fortune truc failed'
 assertSameAppValue('Liễu', $april2026['fortune']['saoNhiThapBatTu'], 'Fortune 28-star failed');
 assertSameAppValue('Tiểu Cát', $april2026['fortune']['lucDieu'], 'Fortune luc dieu failed');
 assertSameAppValue('Đại Lâm Mộc', $april2026['fortune']['napAm'], 'Fortune nap am failed');
+assertSameAppValue('Mộc', $april2026['fortune']['napAmElement'], 'Fortune nap am element failed');
 assertSameAppValue(['Tân Hợi', 'Đinh Hợi'], $april2026['fortune']['tuoiXung'], 'Fortune conflict ages failed');
+
+$calendar = lta_render_calendar(
+    lta_month_cells(4, 2026, ['day' => 25, 'month' => 4, 'year' => 2026], ['day' => 25, 'month' => 4, 'year' => 2026]),
+    false,
+    ['showNapAm' => true]
+);
+assertContainsText('data-popup-title="Thứ Bảy 25/4/2026"', $calendar, 'Calendar popup title failed');
+assertContainsText('data-nap-am="Đại Lâm Mộc"', $calendar, 'Calendar nap am data failed');
+assertContainsText('data-nap-element="Mộc"', $calendar, 'Calendar nap am element failed');
+assertContainsText('class="lta-nap-label">Đại Lâm Mộc</span>', $calendar, 'Calendar nap am label failed');
 
 echo "App feature checks passed.\n";

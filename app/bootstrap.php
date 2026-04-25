@@ -312,11 +312,13 @@ function lta_month_cells(int $month, int $year, array $selected, array $today): 
     for ($day = 1; $day <= $daysInMonth; $day++) {
         $lunar = LunarCalendar::solarToLunar($day, $month, $year);
         $events = lta_find_events($day, $month, $year, $lunar);
+        $fortune = DayFortune::forSolarDate($day, $month, $year);
         $cells[] = [
             'solarDay' => $day,
             'solarMonth' => $month,
             'solarYear' => $year,
             'lunar' => $lunar,
+            'fortune' => $fortune,
             'events' => $events,
             'isToday' => $day === $today['day'] && $month === $today['month'] && $year === $today['year'],
             'isSelected' => $day === $selected['day'] && $month === $selected['month'] && $year === $selected['year'],
@@ -489,11 +491,14 @@ function lta_render_markdown_grid(array $cells): string
     return implode("\n", $rows);
 }
 
-function lta_render_calendar(array $cells, bool $isEmbed = false): string
+function lta_render_calendar(array $cells, bool $isEmbed = false, array $options = []): string
 {
+    $showNapAm = (bool) ($options['showNapAm'] ?? false);
+    $extraClass = (string) ($options['class'] ?? '');
+    $gridClass = trim('lta-calendar-grid ' . $extraClass);
     ob_start();
     ?>
-    <div class="lta-calendar-grid" role="grid" aria-label="Lịch tháng">
+    <div class="<?= lta_h($gridClass) ?>" role="grid" aria-label="Lịch tháng">
         <?php foreach (LTA_WEEKDAYS as $weekday): ?>
             <div class="lta-weekday" role="columnheader"><?= lta_h($weekday) ?></div>
         <?php endforeach; ?>
@@ -505,6 +510,7 @@ function lta_render_calendar(array $cells, bool $isEmbed = false): string
             <?php endif; ?>
             <?php
             $lunar = $cell['lunar'];
+            $fortune = $cell['fortune'];
             $cellDate = ['day' => $cell['solarDay'], 'month' => $cell['solarMonth'], 'year' => $cell['solarYear']];
             $dayUrl = lta_date_url($cell['solarDay'], $cell['solarMonth'], $cell['solarYear']);
             $classes = ['lta-day'];
@@ -522,13 +528,18 @@ function lta_render_calendar(array $cells, bool $isEmbed = false): string
             }
             $eventLabel = implode(', ', array_map(static fn (array $event): string => $event['name'], $cell['events']));
             $popupText = lta_popup_text($cellDate);
+            $popupTitle = LTA_WEEKDAYS_FULL[(LunarCalendar::julianDayFromDate($cell['solarDay'], $cell['solarMonth'], $cell['solarYear']) + 1) % 7]
+                . ' ' . (int) $cell['solarDay'] . '/' . (int) $cell['solarMonth'] . '/' . (int) $cell['solarYear'];
             ?>
-            <a class="<?= lta_h(implode(' ', $classes)) ?>" role="gridcell" href="<?= lta_h($dayUrl) ?>" title="<?= lta_h($eventLabel) ?>" data-lta-day data-popup="<?= lta_h($popupText) ?>">
+            <a class="<?= lta_h(implode(' ', $classes)) ?>" role="gridcell" href="<?= lta_h($dayUrl) ?>" title="<?= lta_h($popupText) ?>" data-lta-day data-popup-title="<?= lta_h($popupTitle) ?>" data-popup="<?= lta_h($popupText) ?>" data-nap-am="<?= lta_h($fortune['napAm']) ?>" data-nap-element="<?= lta_h($fortune['napAmElement']) ?>">
                 <span class="lta-solar-day"><?= (int) $cell['solarDay'] ?></span>
                 <span class="lta-lunar-day">
                     <?= (int) $lunar['day'] === 1 || (int) $cell['solarDay'] === 1 ? (int) $lunar['day'] . '/' . (int) $lunar['month'] : (int) $lunar['day'] ?>
                     <?= (int) $lunar['leap'] === 1 ? 'N' : '' ?>
                 </span>
+                <?php if ($showNapAm): ?>
+                    <span class="lta-nap-label"><?= lta_h($fortune['napAm']) ?></span>
+                <?php endif; ?>
                 <?php if ($cell['events'] !== []): ?>
                     <span class="lta-event-dot" aria-label="<?= lta_h($eventLabel) ?>"></span>
                 <?php endif; ?>

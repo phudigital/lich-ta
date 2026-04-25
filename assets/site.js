@@ -22,13 +22,18 @@
 
     var modal = document.querySelector('[data-lta-modal]');
     var modalContent = document.querySelector('[data-lta-modal-content]');
+    var modalTitle = document.getElementById('lta-modal-title');
+    var activeTooltip;
 
-    function openModal(text) {
+    function openModal(text, title) {
         if (!modal || !modalContent) {
             window.alert(text);
             return;
         }
 
+        if (modalTitle && title) {
+            modalTitle.textContent = title;
+        }
         modalContent.textContent = text;
         modal.hidden = false;
         document.documentElement.classList.add('lta-modal-open');
@@ -47,6 +52,42 @@
         document.documentElement.classList.remove('lta-modal-open');
     }
 
+    function isFinePointer() {
+        return window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    }
+
+    function removeTooltip() {
+        if (activeTooltip) {
+            activeTooltip.remove();
+            activeTooltip = null;
+        }
+    }
+
+    function showTooltip(day) {
+        if (!isFinePointer()) {
+            return;
+        }
+
+        removeTooltip();
+        activeTooltip = document.createElement('div');
+        activeTooltip.className = 'lta-day-tooltip';
+        activeTooltip.textContent = day.getAttribute('data-popup') || day.textContent.trim();
+        document.body.appendChild(activeTooltip);
+
+        var rect = day.getBoundingClientRect();
+        var tipRect = activeTooltip.getBoundingClientRect();
+        var top = window.scrollY + rect.top - tipRect.height - 10;
+        var left = window.scrollX + rect.left + (rect.width / 2) - (tipRect.width / 2);
+
+        if (top < window.scrollY + 8) {
+            top = window.scrollY + rect.bottom + 10;
+        }
+        left = Math.max(window.scrollX + 8, Math.min(left, window.scrollX + document.documentElement.clientWidth - tipRect.width - 8));
+
+        activeTooltip.style.top = top + 'px';
+        activeTooltip.style.left = left + 'px';
+    }
+
     document.addEventListener('click', function (event) {
         var day = event.target.closest('[data-lta-day]');
         if (day) {
@@ -54,7 +95,7 @@
                 return;
             }
             event.preventDefault();
-            openModal(day.getAttribute('data-popup') || day.textContent.trim());
+            openModal(day.getAttribute('data-popup') || day.textContent.trim(), day.getAttribute('data-popup-title') || 'Chi tiết ngày');
             return;
         }
 
@@ -64,8 +105,45 @@
         }
     });
 
+    document.addEventListener('mouseover', function (event) {
+        var day = event.target.closest('[data-lta-day]');
+        if (day) {
+            showTooltip(day);
+        }
+    });
+
+    document.addEventListener('mouseout', function (event) {
+        if (event.target.closest('[data-lta-day]')) {
+            removeTooltip();
+        }
+    });
+
+    document.addEventListener('scroll', removeTooltip, true);
+
+    document.querySelectorAll('[data-nap-am-tool]').forEach(function (root) {
+        var buttons = root.querySelectorAll('[data-nap-filter]');
+        var days = root.querySelectorAll('[data-lta-day]');
+
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var filter = button.getAttribute('data-nap-filter') || '';
+
+                buttons.forEach(function (candidate) {
+                    candidate.classList.toggle('is-active', candidate === button);
+                });
+
+                days.forEach(function (day) {
+                    var matches = filter === '' || day.getAttribute('data-nap-element') === filter;
+                    day.classList.toggle('is-nap-match', filter !== '' && matches);
+                    day.classList.toggle('is-nap-dim', filter !== '' && !matches);
+                });
+            });
+        });
+    });
+
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') {
+            removeTooltip();
             closeModal();
         }
     });

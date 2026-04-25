@@ -50,6 +50,7 @@ $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl
         </a>
         <nav class="lta-nav" aria-label="Điều hướng">
             <a href="#calendar">Lịch tháng</a>
+            <a href="#nap-am">Nạp âm</a>
             <a href="#convert">Đổi ngày</a>
             <a href="#embed">Mã nhúng</a>
         </nav>
@@ -142,6 +143,24 @@ $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl
                 </div>
             <?php endif; ?>
         </aside>
+    </section>
+
+    <section class="lta-panel lta-nap-panel" id="nap-am" data-nap-am-tool>
+        <div class="lta-panel-head">
+            <div>
+                <p class="lta-eyebrow">Nạp âm ngày</p>
+                <h2><?= lta_h(LTA_MONTHS[$month]) ?> năm <?= (int) $year ?></h2>
+            </div>
+            <div class="lta-element-filter" aria-label="Lọc theo ngũ hành">
+                <button type="button" class="is-active" data-nap-filter="">Tất cả</button>
+                <button type="button" data-nap-filter="Kim">Kim</button>
+                <button type="button" data-nap-filter="Mộc">Mộc</button>
+                <button type="button" data-nap-filter="Thủy">Thủy</button>
+                <button type="button" data-nap-filter="Hỏa">Hỏa</button>
+                <button type="button" data-nap-filter="Thổ">Thổ</button>
+            </div>
+        </div>
+        <?= lta_render_calendar($cells, false, ['showNapAm' => true, 'class' => 'lta-nap-calendar']) ?>
     </section>
 
     <section class="lta-lower-grid" id="convert">
