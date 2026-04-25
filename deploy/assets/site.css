@@ -365,6 +365,11 @@ h2 {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    justify-self: end;
+    padding: 4px;
+    background: #f1f5f1;
+    border: 1px solid var(--lta-line);
+    border-radius: 999px;
     white-space: nowrap;
 }
 
@@ -388,7 +393,7 @@ h2 {
 .lta-month-actions a:first-child,
 .lta-month-actions a:last-child {
     font-size: 1.5rem;
-    min-width: 42px;
+    min-width: 38px;
     padding: 0;
 }
 
@@ -409,8 +414,9 @@ h2 {
 }
 
 .lta-picker {
-    grid-template-columns: minmax(130px, 1fr) minmax(120px, 0.7fr) auto;
-    margin-bottom: 10px;
+    align-items: end;
+    grid-template-columns: minmax(160px, 1.15fr) minmax(120px, 0.75fr) minmax(84px, auto);
+    margin: 0;
 }
 
 .lta-converter {
@@ -449,11 +455,43 @@ h2 {
     color: var(--lta-ink);
 }
 
+.lta-calendar-panel .lta-panel-head {
+    align-items: end;
+    margin-bottom: 14px;
+}
+
+.lta-calendar-panel .lta-panel-head h1 {
+    font-size: clamp(2.4rem, 3.8vw, 3.6rem);
+}
+
+.lta-calendar-panel .lta-picker button {
+    border-radius: 14px;
+    font-weight: 900;
+    min-height: 48px;
+    padding-inline: 20px;
+}
+
+.lta-calendar-panel .lta-picker input,
+.lta-calendar-panel .lta-picker select,
+.lta-calendar-panel .lta-month-filters select {
+    min-height: 48px;
+}
+
+.lta-month-controls {
+    background: #f7faf7;
+    border: 1px solid var(--lta-line);
+    border-radius: 18px;
+    display: grid;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding: 12px;
+}
+
 .lta-month-filters {
     display: grid;
     grid-template-columns: repeat(2, minmax(150px, 1fr));
     gap: 10px;
-    margin-bottom: 18px;
+    margin-bottom: 0;
 }
 
 .lta-date-lookup {
@@ -1257,6 +1295,7 @@ pre {
 
     .lta-month-actions {
         justify-content: space-between;
+        justify-self: stretch;
     }
 
     .lta-nap-controls {

@@ -177,45 +177,47 @@ $viewUrl = static function (string $target, array $date) use ($month, $year): st
                 </div>
             </div>
 
-            <form class="lta-picker" method="get" action="">
-                <input name="view" type="hidden" value="month">
-                <label>
-                    <span>Tháng</span>
-                    <select name="month">
-                        <?php foreach (LTA_MONTHS as $value => $label): ?>
-                            <option value="<?= (int) $value ?>" <?= $value === $month ? 'selected' : '' ?>><?= lta_h($label) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </label>
-                <label>
-                    <span>Năm</span>
-                    <input name="year" type="number" min="1800" max="2199" value="<?= (int) $year ?>">
-                </label>
-                <input name="day" type="hidden" value="1">
-                <button type="submit">Xem</button>
-            </form>
+            <div class="lta-month-controls">
+                <form class="lta-picker" method="get" action="">
+                    <input name="view" type="hidden" value="month">
+                    <label>
+                        <span>Tháng</span>
+                        <select name="month">
+                            <?php foreach (LTA_MONTHS as $value => $label): ?>
+                                <option value="<?= (int) $value ?>" <?= $value === $month ? 'selected' : '' ?>><?= lta_h($label) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Năm</span>
+                        <input name="year" type="number" min="1800" max="2199" value="<?= (int) $year ?>">
+                    </label>
+                    <input name="day" type="hidden" value="1">
+                    <button type="submit">Xem</button>
+                </form>
 
-            <div class="lta-month-filters" aria-label="Lọc lịch tháng">
-                <label>
-                    <span>Ngũ hành ngày</span>
-                    <select data-nap-filter-select>
-                        <option value="">Tất cả ngũ hành</option>
-                        <option value="Kim">Kim</option>
-                        <option value="Mộc">Mộc</option>
-                        <option value="Thủy">Thủy</option>
-                        <option value="Hỏa">Hỏa</option>
-                        <option value="Thổ">Thổ</option>
-                    </select>
-                </label>
-                <label>
-                    <span>Đổng Công</span>
-                    <select data-dong-filter-select>
-                        <option value="">Tất cả Đổng Công</option>
-                        <option value="good">Tốt</option>
-                        <option value="mixed">Cân nhắc</option>
-                        <option value="bad">Chưa tốt</option>
-                    </select>
-                </label>
+                <div class="lta-month-filters" aria-label="Lọc lịch tháng">
+                    <label>
+                        <span>Ngũ hành ngày</span>
+                        <select data-nap-filter-select>
+                            <option value="">Tất cả ngũ hành</option>
+                            <option value="Kim">Kim</option>
+                            <option value="Mộc">Mộc</option>
+                            <option value="Thủy">Thủy</option>
+                            <option value="Hỏa">Hỏa</option>
+                            <option value="Thổ">Thổ</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Đổng Công</span>
+                        <select data-dong-filter-select>
+                            <option value="">Tất cả Đổng Công</option>
+                            <option value="good">Tốt</option>
+                            <option value="mixed">Cân nhắc</option>
+                            <option value="bad">Chưa tốt</option>
+                        </select>
+                    </label>
+                </div>
             </div>
 
             <?= lta_render_calendar($cells, false, ['showNapAm' => true, 'class' => 'lta-nap-calendar']) ?>
