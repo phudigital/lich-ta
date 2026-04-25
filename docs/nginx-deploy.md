@@ -27,7 +27,7 @@ The old source/reference files can remain in the repo, but only the files above 
 Adjust `root` and PHP socket to match the server.
 
 ```nginx
-location ^~ /lich-ta/ {
+location /lich-ta/ {
     alias /var/www/app.pdl.vn/lich-ta/;
     index index.php;
     try_files $uri $uri/ /lich-ta/index.php?$query_string;
