@@ -21,11 +21,15 @@
 html {
     background: var(--lta-paper);
     color: var(--lta-ink);
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 body {
     margin: 0;
     min-width: 320px;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .lta-modal-open body {
@@ -45,6 +49,7 @@ select {
 
 .lta-shell {
     width: min(1180px, calc(100% - 32px));
+    max-width: calc(100vw - 32px);
     margin: 0 auto;
     padding: 24px 0 56px;
 }
@@ -65,6 +70,7 @@ select {
     align-items: center;
     justify-content: space-between;
     gap: 18px;
+    min-width: 0;
     padding: 12px 14px;
     border-radius: 18px;
     backdrop-filter: blur(14px);
@@ -74,6 +80,10 @@ select {
     display: inline-flex;
     align-items: center;
     gap: 10px;
+    min-width: 0;
+}
+
+.lta-brand span {
     min-width: 0;
 }
 
@@ -100,7 +110,10 @@ select {
 
 .lta-nav {
     display: flex;
+    flex-wrap: wrap;
     gap: 4px;
+    justify-content: flex-end;
+    min-width: 0;
     padding: 4px;
     background: #eef3ee;
     border-radius: 999px;
@@ -138,6 +151,7 @@ select {
     grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
     gap: 18px;
     margin-top: 22px;
+    min-width: 0;
 }
 
 .lta-home[data-home-element="Kim"] {
@@ -184,10 +198,12 @@ select {
     grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.9fr);
     gap: 18px;
     margin-top: 22px;
+    min-width: 0;
 }
 
 .lta-panel {
     border-radius: 24px;
+    min-width: 0;
     padding: 22px;
 }
 
@@ -209,6 +225,11 @@ select {
     display: flex;
     align-items: center;
     gap: 18px;
+    min-width: 0;
+}
+
+.lta-today-hero > div {
+    min-width: 0;
 }
 
 .lta-today-hero > span {
@@ -354,7 +375,8 @@ h2 {
 }
 
 h1 {
-    font-size: clamp(2rem, 4vw, 4rem);
+    font-size: clamp(2rem, 3.2vw, 3.25rem);
+    overflow-wrap: anywhere;
 }
 
 h2 {
@@ -461,7 +483,7 @@ h2 {
 }
 
 .lta-calendar-panel .lta-panel-head h1 {
-    font-size: clamp(2.4rem, 3.8vw, 3.6rem);
+    font-size: clamp(2rem, 3vw, 3rem);
 }
 
 .lta-calendar-panel .lta-picker button {
