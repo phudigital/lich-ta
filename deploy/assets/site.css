@@ -26,15 +26,104 @@ html {
 }
 
 body {
+    --lta-bg-grid: rgba(165, 31, 22, 0.035);
+    --lta-bg-grid-soft: rgba(165, 31, 22, 0.025);
+    --lta-bg-start: #fff7e5;
+    --lta-bg-end: #f8e7c3;
     margin: 0;
     min-width: 320px;
     max-width: 100%;
     overflow-x: hidden;
     background:
-        linear-gradient(90deg, rgba(165, 31, 22, 0.035) 1px, transparent 1px),
-        linear-gradient(0deg, rgba(165, 31, 22, 0.025) 1px, transparent 1px),
-        linear-gradient(180deg, #fff7e5 0%, #f8e7c3 100%);
+        linear-gradient(90deg, var(--lta-bg-grid) 1px, transparent 1px),
+        linear-gradient(0deg, var(--lta-bg-grid-soft) 1px, transparent 1px),
+        linear-gradient(180deg, var(--lta-bg-start) 0%, var(--lta-bg-end) 100%);
     background-size: 32px 32px, 32px 32px, auto;
+}
+
+body[data-day-element="Kim"] {
+    --lta-ink: #25211d;
+    --lta-muted: #746a60;
+    --lta-line: #dfd1bd;
+    --lta-paper: #f8f2e8;
+    --lta-panel: #fffaf0;
+    --lta-sage: #7f7468;
+    --lta-sage-strong: #51473e;
+    --lta-coral: #8e3429;
+    --lta-gold: #c49a42;
+    --lta-blue: #5a524a;
+    --lta-bg-grid: rgba(127, 116, 104, 0.04);
+    --lta-bg-grid-soft: rgba(127, 116, 104, 0.025);
+    --lta-bg-start: #fff8ec;
+    --lta-bg-end: #eadcc9;
+}
+
+body[data-day-element="Mộc"] {
+    --lta-ink: #1e2618;
+    --lta-muted: #657054;
+    --lta-line: #c9d8aa;
+    --lta-paper: #f4f7e8;
+    --lta-panel: #fffdf2;
+    --lta-sage: #4f7a3d;
+    --lta-sage-strong: #344f29;
+    --lta-coral: #9c3a25;
+    --lta-gold: #c7a84b;
+    --lta-blue: #4d5d3e;
+    --lta-bg-grid: rgba(79, 122, 61, 0.04);
+    --lta-bg-grid-soft: rgba(79, 122, 61, 0.026);
+    --lta-bg-start: #fbf8df;
+    --lta-bg-end: #dce9bf;
+}
+
+body[data-day-element="Thủy"] {
+    --lta-ink: #17272b;
+    --lta-muted: #5d7071;
+    --lta-line: #b9d0cc;
+    --lta-paper: #edf5f1;
+    --lta-panel: #fffdf2;
+    --lta-sage: #326a78;
+    --lta-sage-strong: #214952;
+    --lta-coral: #a23c2a;
+    --lta-gold: #cba64c;
+    --lta-blue: #326a78;
+    --lta-bg-grid: rgba(50, 106, 120, 0.04);
+    --lta-bg-grid-soft: rgba(50, 106, 120, 0.026);
+    --lta-bg-start: #f8f6df;
+    --lta-bg-end: #cfe3dc;
+}
+
+body[data-day-element="Hỏa"] {
+    --lta-ink: #2a1c14;
+    --lta-muted: #79675b;
+    --lta-line: #e8d8b8;
+    --lta-paper: #fff6df;
+    --lta-panel: #fffaf0;
+    --lta-sage: #a51f16;
+    --lta-sage-strong: #74150f;
+    --lta-coral: #b52a1f;
+    --lta-gold: #d8a93d;
+    --lta-blue: #59452f;
+    --lta-bg-grid: rgba(165, 31, 22, 0.035);
+    --lta-bg-grid-soft: rgba(165, 31, 22, 0.025);
+    --lta-bg-start: #fff7e5;
+    --lta-bg-end: #f8e7c3;
+}
+
+body[data-day-element="Thổ"] {
+    --lta-ink: #291f13;
+    --lta-muted: #756344;
+    --lta-line: #ddc48e;
+    --lta-paper: #fbf0d4;
+    --lta-panel: #fffaf0;
+    --lta-sage: #9b6b24;
+    --lta-sage-strong: #664617;
+    --lta-coral: #a53b21;
+    --lta-gold: #d0a43c;
+    --lta-blue: #5c4b2f;
+    --lta-bg-grid: rgba(155, 107, 36, 0.04);
+    --lta-bg-grid-soft: rgba(155, 107, 36, 0.026);
+    --lta-bg-start: #fff8e3;
+    --lta-bg-end: #ead39a;
 }
 
 .lta-modal-open body {
@@ -890,11 +979,73 @@ h2 {
 .lta-hours,
 .lta-events,
 .lta-fortune-note,
+.lta-collapse,
 .lta-almanac-detail article {
     background: #f7f3e8;
     border: 1px solid #e7d8b8;
     border-radius: 18px;
     padding: 16px;
+}
+
+.lta-collapse {
+    overflow: hidden;
+}
+
+.lta-collapse summary {
+    align-items: center;
+    color: var(--lta-sage-strong);
+    cursor: pointer;
+    display: flex;
+    font-size: 0.82rem;
+    font-weight: 900;
+    gap: 8px;
+    list-style: none;
+    min-height: 28px;
+    position: relative;
+    text-transform: uppercase;
+}
+
+.lta-collapse summary::-webkit-details-marker {
+    display: none;
+}
+
+.lta-collapse summary::before {
+    align-items: center;
+    background: color-mix(in srgb, var(--lta-sage) 14%, #fffaf0);
+    border: 1px solid color-mix(in srgb, var(--lta-sage) 28%, var(--lta-line));
+    border-radius: 999px;
+    color: var(--lta-sage-strong);
+    content: "+";
+    display: inline-flex;
+    font-size: 0.86rem;
+    height: 22px;
+    justify-content: center;
+    line-height: 1;
+    width: 22px;
+}
+
+.lta-collapse[open] summary::before {
+    content: "−";
+}
+
+.lta-home .lta-collapse {
+    isolation: isolate;
+    min-height: 58px;
+    position: relative;
+}
+
+.lta-home .lta-collapse::after {
+    color: color-mix(in srgb, var(--home-element) 16%, transparent);
+    content: attr(data-lta-icon);
+    font-size: 4.6rem;
+    font-weight: 900;
+    line-height: 1;
+    pointer-events: none;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: -1;
 }
 
 .lta-events {
@@ -927,7 +1078,7 @@ h2 {
 }
 
 .lta-almanac-detail span {
-    color: var(--lta-red);
+    color: var(--lta-coral);
     display: block;
     font-size: 0.76rem;
     font-weight: 900;

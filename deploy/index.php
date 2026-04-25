@@ -155,7 +155,7 @@ $faqJson = [
     <?php endif; ?>
     <link rel="stylesheet" href="assets/site.css?v=<?= lta_h(LTA_APP_VERSION) ?>">
 </head>
-<body>
+<body data-day-element="<?= lta_h($dayInfo['fortune']['napAmElement']) ?>">
 <main class="lta-shell">
     <header class="lta-topbar">
         <a class="lta-brand" href="./" aria-label="Lịch Ta">
@@ -236,16 +236,17 @@ $faqJson = [
                 <div><dt><span aria-hidden="true">☯</span>Ngày</dt><dd><?= lta_h($dayInfo['fortune']['hoangHacDao']) ?><?= $dayInfo['fortune']['hoangHacDaoStar'] !== null ? ' - ' . lta_h($dayInfo['fortune']['hoangHacDaoStar']) : '' ?></dd></div>
                 <div><dt><span aria-hidden="true">✓</span>Đổng Công</dt><dd><?= lta_h($dayInfo['fortune']['dongCong']['label']) ?> · trực <?= lta_h($dayInfo['fortune']['dongCong']['truc']) ?></dd></div>
             </dl>
-            <div class="lta-hours">
-                <span>Giờ hoàng đạo</span>
+            <details class="lta-hours lta-collapse" data-lta-icon="◷">
+                <summary>Giờ hoàng đạo</summary>
                 <p><?= lta_h(implode(', ', $dayInfo['hours'])) ?></p>
-            </div>
-            <div class="lta-fortune-note">
-                <span>Tuổi xung</span>
+            </details>
+            <details class="lta-fortune-note lta-collapse" data-lta-icon="☯">
+                <summary>Tuổi xung</summary>
                 <p><?= lta_h(implode(', ', $dayInfo['fortune']['tuoiXung'])) ?> · xung chi <?= lta_h($dayInfo['fortune']['ngayXung']) ?></p>
                 <small><?= lta_h($dayInfo['fortune']['lucDieuHint']) ?></small>
-            </div>
-            <div class="lta-almanac-detail">
+            </details>
+            <details class="lta-almanac-detail lta-collapse" data-lta-icon="✦">
+                <summary>Thông tin cổ lịch</summary>
                 <article>
                     <span>Nhị Thập Bát Tú</span>
                     <strong><?= lta_h($dayInfo['fortune']['saoNhiThapBatTu']) ?> · <?= lta_h($traditional['nhiThapBatTu']['animal']) ?></strong>
@@ -273,16 +274,16 @@ $faqJson = [
                     <p><?= lta_h($traditional['ngocHap']['ritual']['summary']) ?></p>
                     <small><?= lta_h($traditional['ngocHap']['note']) ?></small>
                 </article>
-            </div>
+            </details>
             <?php if ($dayInfo['events'] !== []): ?>
-                <div class="lta-events">
-                    <span>Sự kiện</span>
+                <details class="lta-events lta-collapse" data-lta-icon="◆">
+                    <summary>Sự kiện</summary>
                     <ul>
                         <?php foreach ($dayInfo['events'] as $event): ?>
                             <li><?= lta_h($event['name']) ?></li>
                         <?php endforeach; ?>
                     </ul>
-                </div>
+                </details>
             <?php endif; ?>
         </aside>
     </section>
@@ -381,17 +382,18 @@ $faqJson = [
                 <div><dt>Đổng Công</dt><dd><?= lta_h($dayInfo['fortune']['dongCong']['label']) ?> · trực <?= lta_h($dayInfo['fortune']['dongCong']['truc']) ?></dd></div>
             </dl>
 
-            <div class="lta-hours">
-                <span>Giờ hoàng đạo</span>
+            <details class="lta-hours lta-collapse">
+                <summary>Giờ hoàng đạo</summary>
                 <p><?= lta_h(implode(', ', $dayInfo['hours'])) ?></p>
-            </div>
+            </details>
 
-            <div class="lta-fortune-note">
-                <span>Tuổi xung</span>
+            <details class="lta-fortune-note lta-collapse">
+                <summary>Tuổi xung</summary>
                 <p><?= lta_h(implode(', ', $dayInfo['fortune']['tuoiXung'])) ?> · xung chi <?= lta_h($dayInfo['fortune']['ngayXung']) ?></p>
                 <small><?= lta_h($dayInfo['fortune']['lucDieuHint']) ?></small>
-            </div>
-            <div class="lta-almanac-detail">
+            </details>
+            <details class="lta-almanac-detail lta-collapse">
+                <summary>Thông tin cổ lịch</summary>
                 <article>
                     <span>Nhị Thập Bát Tú</span>
                     <strong><?= lta_h($dayInfo['fortune']['saoNhiThapBatTu']) ?> · <?= lta_h($traditional['nhiThapBatTu']['animal']) ?></strong>
@@ -419,17 +421,17 @@ $faqJson = [
                     <p><?= lta_h($traditional['ngocHap']['ritual']['summary']) ?></p>
                     <small><?= lta_h($traditional['ngocHap']['note']) ?></small>
                 </article>
-            </div>
+            </details>
 
             <?php if ($dayInfo['events'] !== []): ?>
-                <div class="lta-events">
-                    <span>Sự kiện</span>
+                <details class="lta-events lta-collapse">
+                    <summary>Sự kiện</summary>
                     <ul>
                         <?php foreach ($dayInfo['events'] as $event): ?>
                             <li><?= lta_h($event['name']) ?></li>
                         <?php endforeach; ?>
                     </ul>
-                </div>
+                </details>
             <?php endif; ?>
         </aside>
     </section>

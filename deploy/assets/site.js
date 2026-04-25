@@ -243,6 +243,9 @@
         if (description && document.querySelector('meta[name="description"]')) {
             document.querySelector('meta[name="description"]').setAttribute('content', description.getAttribute('content') || '');
         }
+        if (doc.body && doc.body.getAttribute('data-day-element')) {
+            document.body.setAttribute('data-day-element', doc.body.getAttribute('data-day-element') || '');
+        }
     }
 
     function replaceMonthWorkspace(html, url, pushState) {
