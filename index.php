@@ -119,6 +119,7 @@ $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl
                 <div><dt>Lục diệu</dt><dd><?= lta_h($dayInfo['fortune']['lucDieu']) ?></dd></div>
                 <div><dt>Nạp âm</dt><dd><?= lta_h($dayInfo['fortune']['napAm']) ?></dd></div>
                 <div><dt>Ngày</dt><dd><?= lta_h($dayInfo['fortune']['hoangHacDao']) ?><?= $dayInfo['fortune']['hoangHacDaoStar'] !== null ? ' - ' . lta_h($dayInfo['fortune']['hoangHacDaoStar']) : '' ?></dd></div>
+                <div><dt>Đổng Công</dt><dd><?= lta_h($dayInfo['fortune']['dongCong']['label']) ?> · trực <?= lta_h($dayInfo['fortune']['dongCong']['truc']) ?></dd></div>
             </dl>
 
             <div class="lta-hours">
@@ -158,6 +159,12 @@ $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl
                 <button type="button" data-nap-filter="Thủy">Thủy</button>
                 <button type="button" data-nap-filter="Hỏa">Hỏa</button>
                 <button type="button" data-nap-filter="Thổ">Thổ</button>
+            </div>
+            <div class="lta-element-filter" aria-label="Lọc theo Đổng Công">
+                <button type="button" class="is-active" data-dong-filter="">Đổng Công</button>
+                <button type="button" data-dong-filter="good">Tốt</button>
+                <button type="button" data-dong-filter="mixed">Cân nhắc</button>
+                <button type="button" data-dong-filter="bad">Chưa tốt</button>
             </div>
         </div>
         <?= lta_render_calendar($cells, false, ['showNapAm' => true, 'class' => 'lta-nap-calendar']) ?>

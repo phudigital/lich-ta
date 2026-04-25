@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../src/LunarCalendar.php';
+require_once __DIR__ . '/../src/DongCongCalendar.php';
 require_once __DIR__ . '/../src/DayFortune.php';
 
 use LichTa\DayFortune;
@@ -381,6 +382,7 @@ function lta_popup_text(array $date): string
         'Tiết: ' . $info['term'],
         'Giờ hoàng đạo: ' . implode(', ', $info['hours']),
         'Trực: ' . $info['fortune']['truc'] . '; Sao: ' . $info['fortune']['saoNhiThapBatTu'] . '; Lục diệu: ' . $info['fortune']['lucDieu'],
+        'Đổng Công: ' . $info['fortune']['dongCong']['label'] . ' - trực ' . $info['fortune']['dongCong']['truc'],
     ];
 
     if ($info['events'] !== []) {
@@ -429,6 +431,7 @@ function lta_render_text(array $date, bool $markdown = false): string
             '- Lục diệu: ' . $info['fortune']['lucDieu'],
             '- Nạp âm ngày: ' . $info['fortune']['napAm'],
             '- Hoàng/Hắc đạo: ' . $info['fortune']['hoangHacDao'] . ($info['fortune']['hoangHacDaoStar'] !== null ? ' - ' . $info['fortune']['hoangHacDaoStar'] : ''),
+            '- Đổng Công: ' . $info['fortune']['dongCong']['label'] . ' - trực ' . $info['fortune']['dongCong']['truc'],
         ];
         if ($eventNames !== []) {
             $lines[] = '- Sự kiện: ' . implode('; ', $eventNames);
@@ -455,6 +458,7 @@ function lta_render_text(array $date, bool $markdown = false): string
         'Lục diệu: ' . $info['fortune']['lucDieu'],
         'Nạp âm ngày: ' . $info['fortune']['napAm'],
         'Hoàng/Hắc đạo: ' . $info['fortune']['hoangHacDao'] . ($info['fortune']['hoangHacDaoStar'] !== null ? ' - ' . $info['fortune']['hoangHacDaoStar'] : ''),
+        'Đổng Công: ' . $info['fortune']['dongCong']['label'] . ' - trực ' . $info['fortune']['dongCong']['truc'],
     ];
     if ($eventNames !== []) {
         $lines[] = 'Sự kiện: ' . implode('; ', $eventNames);
@@ -531,7 +535,7 @@ function lta_render_calendar(array $cells, bool $isEmbed = false, array $options
             $popupTitle = LTA_WEEKDAYS_FULL[(LunarCalendar::julianDayFromDate($cell['solarDay'], $cell['solarMonth'], $cell['solarYear']) + 1) % 7]
                 . ' ' . (int) $cell['solarDay'] . '/' . (int) $cell['solarMonth'] . '/' . (int) $cell['solarYear'];
             ?>
-            <a class="<?= lta_h(implode(' ', $classes)) ?>" role="gridcell" href="<?= lta_h($dayUrl) ?>" title="<?= lta_h($popupText) ?>" data-lta-day data-popup-title="<?= lta_h($popupTitle) ?>" data-popup="<?= lta_h($popupText) ?>" data-nap-am="<?= lta_h($fortune['napAm']) ?>" data-nap-element="<?= lta_h($fortune['napAmElement']) ?>">
+            <a class="<?= lta_h(implode(' ', $classes)) ?>" role="gridcell" href="<?= lta_h($dayUrl) ?>" title="<?= lta_h($popupText) ?>" data-lta-day data-solar-day="<?= (int) $cell['solarDay'] ?>" data-solar-month="<?= (int) $cell['solarMonth'] ?>" data-solar-year="<?= (int) $cell['solarYear'] ?>" data-popup-title="<?= lta_h($popupTitle) ?>" data-popup="<?= lta_h($popupText) ?>" data-nap-am="<?= lta_h($fortune['napAm']) ?>" data-nap-element="<?= lta_h($fortune['napAmElement']) ?>" data-dong-cong="<?= lta_h($fortune['dongCong']['level']) ?>">
                 <span class="lta-solar-day"><?= (int) $cell['solarDay'] ?></span>
                 <span class="lta-lunar-day">
                     <?= (int) $lunar['day'] === 1 || (int) $cell['solarDay'] === 1 ? (int) $lunar['day'] . '/' . (int) $lunar['month'] : (int) $lunar['day'] ?>

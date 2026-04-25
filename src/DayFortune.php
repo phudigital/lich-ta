@@ -137,6 +137,7 @@ final class DayFortune
             'tuoiXung' => self::conflictAges($dayParts['stem'], $dayParts['branch']),
             'ngayTot' => self::goodDayMarkers((int) $lunar['day'], (int) $lunar['month'], $truc, $isHoangDao),
             'ngayXau' => self::badDayMarkers((int) $lunar['day'], $truc, $isHacDao),
+            'dongCong' => DongCongCalendar::evaluate($day, $month, $year, $canChi['day']),
             'sourceNote' => 'Bộ trường được thiết kế lại từ các quy tắc lịch Việt truyền thống; không copy dữ liệu JS obfuscated của bên thứ ba.',
         ];
     }

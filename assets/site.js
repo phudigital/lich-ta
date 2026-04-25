@@ -94,6 +94,16 @@
             if (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1) {
                 return;
             }
+            if (isFinePointer()) {
+                event.preventDefault();
+                var target = new URL(window.location.href);
+                target.searchParams.set('day', day.getAttribute('data-solar-day'));
+                target.searchParams.set('month', day.getAttribute('data-solar-month'));
+                target.searchParams.set('year', day.getAttribute('data-solar-year'));
+                target.hash = 'calendar';
+                window.location.href = target.toString();
+                return;
+            }
             event.preventDefault();
             openModal(day.getAttribute('data-popup') || day.textContent.trim(), day.getAttribute('data-popup-title') || 'Chi tiết ngày');
             return;
@@ -121,22 +131,43 @@
     document.addEventListener('scroll', removeTooltip, true);
 
     document.querySelectorAll('[data-nap-am-tool]').forEach(function (root) {
-        var buttons = root.querySelectorAll('[data-nap-filter]');
+        var napButtons = root.querySelectorAll('[data-nap-filter]');
+        var dongButtons = root.querySelectorAll('[data-dong-filter]');
         var days = root.querySelectorAll('[data-lta-day]');
+        var napFilter = '';
+        var dongFilter = '';
 
-        buttons.forEach(function (button) {
+        function applyFilters() {
+            days.forEach(function (day) {
+                var napMatches = napFilter === '' || day.getAttribute('data-nap-element') === napFilter;
+                var dongMatches = dongFilter === '' || day.getAttribute('data-dong-cong') === dongFilter;
+                var matches = napMatches && dongMatches;
+                day.classList.toggle('is-nap-match', (napFilter !== '' || dongFilter !== '') && matches);
+                day.classList.toggle('is-nap-dim', (napFilter !== '' || dongFilter !== '') && !matches);
+            });
+        }
+
+        napButtons.forEach(function (button) {
             button.addEventListener('click', function () {
-                var filter = button.getAttribute('data-nap-filter') || '';
+                napFilter = button.getAttribute('data-nap-filter') || '';
 
-                buttons.forEach(function (candidate) {
+                napButtons.forEach(function (candidate) {
                     candidate.classList.toggle('is-active', candidate === button);
                 });
 
-                days.forEach(function (day) {
-                    var matches = filter === '' || day.getAttribute('data-nap-element') === filter;
-                    day.classList.toggle('is-nap-match', filter !== '' && matches);
-                    day.classList.toggle('is-nap-dim', filter !== '' && !matches);
+                applyFilters();
+            });
+        });
+
+        dongButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                dongFilter = button.getAttribute('data-dong-filter') || '';
+
+                dongButtons.forEach(function (candidate) {
+                    candidate.classList.toggle('is-active', candidate === button);
                 });
+
+                applyFilters();
             });
         });
     });

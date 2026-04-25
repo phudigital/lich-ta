@@ -38,6 +38,7 @@ assertContainsText('Giờ đầu ngày: Nhâm Tý', $popup, 'Popup first hour fa
 assertContainsText('Tiết: Hạ chí', $popup, 'Popup solar term failed');
 assertContainsText('Giờ hoàng đạo: Sửu (1-3), Thìn (7-9), Ngọ (11-13), Mùi (13-15), Tuất (19-21), Hợi (21-23)', $popup, 'Popup auspicious hours failed');
 assertContainsText('Trực: Bế; Sao: Chủy; Lục diệu: Tốc Hỷ', $popup, 'Popup fortune line failed');
+assertContainsText('Đổng Công:', $popup, 'Popup dong cong line failed');
 
 $markdown = lta_render_text(['day' => 17, 'month' => 2, 'year' => 2026], true);
 assertContainsText('# Thứ Ba, 17/2/2026', $markdown, 'Markdown heading failed');
@@ -51,6 +52,8 @@ assertSameAppValue('Tiểu Cát', $april2026['fortune']['lucDieu'], 'Fortune luc
 assertSameAppValue('Đại Lâm Mộc', $april2026['fortune']['napAm'], 'Fortune nap am failed');
 assertSameAppValue('Mộc', $april2026['fortune']['napAmElement'], 'Fortune nap am element failed');
 assertSameAppValue(['Tân Hợi', 'Đinh Hợi'], $april2026['fortune']['tuoiXung'], 'Fortune conflict ages failed');
+assertSameAppValue('Trừ', $april2026['fortune']['dongCong']['truc'], 'Dong Cong truc failed');
+assertSameAppValue('mixed', $april2026['fortune']['dongCong']['level'], 'Dong Cong level failed');
 
 $calendar = lta_render_calendar(
     lta_month_cells(4, 2026, ['day' => 25, 'month' => 4, 'year' => 2026], ['day' => 25, 'month' => 4, 'year' => 2026]),
@@ -60,6 +63,7 @@ $calendar = lta_render_calendar(
 assertContainsText('data-popup-title="Thứ Bảy 25/4/2026"', $calendar, 'Calendar popup title failed');
 assertContainsText('data-nap-am="Đại Lâm Mộc"', $calendar, 'Calendar nap am data failed');
 assertContainsText('data-nap-element="Mộc"', $calendar, 'Calendar nap am element failed');
+assertContainsText('data-dong-cong="mixed"', $calendar, 'Calendar dong cong data failed');
 assertContainsText('class="lta-nap-label">Đại Lâm Mộc</span>', $calendar, 'Calendar nap am label failed');
 
 echo "App feature checks passed.\n";

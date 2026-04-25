@@ -26,8 +26,10 @@ $solar = LunarCalendar::lunarToSolar(1, 1, 2026);
 - `assets/site.css`, `assets/site.js`: UI styling and small interaction code.
 - `src/LunarCalendar.php`: clean PHP calendar engine for future app work.
 - `src/DayFortune.php`: clean Vietnamese day-fortune layer for Trực, Lục diệu, Nạp âm, Sao nhị thập bát tú, Hoàng/Hắc đạo, tuổi xung.
+- `src/DongCongCalendar.php`: summarized Đổng Công day-quality layer for good/mixed/bad filtering by solar term month and trực.
 - `docs/lunar-algorithm-memory.md`: project memory explaining the algorithm, source files, API, and regression anchors.
 - `docs/maphuong-reference-notes.md`: notes from reading the maphuong.com Lịch Việt files and the copyright boundary for not copying their obfuscated data file.
+- `docs/dong-cong-memory.md`: memory notes from the Đổng Công web article and local PDF, plus the current implementation boundary.
 - `tests/check-lunar-calendar.php`: focused smoke tests for conversion anchors.
 - `tinhlich.md`, `tietkhi.md`, `thuvien.php`: source/reference algorithm notes.
 - `amlich-js/amlich-hnd.js`: original JavaScript UI/calendar implementation with precomputed 1800-2199 year data.
