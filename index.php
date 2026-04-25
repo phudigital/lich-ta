@@ -552,6 +552,13 @@ $faqJson = [
             <p class="lta-eyebrow">Nhúng vào website</p>
             <h1>Code nhúng lịch Việt cho website</h1>
             <p class="lta-lead">Lịch Ta cung cấp mã nhúng lịch âm Việt Nam gọn nhẹ cho landing page, website doanh nghiệp, blog phong thủy, trang tin địa phương hoặc hệ thống nội bộ cần hiển thị lịch Việt.</p>
+            <div class="lta-embed-preview">
+                <div class="lta-embed-preview-head">
+                    <span>Xem trước giao diện nhúng</span>
+                    <strong>Iframe responsive</strong>
+                </div>
+                <iframe src="<?= lta_h($baseUrl) ?>/embed.php" title="Xem trước widget lịch âm Việt Nam" loading="lazy"></iframe>
+            </div>
             <div class="lta-code-tabs" data-code-tabs>
                 <div class="lta-segmented" role="tablist">
                     <button type="button" class="is-active" data-code-tab="iframe">Iframe</button>
@@ -564,6 +571,7 @@ $faqJson = [
         <aside class="lta-panel lta-seo-aside">
             <p class="lta-eyebrow">Dành cho website</p>
             <h2>Widget lịch âm responsive</h2>
+            <p class="lta-embed-preview-copy">Khung xem trước bên cạnh là giao diện thực tế khi nhúng vào website: có lịch tháng, ngày âm, thông tin ngày đang chọn và tự co theo mobile.</p>
             <ul class="lta-check-list">
                 <li>Hiển thị lịch tháng, ngày âm, ngày dương và thông tin ngày đang chọn.</li>
                 <li>Hỗ trợ iframe hoặc JavaScript, dễ đặt trong WordPress, Ladipage, HTML tĩnh hoặc CMS riêng.</li>
