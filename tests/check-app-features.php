@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../app/bootstrap.php';
 
 $_SERVER['SCRIPT_NAME'] = '/lich-ta/index.php';
-$_SERVER['HTTP_HOST'] = 'app.pdl.vn';
+$_SERVER['HTTP_HOST'] = 'calendar.example.test';
 $_SERVER['HTTPS'] = 'on';
 
 function assertContainsText(string $needle, string $haystack, string $message): void
@@ -55,7 +55,11 @@ assertContainsText('Đổng Công:', $popup, 'Popup dong cong line failed');
 $markdown = lta_render_text(['day' => 17, 'month' => 2, 'year' => 2026], true);
 assertContainsText('# Thứ Ba, 17/2/2026', $markdown, 'Markdown heading failed');
 assertContainsText('Tết Nguyên Đán', $markdown, 'Markdown event failed');
-assertContainsText('https://app.pdl.vn/lich-ta/2026-02-17', $markdown, 'Markdown solar link failed');
+assertContainsText('https://calendar.example.test/lich-ta/2026-02-17', $markdown, 'Markdown solar link failed');
+
+$_SERVER['SCRIPT_NAME'] = '/index.php';
+assertSameAppValue('https://calendar.example.test/2026-02-17', lta_date_url(17, 2, 2026, true), 'Root-domain solar link failed');
+$_SERVER['SCRIPT_NAME'] = '/lich-ta/index.php';
 
 $april2026 = lta_day_info(['day' => 25, 'month' => 4, 'year' => 2026]);
 assertSameAppValue('Trừ', $april2026['fortune']['truc'], 'Fortune truc failed');

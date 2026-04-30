@@ -20,7 +20,7 @@ $solar = LunarCalendar::lunarToSolar(1, 1, 2026);
 
 ## Files To Know
 
-- `index.php`: customer-facing website for `https://app.pdl.vn/lich-ta`.
+- `index.php`: customer-facing website. It detects the current domain/path from the request, so it can run at a subfolder such as `/lich-ta` or directly at a root domain.
 - `embed.php`: embeddable iframe widget.
 - `embed.js`: JavaScript embed loader that creates the iframe for customers.
 - `assets/site.css`, `assets/site.js`: UI styling and small interaction code.
@@ -39,14 +39,14 @@ $solar = LunarCalendar::lunarToSolar(1, 1, 2026);
 Iframe:
 
 ```html
-<iframe src="https://app.pdl.vn/lich-ta/embed.php" width="100%" height="620" style="border:0;max-width:760px;border-radius:16px;overflow:hidden" loading="lazy"></iframe>
+<iframe src="{BASE_URL}/embed.php" width="100%" height="620" style="border:0;max-width:760px;border-radius:16px;overflow:hidden" loading="lazy"></iframe>
 ```
 
 JavaScript:
 
 ```html
 <div id="pdl-lich-ta"></div>
-<script src="https://app.pdl.vn/lich-ta/embed.js" data-target="pdl-lich-ta" data-view="month" async></script>
+<script src="{BASE_URL}/embed.js" data-target="pdl-lich-ta" data-view="month" async></script>
 ```
 
 Optional script attributes:
@@ -60,12 +60,12 @@ Optional script attributes:
 
 The app is plain PHP. No Composer or build step is required.
 
-For `https://app.pdl.vn/lich-ta`, place this repository folder at the Nginx-served path for `/lich-ta` and ensure PHP-FPM handles `.php` files. The public entry points are:
+Place this repository folder at the Nginx-served path for the chosen domain or subfolder and ensure PHP-FPM handles `.php` files. The public entry points are:
 
-- `/lich-ta/index.php`
-- `/lich-ta/embed.php`
-- `/lich-ta/embed.js`
-- `/lich-ta/assets/*`
+- `{BASE_PATH}/index.php`
+- `{BASE_PATH}/embed.php`
+- `{BASE_PATH}/embed.js`
+- `{BASE_PATH}/assets/*`
 
 ## Verify
 

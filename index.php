@@ -46,7 +46,7 @@ $next = lta_next_month($month, $year);
 $selectedDate = new DateTimeImmutable(sprintf('%04d-%02d-%02d', $selected['year'], $selected['month'], $selected['day']));
 $prevDay = $selectedDate->modify('-1 day');
 $nextDay = $selectedDate->modify('+1 day');
-$baseUrl = 'https://app.pdl.vn/lich-ta';
+$baseUrl = rtrim(lta_full_base_url(), '/');
 $iframeCode = '<iframe src="' . $baseUrl . '/embed.php" width="100%" height="620" style="border:0;max-width:760px;border-radius:16px;overflow:hidden" loading="lazy"></iframe>';
 $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl . '/embed.js" data-target="pdl-lich-ta" data-view="month" async></script>';
 $pagePaths = [
@@ -634,7 +634,7 @@ $faqJson = [
                 <a href="https://vi.wikipedia.org/wiki/M%C3%B9a" target="_blank" rel="noopener">Mùa - Wikipedia</a>
                 <a href="https://science.nasa.gov/solar-system/skywatching/night-sky-network/embracing-the-equinox/" target="_blank" rel="noopener">NASA: Equinox</a>
                 <a href="https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice" target="_blank" rel="noopener">NOAA: Solstice</a>
-                <a href="https://www.xemamlich.uhm.vn/vncal_en.html" target="_blank" rel="noopener">Hồ Ngọc Đức: Vietnamese lunar calendar</a>
+                <a href="#" target="_blank" rel="noopener">Hồ Ngọc Đức: Vietnamese lunar calendar</a>
             </div>
         </div>
 

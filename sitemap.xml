@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://app.pdl.vn/lich-ta/</loc>
+    <loc>https://xemngay.io.vn/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://app.pdl.vn/lich-ta/ma-nhung-lich-viet</loc>
+    <loc>https://xemngay.io.vn/ma-nhung-lich-viet</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://app.pdl.vn/lich-ta/thu-vien-thong-thu</loc>
+    <loc>https://xemngay.io.vn/thu-vien-thong-thu</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://app.pdl.vn/lich-ta/gioi-thieu</loc>
+    <loc>https://xemngay.io.vn/gioi-thieu</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://app.pdl.vn/lich-ta/dieu-khoan-su-dung</loc>
+    <loc>https://xemngay.io.vn/dieu-khoan-su-dung</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://app.pdl.vn/lich-ta/chinh-sach-bao-mat</loc>
+    <loc>https://xemngay.io.vn/chinh-sach-bao-mat</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>

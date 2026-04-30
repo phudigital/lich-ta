@@ -27,7 +27,7 @@ const LTA_MONTHS = [
 
 const LTA_WEEKDAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 const LTA_WEEKDAYS_FULL = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-const LTA_APP_VERSION = '1.2.1';
+const LTA_APP_VERSION = '1.2.2';
 const LTA_CACHE_VERSION = 2;
 
 const LTA_STEMS_VI = [
@@ -161,14 +161,25 @@ function lta_base_url(): string
     return $scriptDir === '' ? '' : $scriptDir;
 }
 
-function lta_full_base_url(): string
+function lta_request_scheme(): string
 {
     $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
         || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
-    $scheme = $isHttps ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'] ?? 'app.pdl.vn';
 
-    return $scheme . '://' . $host . lta_base_url();
+    return $isHttps ? 'https' : 'http';
+}
+
+function lta_request_host(): string
+{
+    $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $host = explode(',', (string) $host)[0];
+
+    return trim($host) !== '' ? trim($host) : 'localhost';
+}
+
+function lta_full_base_url(): string
+{
+    return lta_origin_url() . lta_base_url();
 }
 
 function lta_vi_name(string $asciiName): string
@@ -424,12 +435,7 @@ function lta_lunar_date_url(array $lunar, bool $absolute = false): string
 
 function lta_origin_url(): string
 {
-    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-        || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
-    $scheme = $isHttps ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'] ?? 'app.pdl.vn';
-
-    return $scheme . '://' . $host;
+    return lta_request_scheme() . '://' . lta_request_host();
 }
 
 function lta_month_cells(int $month, int $year, array $selected, array $today): array

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://app.pdl.vn/lich-ta/sitemap.xml
+Sitemap: https://xemngay.io.vn/sitemap.xml

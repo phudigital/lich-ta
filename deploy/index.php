@@ -46,7 +46,7 @@ $next = lta_next_month($month, $year);
 $selectedDate = new DateTimeImmutable(sprintf('%04d-%02d-%02d', $selected['year'], $selected['month'], $selected['day']));
 $prevDay = $selectedDate->modify('-1 day');
 $nextDay = $selectedDate->modify('+1 day');
-$baseUrl = 'https://app.pdl.vn/lich-ta';
+$baseUrl = rtrim(lta_full_base_url(), '/');
 $iframeCode = '<iframe src="' . $baseUrl . '/embed.php" width="100%" height="620" style="border:0;max-width:760px;border-radius:16px;overflow:hidden" loading="lazy"></iframe>';
 $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl . '/embed.js" data-target="pdl-lich-ta" data-view="month" async></script>';
 $pagePaths = [
@@ -634,7 +634,7 @@ $faqJson = [
                 <a href="https://vi.wikipedia.org/wiki/M%C3%B9a" target="_blank" rel="noopener">Mùa - Wikipedia</a>
                 <a href="https://science.nasa.gov/solar-system/skywatching/night-sky-network/embracing-the-equinox/" target="_blank" rel="noopener">NASA: Equinox</a>
                 <a href="https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice" target="_blank" rel="noopener">NOAA: Solstice</a>
-                <a href="https://www.xemamlich.uhm.vn/vncal_en.html" target="_blank" rel="noopener">Hồ Ngọc Đức: Vietnamese lunar calendar</a>
+                <a href="#" rel="noopener">Hồ Ngọc Đức: Vietnamese lunar calendar</a>
             </div>
         </div>
 
@@ -653,7 +653,7 @@ $faqJson = [
 
         <section id="am-lich-ho-ngoc-duc" class="lta-library-section">
             <h2>Cách tính ngày âm theo giáo sư Hồ Ngọc Đức</h2>
-            <p>Phần lõi đổi ngày dương sang âm của Lịch Ta tham khảo thuật toán âm lịch Việt Nam do giáo sư Hồ Ngọc Đức công bố rộng rãi, trong đó các phép tính được điều chỉnh theo giờ Hà Nội GMT+7 và có xét tiết khí. Cách tính này không chỉ tra bảng ngày có sẵn, mà dựa trên các mốc thiên văn như ngày Julius, thời điểm sóc, tiết khí và múi giờ Việt Nam. <a class="lta-citation-link" href="https://www.xemamlich.uhm.vn/vncal_en.html" target="_blank" rel="noopener">Nguồn thuật toán</a></p>
+            <p>Phần lõi đổi ngày dương sang âm của Lịch Ta tham khảo thuật toán âm lịch Việt Nam do giáo sư Hồ Ngọc Đức công bố rộng rãi, trong đó các phép tính được điều chỉnh theo giờ Hà Nội GMT+7 và có xét tiết khí. Cách tính này không chỉ tra bảng ngày có sẵn, mà dựa trên các mốc thiên văn như ngày Julius, thời điểm sóc, tiết khí và múi giờ Việt Nam. <a class="lta-citation-link" href="#" rel="noopener">Nguồn thuật toán</a></p>
             <div class="lta-method-grid">
                 <article>
                     <h3>1. Đổi ngày dương sang ngày Julius</h3>
@@ -850,7 +850,7 @@ $faqJson = [
 
         <h2>Cách tính lịch âm ở mức cơ bản</h2>
         <p>Âm lịch Việt Nam dựa trên chu kỳ Mặt Trăng, trong đó ngày đầu tháng âm thường gắn với thời điểm sóc. Để đồng bộ với mùa trong năm, lịch còn xét các tiết khí theo chuyển động biểu kiến của Mặt Trời; hệ 24 tiết khí thường được hiểu là các mốc cách nhau 15 độ trên kinh độ Mặt Trời. Vì một năm âm lịch ngắn hơn năm dương lịch, một số năm sẽ có tháng nhuận để giữ lịch không lệch quá xa mùa vụ. Khi chuyển đổi ngày dương sang âm, ứng dụng cần xác định ngày Julius, thời điểm sóc, tháng âm, năm âm và trường hợp tháng nhuận theo múi giờ Việt Nam. <a class="lta-citation-link" href="https://vi.wikipedia.org/wiki/Ti%E1%BA%BFt_kh%C3%AD" target="_blank" rel="noopener">Tham khảo tiết khí</a></p>
-        <p>Phần lõi tính ngày âm của Lịch Ta tham khảo thư viện và thuật toán âm lịch Việt Nam do giáo sư Hồ Ngọc Đức công bố rộng rãi, kết hợp nguyên lý mùa thiên văn từ độ nghiêng trục Trái Đất và các điểm phân chí. Đây là nền tảng chính để app tính ngày âm, tháng nhuận, Can Chi, 24 tiết khí, giờ hoàng đạo và các mốc liên quan theo múi giờ Việt Nam UTC+7. <a class="lta-citation-link" href="https://www.xemamlich.uhm.vn/vncal_en.html" target="_blank" rel="noopener">Thuật toán âm lịch</a> <a class="lta-citation-link" href="https://science.nasa.gov/solar-system/skywatching/night-sky-network/embracing-the-equinox/" target="_blank" rel="noopener">NASA về mùa</a></p>
+        <p>Phần lõi tính ngày âm của Lịch Ta tham khảo thư viện và thuật toán âm lịch Việt Nam do giáo sư Hồ Ngọc Đức công bố rộng rãi, kết hợp nguyên lý mùa thiên văn từ độ nghiêng trục Trái Đất và các điểm phân chí. Đây là nền tảng chính để app tính ngày âm, tháng nhuận, Can Chi, 24 tiết khí, giờ hoàng đạo và các mốc liên quan theo múi giờ Việt Nam UTC+7. <a class="lta-citation-link" href="#" rel="noopener">Thuật toán âm lịch</a> <a class="lta-citation-link" href="https://science.nasa.gov/solar-system/skywatching/night-sky-network/embracing-the-equinox/" target="_blank" rel="noopener">NASA về mùa</a></p>
         <p>Sau khi có ngày âm cơ bản, Lịch Ta bổ sung các lớp thông tin truyền thống như Can Chi ngày, Can Chi tháng, Can Chi năm, nạp âm, trực, lục diệu, tiết khí, giờ hoàng đạo và một số ngày lễ phổ biến. Các lớp này giúp người dùng đọc lịch Việt theo thói quen văn hóa quen thuộc hơn thay vì chỉ thấy con số ngày tháng.</p>
 
         <h2>Vì sao có thêm mã nhúng?</h2>
