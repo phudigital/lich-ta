@@ -27,7 +27,7 @@ const LTA_MONTHS = [
 
 const LTA_WEEKDAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 const LTA_WEEKDAYS_FULL = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-const LTA_APP_VERSION = '1.2.2';
+const LTA_APP_VERSION = '1.2.3';
 const LTA_CACHE_VERSION = 2;
 
 const LTA_STEMS_VI = [
@@ -347,6 +347,28 @@ function lta_view_from_path(?string $path = null): ?string
 
     if (preg_match('/^\d{4}([\-\/]\d{1,2})?$/', $path) === 1) {
         return 'month';
+    }
+
+    return null;
+}
+
+function lta_deeplink_kind(?string $path = null): ?string
+{
+    $path = lta_normalized_path($path);
+    if ($path === '' || in_array($path, ['index.php', 'embed.php'], true)) {
+        return null;
+    }
+
+    if (preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $path) === 1 || preg_match('/^[lL](\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/', $path) === 1) {
+        return 'day';
+    }
+
+    if (preg_match('/^(\d{4})[-\/](\d{1,2})$/', $path) === 1) {
+        return 'month';
+    }
+
+    if (preg_match('/^(\d{4})$/', $path) === 1) {
+        return 'year';
     }
 
     return null;

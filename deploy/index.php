@@ -24,6 +24,20 @@ $cells = lta_month_cells($month, $year, $selected, $today);
 $dayInfo = lta_day_info($selected);
 $traditional = $dayInfo['fortune']['traditional'];
 $almanacLibrary = \LichTa\TraditionalAlmanac::library();
+$monthEventNames = [];
+$monthDongCounts = ['good' => 0, 'mixed' => 0, 'bad' => 0, 'unknown' => 0];
+foreach ($cells as $cell) {
+    if ($cell === null) {
+        continue;
+    }
+
+    foreach ($cell['events'] as $event) {
+        $monthEventNames[$event['name']] = $event['name'];
+    }
+
+    $dongLevel = $cell['fortune']['dongCong']['level'] ?? 'unknown';
+    $monthDongCounts[$dongLevel] = ($monthDongCounts[$dongLevel] ?? 0) + 1;
+}
 $levelLabel = static fn (string $level): string => match ($level) {
     'good' => 'Tốt',
     'bad' => 'Xấu',
@@ -47,6 +61,7 @@ $selectedDate = new DateTimeImmutable(sprintf('%04d-%02d-%02d', $selected['year'
 $prevDay = $selectedDate->modify('-1 day');
 $nextDay = $selectedDate->modify('+1 day');
 $baseUrl = rtrim(lta_full_base_url(), '/');
+$deeplinkKind = lta_deeplink_kind();
 $iframeCode = '<iframe src="' . $baseUrl . '/embed.php" width="100%" height="620" style="border:0;max-width:760px;border-radius:16px;overflow:hidden" loading="lazy"></iframe>';
 $scriptCode = '<div id="pdl-lich-ta"></div>' . "\n" . '<script src="' . $baseUrl . '/embed.js" data-target="pdl-lich-ta" data-view="month" async></script>';
 $pagePaths = [
@@ -66,6 +81,11 @@ $canonicalPaths = [
     'about' => 'gioi-thieu',
     'terms' => 'dieu-khoan-su-dung',
     'privacy' => 'chinh-sach-bao-mat',
+];
+$deeplinkCanonicalPaths = [
+    'day' => sprintf('%04d-%02d-%02d', $selected['year'], $selected['month'], $selected['day']),
+    'month' => sprintf('%04d-%02d', $year, $month),
+    'year' => sprintf('%04d', $year),
 ];
 $viewMeta = [
     'today' => [
@@ -102,7 +122,26 @@ $viewMeta = [
     ],
 ];
 $meta = $viewMeta[$view] ?? $viewMeta['today'];
-$canonicalPath = $canonicalPaths[$view] ?? '';
+if ($deeplinkKind === 'day') {
+    $eventNames = array_map(static fn (array $event): string => $event['name'], $dayInfo['events']);
+    $eventText = $eventNames === [] ? '' : ' Sự kiện: ' . implode(', ', $eventNames) . '.';
+    $meta = [
+        'title' => 'Lịch âm ngày ' . (int) $selected['day'] . '/' . (int) $selected['month'] . '/' . (int) $selected['year'] . ' - ' . $dayInfo['canChi']['day'] . ', ' . $dayInfo['fortune']['napAm'],
+        'description' => 'Xem lịch âm ngày ' . (int) $selected['day'] . '/' . (int) $selected['month'] . '/' . (int) $selected['year'] . ': âm lịch ' . (int) $dayInfo['lunar']['day'] . '/' . (int) $dayInfo['lunar']['month'] . '/' . (int) $dayInfo['lunar']['year'] . ', ngày ' . $dayInfo['canChi']['day'] . ', tháng ' . $dayInfo['canChi']['month'] . ', năm ' . $dayInfo['canChi']['year'] . ', tiết ' . $dayInfo['term'] . ', giờ hoàng đạo, tuổi xung, nạp âm ' . $dayInfo['fortune']['napAm'] . ', trực ' . $dayInfo['fortune']['truc'] . ', lục diệu ' . $dayInfo['fortune']['lucDieu'] . ' và thông tin ngày tốt xấu theo lịch Việt.' . $eventText,
+    ];
+} elseif ($deeplinkKind === 'month') {
+    $eventText = $monthEventNames === [] ? 'các ngày âm dương trong tháng' : 'các ngày nổi bật như ' . implode(', ', array_slice(array_values($monthEventNames), 0, 4));
+    $meta = [
+        'title' => 'Lịch âm tháng ' . (int) $month . '/' . (int) $year . ' - Lịch Việt, Can Chi, tiết khí',
+        'description' => 'Xem lịch âm tháng ' . (int) $month . ' năm ' . (int) $year . ' với ngày dương, ngày âm, Can Chi từng ngày, nạp âm, tiết khí, giờ hoàng đạo, Đổng Công, trực, lục diệu và ' . $eventText . '. Trang tháng hỗ trợ tra ngày tốt xấu, lọc theo ngũ hành và mở chi tiết từng ngày bằng deeplink riêng.',
+    ];
+} elseif ($deeplinkKind === 'year') {
+    $meta = [
+        'title' => 'Lịch âm năm ' . (int) $year . ' - Lịch Việt, ngày âm, Can Chi, tiết khí',
+        'description' => 'Xem lịch âm năm ' . (int) $year . ' theo lịch Việt Nam, mở nhanh từng tháng trong năm, tra ngày âm dương, Can Chi, tiết khí, nạp âm, ngày lễ truyền thống, giờ hoàng đạo và thông tin ngày tốt xấu. Mỗi tháng và mỗi ngày đều có deeplink riêng để hỗ trợ tra cứu và tối ưu SEO theo lịch Việt.',
+    ];
+}
+$canonicalPath = $deeplinkCanonicalPaths[$deeplinkKind] ?? ($canonicalPaths[$view] ?? '');
 $canonicalUrl = rtrim($baseUrl, '/') . ($canonicalPath !== '' ? '/' . ltrim($canonicalPath, '/') : '/');
 $thumbnailUrl = rtrim($baseUrl, '/') . '/assets/lich-ta-thumbnail.svg';
 $viewUrl = static function (string $target, array $date) use ($month, $year, $pagePaths): string {
@@ -459,6 +498,63 @@ $faqJson = [
                 </details>
             <?php endif; ?>
         </aside>
+    </section>
+    <?php endif; ?>
+
+    <?php if (in_array($deeplinkKind, ['day', 'month', 'year'], true)): ?>
+    <section class="lta-panel lta-seo-content lta-deeplink-content">
+        <p class="lta-eyebrow">Nội dung tra cứu</p>
+        <?php if ($deeplinkKind === 'day'): ?>
+            <h2>Tra lịch âm ngày <?= (int) $selected['day'] ?>/<?= (int) $selected['month'] ?>/<?= (int) $selected['year'] ?></h2>
+            <p>Ngày <?= (int) $selected['day'] ?>/<?= (int) $selected['month'] ?>/<?= (int) $selected['year'] ?> là <?= lta_h($dayInfo['weekdayFull']) ?> theo dương lịch. Âm lịch tương ứng là ngày <?= (int) $dayInfo['lunar']['day'] ?>/<?= (int) $dayInfo['lunar']['month'] ?>/<?= (int) $dayInfo['lunar']['year'] ?><?= (int) $dayInfo['lunar']['leap'] === 1 ? ' nhuận' : '' ?>. Ngày này thuộc Can Chi <?= lta_h($dayInfo['canChi']['day']) ?>, tháng <?= lta_h($dayInfo['canChi']['month']) ?>, năm <?= lta_h($dayInfo['canChi']['year']) ?> và đang ở tiết khí <?= lta_h($dayInfo['term']) ?>.</p>
+            <p>Ngày này thuộc nạp âm <?= lta_h($dayInfo['fortune']['napAm']) ?>, hành <?= lta_h($dayInfo['fortune']['napAmElement']) ?>, trực <?= lta_h($dayInfo['fortune']['truc']) ?>, sao <?= lta_h($dayInfo['fortune']['saoNhiThapBatTu']) ?> và lục diệu <?= lta_h($dayInfo['fortune']['lucDieu']) ?>. Giờ hoàng đạo trong ngày gồm <?= lta_h(implode(', ', $dayInfo['hours'])) ?>. Tuổi xung nên lưu ý: <?= lta_h(implode(', ', $dayInfo['fortune']['tuoiXung'])) ?>.</p>
+            <div class="lta-seo-grid">
+                <article>
+                    <h3>Thông tin ngày tốt xấu</h3>
+                    <p>Đổng Công ghi nhận ngày này ở mức <?= lta_h($levelLabel($dayInfo['fortune']['dongCong']['level'])) ?>, trực <?= lta_h($dayInfo['fortune']['dongCong']['truc']) ?>. Khi cần chọn ngày cho việc quan trọng, bạn nên đọc cùng các lớp Can Chi, tiết khí, sao ngày, ngày kỵ và mục đích việc cần làm.</p>
+                </article>
+                <article>
+                    <h3>Liên kết liên quan</h3>
+                    <p>Xem thêm <a href="<?= lta_h(lta_base_url() . '/' . sprintf('%04d-%02d', $selected['year'], $selected['month'])) ?>">lịch âm tháng <?= (int) $selected['month'] ?>/<?= (int) $selected['year'] ?></a> hoặc <a href="<?= lta_h(lta_base_url() . '/' . sprintf('%04d', $selected['year'])) ?>">lịch âm năm <?= (int) $selected['year'] ?></a> để tra các ngày gần kề, ngày lễ và lịch tháng đầy đủ.</p>
+                </article>
+                <?php if ($dayInfo['events'] !== []): ?>
+                    <article>
+                        <h3>Sự kiện trong ngày</h3>
+                        <p><?= lta_h(implode(', ', array_map(static fn (array $event): string => $event['name'], $dayInfo['events']))) ?>.</p>
+                    </article>
+                <?php endif; ?>
+            </div>
+        <?php elseif ($deeplinkKind === 'month'): ?>
+            <h2>Lịch âm tháng <?= (int) $month ?> năm <?= (int) $year ?></h2>
+            <p>Trang này tổng hợp lịch âm tháng <?= (int) $month ?> năm <?= (int) $year ?>, gồm <?= (int) cal_days_in_month(CAL_GREGORIAN, $month, $year) ?> ngày dương lịch kèm ngày âm, Can Chi, nạp âm, trực, lục diệu, tiết khí và thông tin Đổng Công. Người dùng có thể mở từng ngày để xem deeplink riêng với title, description và canonical tương ứng.</p>
+            <p>Các ngày nổi bật trong tháng: <?= $monthEventNames === [] ? 'tháng này không có sự kiện phổ biến trong dữ liệu hiện tại, bạn vẫn có thể tra từng ngày để xem Can Chi, tiết khí và ngày tốt xấu.' : lta_h(implode(', ', array_values($monthEventNames))) . '.' ?></p>
+            <div class="lta-seo-grid">
+                <article>
+                    <h3>Bộ lọc ngày tốt xấu</h3>
+                    <p>Trong tháng có <?= (int) $monthDongCounts['good'] ?> ngày được đánh dấu tốt theo Đổng Công, <?= (int) $monthDongCounts['mixed'] ?> ngày nên cân nhắc và <?= (int) $monthDongCounts['bad'] ?> ngày chưa tốt. Các nhãn này giúp lọc nhanh trước khi đọc chi tiết từng ngày.</p>
+                </article>
+                <article>
+                    <h3>Tra cứu theo ngũ hành</h3>
+                    <p>Lịch tháng hiển thị nạp âm và hành của từng ngày, hỗ trợ lọc Kim, Mộc, Thủy, Hỏa, Thổ. Đây là lớp dữ liệu hữu ích cho người cần xem nhanh màu sắc ngũ hành hoặc mệnh ngày theo lịch Việt.</p>
+                </article>
+                <article>
+                    <h3>Trang liên quan</h3>
+                    <p>Xem <a href="<?= lta_h(lta_base_url() . '/' . sprintf('%04d', $year)) ?>">lịch âm năm <?= (int) $year ?></a> hoặc chọn trực tiếp một ngày trong bảng để mở trang ngày riêng.</p>
+                </article>
+            </div>
+        <?php elseif ($deeplinkKind === 'year'): ?>
+            <h2>Lịch âm năm <?= (int) $year ?></h2>
+            <p>Trang năm <?= (int) $year ?> là điểm vào để tra nhanh lịch âm theo từng tháng. Từ đây, mỗi tháng có URL riêng dạng <?= (int) $year ?>-MM và mỗi ngày có URL riêng dạng <?= (int) $year ?>-MM-DD, giúp người dùng và máy tìm kiếm đọc được nội dung cụ thể hơn thay vì chỉ nhìn một trang lịch chung.</p>
+            <p>Xem nhanh từng tháng trong năm <?= (int) $year ?>:</p>
+            <div class="lta-seo-grid">
+                <?php foreach (LTA_MONTHS as $monthNumber => $monthLabel): ?>
+                    <article>
+                        <h3><a href="<?= lta_h(lta_base_url() . '/' . sprintf('%04d-%02d', $year, $monthNumber)) ?>"><?= lta_h($monthLabel) ?> năm <?= (int) $year ?></a></h3>
+                        <p>Tra lịch âm <?= lta_h(strtolower($monthLabel)) ?>, ngày âm dương, Can Chi, tiết khí, ngày lễ và thông tin ngày tốt xấu trong tháng.</p>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </section>
     <?php endif; ?>
 
