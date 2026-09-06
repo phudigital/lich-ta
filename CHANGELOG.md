@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.3.0 - 2026-09-06
+
+- Đồng bộ toàn bộ giao diện theo prototype: nền giấy ấm, thẻ bo tròn, điều hướng pill và hệ phân cấp màu sắc thống nhất.
+- Thiết kế lại trải nghiệm mobile với header gọn, menu đáy cho bốn màn chính và bottom sheet cho Mã nhúng, Giới thiệu cùng các trang chính sách.
+- Giữ popup chi tiết ngày trên cảm ứng và hover box trên desktop, đồng thời bổ sung trạng thái focus/active rõ ràng cho điều hướng mới.
+
 ## v1.2.5 - 2026-09-06
 
 - Giới hạn cache tháng tự sinh trong cửa sổ 5 năm trước đến 5 năm sau năm hiện tại.

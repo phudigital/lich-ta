@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="520" viewBox="0 0 720 520" role="img" aria-labelledby="title desc">
+  <title id="title">Ngu hanh calendar visual</title>
+  <desc id="desc">A refined five element calendar diagram for Vietnamese lunar calendar SEO content.</desc>
+  <rect width="720" height="520" rx="34" fill="#f5f1e7"/>
+  <path d="M56 84c86-44 154-40 204 10 48 48 98 45 151 15 68-38 139-25 207 42 46 46 61 104 45 174-18 82-73 132-164 151-105 23-206 8-303-43-89-47-141-111-155-192-12-72-7-124 15-157Z" fill="#fffaf0"/>
+  <circle cx="360" cy="258" r="142" fill="#ffffff" stroke="#d9c08a" stroke-width="3"/>
+  <circle cx="360" cy="258" r="76" fill="#f3ead5" stroke="#bf8f39" stroke-width="2"/>
+  <g fill="none" stroke="#bf8f39" stroke-width="2.4" stroke-linecap="round">
+    <path d="M360 116v65"/>
+    <path d="M495 214l-62 20"/>
+    <path d="M443 373l-37-54"/>
+    <path d="M277 373l37-54"/>
+    <path d="M225 214l62 20"/>
+  </g>
+  <g font-family="Georgia, 'Times New Roman', serif" font-weight="700" text-anchor="middle">
+    <circle cx="360" cy="92" r="54" fill="#edf0e6" stroke="#82915f" stroke-width="2"/>
+    <text x="360" y="101" font-size="25" fill="#536432">Moc</text>
+    <circle cx="525" cy="207" r="54" fill="#f6e7dd" stroke="#b65d35" stroke-width="2"/>
+    <text x="525" y="216" font-size="25" fill="#8a3d21">Hoa</text>
+    <circle cx="461" cy="398" r="54" fill="#f4ead2" stroke="#a9782e" stroke-width="2"/>
+    <text x="461" y="407" font-size="25" fill="#7a571f">Tho</text>
+    <circle cx="259" cy="398" r="54" fill="#f3f5f2" stroke="#9a9e99" stroke-width="2"/>
+    <text x="259" y="407" font-size="25" fill="#5f6460">Kim</text>
+    <circle cx="195" cy="207" r="54" fill="#e7eef1" stroke="#4f7890" stroke-width="2"/>
+    <text x="195" y="216" font-size="25" fill="#31576b">Thuy</text>
+  </g>
+  <g fill="#28453a" font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">
+    <text x="360" y="251" font-size="29" font-weight="700">Lich Ta</text>
+    <text x="360" y="285" font-size="17">Can Chi • Tiet khi • Ngu hanh</text>
+  </g>
+  <g fill="#8b6b2f" font-family="Georgia, 'Times New Roman', serif" font-size="18">
+    <text x="56" y="456">SEO theo ngay</text>
+    <text x="504" y="456">SEO theo thang nam</text>
+  </g>
+</svg>
