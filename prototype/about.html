@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Ta - Giới thiệu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fbfaf6; }
+        .glass-header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased pb-24 lg:pb-8">
+
+    <!-- Mobile Header -->
+    <header class="glass-header sticky top-0 z-50 border-b border-slate-200/60 px-4 py-3 flex items-center justify-between lg:px-8 lg:py-4">
+        <a href="index.html" class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-emerald-700 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-sm">
+                LT
+            </div>
+            <div>
+                <h1 class="font-bold leading-tight">Lịch Ta</h1>
+                <p class="text-xs text-slate-500 font-medium">Âm lịch Việt Nam</p>
+            </div>
+        </a>
+        <div class="hidden lg:flex items-center gap-1 bg-emerald-50 p-1 rounded-full border border-emerald-100">
+            <a href="index.html" class="px-4 py-2 text-slate-600 hover:text-emerald-700 rounded-full text-sm font-semibold transition-colors">Hôm nay</a>
+            <a href="month.html" class="px-4 py-2 text-slate-600 hover:text-emerald-700 rounded-full text-sm font-semibold transition-colors">Lịch tháng</a>
+            <a href="convert.html" class="px-4 py-2 text-slate-600 hover:text-emerald-700 rounded-full text-sm font-semibold transition-colors">Đổi ngày</a>
+            <a href="almanac.html" class="px-4 py-2 text-slate-600 hover:text-emerald-700 rounded-full text-sm font-semibold transition-colors">Thông Thư</a>
+        </div>
+        <button class="lg:hidden p-2 text-slate-600 bg-slate-100 rounded-full">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-4 mt-6 lg:mt-10">
+        <div class="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-slate-200">
+            <h2 class="text-3xl font-black mb-6">Về Lịch Ta</h2>
+            
+            <div class="prose prose-slate prose-emerald">
+                <p class="text-lg font-medium text-slate-600 leading-relaxed mb-6">
+                    Lịch Ta là ứng dụng xem lịch âm Việt Nam tinh gọn, tập trung vào trải nghiệm đọc và tốc độ hiển thị.
+                </p>
+                <div class="space-y-4 text-slate-600">
+                    <p>Ứng dụng cung cấp các tính năng cốt lõi:</p>
+                    <ul class="list-disc list-inside space-y-2 mb-6">
+                        <li>Xem lịch âm hôm nay, chi tiết Can Chi, nạp âm, tiết khí.</li>
+                        <li>Lịch tháng trực quan, có bộ lọc ngũ hành và Đổng Công.</li>
+                        <li>Đổi ngày âm dương nhanh chóng, hỗ trợ tháng nhuận.</li>
+                        <li>Thư viện Thông Thư tham khảo kiến thức cổ lịch.</li>
+                    </ul>
+                    
+                    <h3 class="text-xl font-bold text-slate-800 mt-8 mb-4">Mã nhúng cho Website</h3>
+                    <p>
+                        Lịch Ta cung cấp mã nhúng (widget) hoàn toàn miễn phí, cho phép bạn chèn lịch Việt Nam vào website của mình dễ dàng thông qua iframe hoặc đoạn mã JavaScript siêu nhẹ.
+                    </p>
+                    
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mt-6">
+                        <p class="text-sm text-slate-500 text-center font-medium">© 2026 Lịch Ta. Phát triển với tâm huyết.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 pb-safe pt-2 px-6 flex justify-between items-center z-50">
+        <a href="index.html" class="flex flex-col items-center gap-1 text-slate-400 w-16">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            <span class="text-[10px] font-semibold">Hôm nay</span>
+        </a>
+        <a href="month.html" class="flex flex-col items-center gap-1 text-slate-400 w-16">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span class="text-[10px] font-semibold">Tháng</span>
+        </a>
+        <a href="convert.html" class="flex flex-col items-center gap-1 text-slate-400 w-16">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+            <span class="text-[10px] font-semibold">Đổi ngày</span>
+        </a>
+        <a href="almanac.html" class="flex flex-col items-center gap-1 text-slate-400 w-16">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+            <span class="text-[10px] font-semibold">Thông Thư</span>
+        </a>
+    </nav>
+    <style>
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+    </style>
+</body>
+</html>
