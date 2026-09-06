@@ -26,6 +26,7 @@
     var mobileMenu = document.querySelector('[data-lta-mobile-menu]');
     var mobileMenuToggle = document.querySelector('[data-lta-menu-toggle]');
     var activeTooltip;
+    var modalOpener;
 
     function openModal(text, title) {
         if (!modal || !modalContent) {
@@ -36,6 +37,7 @@
         if (modalTitle && title) {
             modalTitle.textContent = title;
         }
+        modalOpener = document.activeElement;
         modalContent.textContent = text;
         modal.hidden = false;
         document.documentElement.classList.add('lta-modal-open');
@@ -52,6 +54,10 @@
 
         modal.hidden = true;
         document.documentElement.classList.toggle('lta-modal-open', Boolean(mobileMenu && !mobileMenu.hidden));
+        if (modalOpener && modalOpener.isConnected) {
+            modalOpener.focus();
+            modalOpener = null;
+        }
     }
 
     function setMobileMenu(open) {
@@ -63,10 +69,12 @@
         mobileMenuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
         document.documentElement.classList.toggle('lta-modal-open', open || (modal && !modal.hidden));
         if (open) {
-            var closeButton = mobileMenu.querySelector('[data-lta-menu-close]');
+            var closeButton = mobileMenu.querySelector('.lta-mobile-menu-close');
             if (closeButton) {
                 closeButton.focus();
             }
+        } else {
+            mobileMenuToggle.focus();
         }
     }
 
@@ -163,6 +171,11 @@
     });
 
     document.addEventListener('scroll', removeTooltip, true);
+    document.addEventListener('focusin', function (event) {
+        var day = event.target.closest('[data-lta-day]');
+        if (day) showTooltip(day);
+    });
+    document.addEventListener('focusout', removeTooltip);
 
     function initNapTool(root) {
         if (root.getAttribute('data-nap-tool-ready') === '1') {
@@ -442,6 +455,14 @@
     });
 
     document.addEventListener('keydown', function (event) {
+        var activeDialog = modal && !modal.hidden ? modal : mobileMenu && !mobileMenu.hidden ? mobileMenu : null;
+        if (event.key === 'Tab' && activeDialog) {
+            var focusable = Array.from(activeDialog.querySelectorAll('button:not([tabindex="-1"]), a[href]')).filter(function (el) { return el.getClientRects().length; });
+            var first = focusable[0];
+            var last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
         if (event.key === 'Escape') {
             removeTooltip();
             closeModal();

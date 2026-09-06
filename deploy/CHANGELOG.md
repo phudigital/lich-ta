@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.3.1 - 2026-09-06
+
+- Sửa bố cục thực tế theo prototype: header toàn chiều rộng, bốn mục chính, logo LT, font Inter và breakpoint 1024px.
+- Tách thẻ ngày, truy cập nhanh và form tra cứu; đưa đổi ngày về một thẻ với kết quả tím và liên kết xem chi tiết.
+- Đồng bộ lịch tháng, thẻ Thông Thư, trang bài viết, popup và hover box với màu sắc, khoảng cách và bo góc của thiết kế mẫu.
+
 ## v1.3.0 - 2026-09-06
 
 - Đồng bộ toàn bộ giao diện theo prototype: nền giấy ấm, thẻ bo tròn, điều hướng pill và hệ phân cấp màu sắc thống nhất.

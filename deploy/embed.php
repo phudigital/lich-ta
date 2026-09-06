@@ -25,6 +25,7 @@ $next = lta_next_month($month, $year);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lịch Ta Widget</title>
     <link rel="stylesheet" href="assets/site.css?v=<?= lta_h(LTA_APP_VERSION) ?>">
+    <link rel="stylesheet" href="assets/prototype.css?v=<?= lta_h(LTA_APP_VERSION) ?>">
 </head>
 <body class="lta-embed-body">
 <main class="lta-widget" data-lta-widget>

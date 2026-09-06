@@ -1857,7 +1857,7 @@ pre {
     text-align: right;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 1023px) {
     .lta-shell {
         width: min(100% - 18px, 680px);
         padding: 10px 0 96px;

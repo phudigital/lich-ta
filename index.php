@@ -4,6 +4,17 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/app/bootstrap.php';
 
+$uiIcon = static function (string $name): string {
+    $paths = [
+        'home' => 'M3 12l9-9 9 9M5 10v11h5v-7h4v7h5V10',
+        'calendar' => 'M8 7V3m8 4V3M5 11h14M5 5h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2',
+        'convert' => 'M8 7h12m0 0l-4-4m4 4l-4 4M16 17H4m0 0l4 4m-4-4l4-4',
+        'almanac' => 'M12 4v2m0 4v10M6 4v10m0 4v2M18 4v10m0 4v2M14 8a2 2 0 11-4 0 2 2 0 014 0M8 16a2 2 0 11-4 0 2 2 0 014 0M20 16a2 2 0 11-4 0 2 2 0 014 0',
+        'menu' => 'M4 6h16M4 12h16M4 18h16',
+    ];
+    return '<svg class="lta-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="' . $paths[$name] . '"></path></svg>';
+};
+
 $today = lta_today();
 $selectedState = lta_selected_date_state($today);
 $selected = $selectedState['date'];
@@ -230,32 +241,35 @@ $faqJson = [
     <script type="application/ld+json"><?= json_encode($faqJson, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
     <?php endif; ?>
     <link rel="stylesheet" href="assets/site.css?v=<?= lta_h(LTA_APP_VERSION) ?>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/prototype.css?v=<?= lta_h(LTA_APP_VERSION) ?>">
 </head>
-<body data-day-element="<?= lta_h($dayInfo['fortune']['napAmElement']) ?>">
-<main class="lta-shell">
+<body data-view="<?= lta_h($view) ?>" data-day-element="<?= lta_h($dayInfo['fortune']['napAmElement']) ?>">
     <header class="lta-topbar">
         <a class="lta-brand" href="./" aria-label="Lịch Ta">
-            <img src="assets/lich-ta-mark.svg" alt="" width="42" height="42">
+            <b class="lta-logo" aria-hidden="true">LT</b>
             <span>
                 <strong>Lịch Ta</strong>
                 <small>Âm lịch Việt Nam · v<?= lta_h(LTA_APP_VERSION) ?></small>
             </span>
         </a>
         <nav class="lta-nav" aria-label="Điều hướng chính">
-            <a class="<?= $view === 'today' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('today', $selected)) ?>"><span aria-hidden="true">⌂</span>Hôm nay</a>
-            <a class="<?= $view === 'month' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true">□</span>Lịch tháng</a>
-            <a class="<?= $view === 'convert' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('convert', $selected)) ?>"><span aria-hidden="true">⇄</span>Đổi ngày</a>
+            <a class="<?= $view === 'today' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('today', $selected)) ?>"><span aria-hidden="true"><?= $uiIcon('home') ?></span>Hôm nay</a>
+            <a class="<?= $view === 'month' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true"><?= $uiIcon('calendar') ?></span>Lịch tháng</a>
+            <a class="<?= $view === 'convert' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('convert', $selected)) ?>"><span aria-hidden="true"><?= $uiIcon('convert') ?></span>Đổi ngày</a>
             <a class="<?= $view === 'almanac' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('almanac', $selected)) ?>"><span aria-hidden="true">i</span>Thông Thư</a>
             <a class="<?= $view === 'embed' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('embed', $selected)) ?>"><span aria-hidden="true">{ }</span>Mã nhúng</a>
             <a class="<?= $view === 'about' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('about', $selected)) ?>"><span aria-hidden="true">i</span>Giới thiệu</a>
         </nav>
         <button class="lta-mobile-menu-toggle" type="button" aria-label="Mở thêm điều hướng" aria-expanded="false" aria-controls="lta-mobile-menu" data-lta-menu-toggle>
-            <span aria-hidden="true">☰</span>
+            <span aria-hidden="true"><?= $uiIcon('menu') ?></span>
         </button>
     </header>
+<main class="lta-shell">
 
     <?php if ($view === 'today'): ?>
     <section class="lta-home" id="today" data-home-element="<?= lta_h($dayInfo['fortune']['napAmElement']) ?>">
+        <div class="lta-today-column">
         <div class="lta-panel lta-today-panel">
             <p class="lta-eyebrow">Hôm nay</p>
             <div class="lta-today-hero">
@@ -271,7 +285,14 @@ $faqJson = [
                 <a class="lta-day-nav-today" href="./">Hôm nay</a>
                 <a href="<?= lta_h(lta_date_url((int) $nextDay->format('j'), (int) $nextDay->format('n'), (int) $nextDay->format('Y'))) ?>" aria-label="Ngày sau">›</a>
             </nav>
+        </div>
+            <div class="lta-home-actions">
+                <a href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true"><?= $uiIcon('calendar') ?></span>Lịch tháng</a>
+                <a href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true"><?= $uiIcon('almanac') ?></span>Lọc ngày</a>
+                <a href="<?= lta_h($viewUrl('convert', $selected)) ?>"><span aria-hidden="true"><?= $uiIcon('convert') ?></span>Đổi ngày</a>
+            </div>
             <form class="lta-date-lookup" method="get" action="" data-date-form>
+                <h2 class="lta-lookup-title">Tra cứu ngày</h2>
                 <fieldset class="lta-toggle">
                     <legend>Chọn loại ngày</legend>
                     <label>
@@ -294,19 +315,14 @@ $faqJson = [
                     <p class="lta-form-error"><?= lta_h($dateInputError) ?></p>
                 <?php endif; ?>
             </form>
-            <div class="lta-home-actions">
-                <a href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true">□</span>Xem lịch tháng</a>
-                <a href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true">◎</span>Lọc ngày</a>
-                <a href="<?= lta_h($viewUrl('convert', $selected)) ?>"><span aria-hidden="true">⇄</span>Đổi ngày</a>
-            </div>
         </div>
 
         <aside class="lta-panel lta-detail-panel" aria-label="Chi tiết ngày hôm nay">
             <p class="lta-eyebrow">Thông tin ngày</p>
             <dl class="lta-facts">
                 <div><dt><span aria-hidden="true">✦</span>Năm</dt><dd><?= lta_h($dayInfo['canChi']['year']) ?></dd></div>
-                <div><dt><span aria-hidden="true">☷</span>Tháng</dt><dd><?= lta_h($dayInfo['canChi']['month']) ?></dd></div>
-                <div><dt><span aria-hidden="true">☰</span>Ngày</dt><dd><?= lta_h($dayInfo['canChi']['day']) ?></dd></div>
+                <div><dt><span aria-hidden="true"><?= $uiIcon('almanac') ?></span>Tháng</dt><dd><?= lta_h($dayInfo['canChi']['month']) ?></dd></div>
+                <div><dt><span aria-hidden="true"><?= $uiIcon('menu') ?></span>Ngày</dt><dd><?= lta_h($dayInfo['canChi']['day']) ?></dd></div>
                 <div><dt><span aria-hidden="true">◷</span>Giờ đầu ngày</dt><dd><?= lta_h($dayInfo['firstHour']) ?></dd></div>
                 <div><dt><span aria-hidden="true">◐</span>Tiết khí</dt><dd><?= lta_h($dayInfo['term']) ?></dd></div>
                 <div><dt><span aria-hidden="true">⌁</span>Trực</dt><dd><?= lta_h($dayInfo['fortune']['truc']) ?></dd></div>
@@ -316,7 +332,7 @@ $faqJson = [
                 <div><dt><span aria-hidden="true">☯</span>Ngày</dt><dd><?= lta_h($dayInfo['fortune']['hoangHacDao']) ?><?= $dayInfo['fortune']['hoangHacDaoStar'] !== null ? ' - ' . lta_h($dayInfo['fortune']['hoangHacDaoStar']) : '' ?></dd></div>
                 <div><dt><span aria-hidden="true">✓</span>Đổng Công</dt><dd><?= lta_h($dayInfo['fortune']['dongCong']['label']) ?> · trực <?= lta_h($dayInfo['fortune']['dongCong']['truc']) ?></dd></div>
             </dl>
-            <details class="lta-hours lta-collapse" data-lta-icon="◷">
+            <details class="lta-hours lta-collapse" data-lta-icon="◷" open>
                 <summary>Giờ hoàng đạo</summary>
                 <p><?= lta_h(implode(', ', $dayInfo['hours'])) ?></p>
             </details>
@@ -616,7 +632,7 @@ $faqJson = [
                     <button type="button" data-nap-filter="Thổ"><span aria-hidden="true">■</span>Thổ</button>
                 </div>
                 <div class="lta-element-filter lta-dong-filter" aria-label="Lọc theo Đổng Công">
-                    <button type="button" class="is-active" data-dong-filter=""><span aria-hidden="true">☷</span>Đổng Công</button>
+                    <button type="button" class="is-active" data-dong-filter=""><span aria-hidden="true"><?= $uiIcon('almanac') ?></span>Đổng Công</button>
                     <button type="button" data-dong-filter="good"><span aria-hidden="true">✓</span>Tốt</button>
                     <button type="button" data-dong-filter="mixed"><span aria-hidden="true">±</span>Cân nhắc</button>
                     <button type="button" data-dong-filter="bad"><span aria-hidden="true">!</span>Chưa tốt</button>
@@ -630,51 +646,41 @@ $faqJson = [
     <?php if ($view === 'convert'): ?>
     <section class="lta-lower-grid" id="convert">
         <div class="lta-panel">
-            <p class="lta-eyebrow">Đổi ngày nhanh</p>
-            <h2><?= $dateInputMode === 'lunar' ? 'Âm lịch sang dương lịch' : 'Dương lịch sang âm lịch' ?></h2>
+            <div class="lta-convert-heading">
+            <p class="lta-eyebrow">Công cụ</p>
+            <h1>Đổi ngày âm dương</h1>
+            <p>Chuyển đổi nhanh chóng giữa dương lịch và âm lịch Việt Nam</p>
+            </div>
             <form class="lta-converter" method="get" action="" data-date-form>
                 <input name="view" type="hidden" value="convert">
                 <fieldset class="lta-toggle">
                     <legend>Kiểu đổi</legend>
                     <label>
                         <input type="radio" name="date_type" value="solar" <?= $dateInputMode === 'solar' ? 'checked' : '' ?>>
-                        <span>Dương sang âm</span>
+                        <span>Dương → Âm</span>
                     </label>
                     <label>
                         <input type="radio" name="date_type" value="lunar" <?= $dateInputMode === 'lunar' ? 'checked' : '' ?>>
-                        <span>Âm sang dương</span>
+                        <span>Âm → Dương</span>
                     </label>
                 </fieldset>
                 <label><span>Ngày</span><input name="day" type="number" min="1" max="<?= $dateInputMode === 'lunar' ? 30 : cal_days_in_month(CAL_GREGORIAN, $selected['month'], $selected['year']) ?>" value="<?= (int) ($dateInputMode === 'lunar' ? $selectedLunar['day'] : $selected['day']) ?>" required></label>
                 <label><span>Tháng</span><input name="month" type="number" min="1" max="12" value="<?= (int) ($dateInputMode === 'lunar' ? $selectedLunar['month'] : $selected['month']) ?>" required></label>
                 <label><span>Năm</span><input name="year" type="number" min="1800" max="2199" value="<?= (int) ($dateInputMode === 'lunar' ? $selectedLunar['year'] : $selected['year']) ?>" required></label>
                 <label class="lta-lunar-leap <?= $dateInputMode === 'lunar' ? '' : 'is-hidden' ?>"><input name="lunar_leap" type="checkbox" value="1" <?= $dateInputMode === 'lunar' && (int) $selectedLunar['leap'] === 1 ? 'checked' : '' ?>><span>Tháng nhuận</span></label>
-                <button type="submit">Đổi ngày</button>
+                <button type="submit">⇄ Chuyển đổi</button>
                 <?php if ($dateInputError !== ''): ?>
                     <p class="lta-form-error"><?= lta_h($dateInputError) ?></p>
                 <?php endif; ?>
             </form>
-        </div>
-
-        <aside class="lta-panel lta-detail-panel" aria-label="Kết quả đổi ngày">
-            <p class="lta-eyebrow">Kết quả</p>
-            <div class="lta-date-hero">
-                <span><?= (int) $dayInfo['solar']['day'] ?></span>
-                <div>
-                    <strong><?= lta_h($dayInfo['weekdayFull']) ?>, <?= (int) $dayInfo['solar']['day'] ?>/<?= (int) $dayInfo['solar']['month'] ?>/<?= (int) $dayInfo['solar']['year'] ?></strong>
-                    <small>Dương lịch</small>
-                </div>
-            </div>
-            <div class="lta-lunar-result">
-                <span>Âm lịch</span>
-                <strong><?= (int) $dayInfo['lunar']['day'] ?>/<?= (int) $dayInfo['lunar']['month'] ?>/<?= (int) $dayInfo['lunar']['year'] ?><?= (int) $dayInfo['lunar']['leap'] === 1 ? ' nhuận' : '' ?></strong>
-            </div>
-            <dl class="lta-facts">
-                <div><dt>Dương lịch</dt><dd><?= (int) $selected['day'] ?>/<?= (int) $selected['month'] ?>/<?= (int) $selected['year'] ?></dd></div>
-                <div><dt>Can Chi</dt><dd><?= lta_h($dayInfo['canChi']['day']) ?></dd></div>
-                <div><dt>Tiết khí</dt><dd><?= lta_h($dayInfo['term']) ?></dd></div>
-            </dl>
+        <aside class="lta-convert-result" aria-label="Kết quả đổi ngày">
+            <p>Kết quả (<?= $dateInputMode === 'lunar' ? 'Dương lịch' : 'Âm lịch' ?>)</p>
+            <?php $resultDate = $dateInputMode === 'lunar' ? $dayInfo['solar'] : $dayInfo['lunar']; ?>
+            <strong class="lta-converted-date"><?= sprintf('%02d/%02d/%04d', $resultDate['day'], $resultDate['month'], $resultDate['year']) ?><?= $dateInputMode !== 'lunar' && $dayInfo['lunar']['leap'] ? ' nhuận' : '' ?></strong>
+            <p>Năm <?= lta_h($dayInfo['canChi']['year']) ?> · Tháng <?= lta_h($dayInfo['canChi']['month']) ?> · Ngày <?= lta_h($dayInfo['canChi']['day']) ?></p>
+            <a href="<?= lta_h(lta_date_url($selected['day'], $selected['month'], $selected['year'])) ?>">Xem chi tiết ngày này</a>
         </aside>
+        </div>
     </section>
     <?php endif; ?>
 
@@ -755,9 +761,25 @@ $faqJson = [
 
     <?php if ($view === 'almanac'): ?>
     <section class="lta-panel lta-page-article lta-almanac-library">
-        <p class="lta-eyebrow">Thư viện Thông Thư</p>
-        <h1>Cách xem ngày tốt xấu theo lịch Việt</h1>
-        <p class="lta-lead">Người Việt khi xem lịch âm thường không chỉ xem ngày mấy, tháng mấy, mà còn xem thêm Can Chi, sao tốt xấu, ngày kỵ, Nhị Thập Bát Tú, giờ xuất hành, Ngọc Hạp và nạp âm. Trang này gom các lớp thông tin đó vào một nơi dễ đọc hơn, để bạn hiểu vì sao một ngày được gợi ý là nên làm việc này, nên tránh việc kia.</p>
+        <p class="lta-eyebrow">Thư viện</p>
+        <h1>Thông Thư Lịch Việt</h1>
+        <p class="lta-lead">Tài liệu tham khảo về cách xem ngày tốt xấu, các vì sao, trực, và các quy tắc cổ lịch được áp dụng trong Lịch Ta.</p>
+        <article class="lta-library-section lta-library-overview">
+            <h2><span><?= $uiIcon('almanac') ?></span>Nhị Thập Bát Tú</h2>
+            <p>Hệ thống 28 chòm sao chia làm 4 phương (Thanh Long, Huyền Vũ, Bạch Hổ, Chu Tước). Mỗi ngày có một sao cai quản, mang ý nghĩa cát hung riêng biệt đối với các công việc cụ thể.</p>
+            <div class="lta-overview-note"><strong>Ví dụ các sao tốt:</strong><ul><li><strong>Giác:</strong> Tốt cho thi cử, nhậm chức, cưới hỏi.</li><li><strong>Phòng:</strong> Rất tốt cho xây dựng, mai táng, xuất hành.</li><li><strong>Vĩ:</strong> Tốt cho mọi việc, đặc biệt là khởi công, khai trương.</li></ul></div>
+            <a class="lta-library-more" href="#nhi-thap-bat-tu">Tra cứu đầy đủ 28 sao →</a>
+        </article>
+        <article class="lta-library-section lta-library-overview">
+            <h2><span><?= $uiIcon('convert') ?></span>Lục Nhâm Xuất Hành</h2>
+            <p>Hệ thống tính toán thời điểm xuất hành cát hung dựa trên 6 quẻ: Đại An, Lưu Liên, Tốc Hỷ, Xích Khẩu, Tiểu Cát, Không Vong.</p>
+            <div class="lta-lucnham-grid"><?php foreach ($almanacLibrary['lucNhan'] as $item): ?><article class="is-<?= lta_h($item['level']) ?>"><h3><?= lta_h($item['name']) ?> (<?= lta_h($levelLabel($item['level'])) ?>)</h3><p><?= lta_h($item['summary']) ?></p></article><?php endforeach; ?></div>
+        </article>
+        <article class="lta-library-section lta-library-overview">
+            <h2><span>◷</span>Thập Nhị Kiến Trừ (12 Trực)</h2>
+            <p>12 Trực quay vòng theo ngày, thể hiện trạng thái của vạn vật: Kiến, Trừ, Mãn, Bình, Định, Chấp, Phá, Nguy, Thành, Thu, Khai, Bế.</p>
+            <a class="lta-library-more" href="#dong-cong">Xem cách tra ngày →</a>
+        </article>
         <div class="lta-source-note">
             <strong>Cách tham khảo</strong>
             <p>Nội dung được tổng hợp và đối chiếu từ nhiều nguồn lịch cổ truyền, thông thư dân gian, tài liệu tra cứu phổ biến và các nguồn thiên văn công khai. Lịch Ta viết lại theo lối ngắn gọn, dễ kiểm tra, để người dùng có thể đọc nhanh thay vì phải lần từng bảng rời rạc.</p>
@@ -974,8 +996,14 @@ $faqJson = [
     <?php if ($view === 'about'): ?>
     <section class="lta-panel lta-page-article">
         <p class="lta-eyebrow">Giới thiệu sản phẩm</p>
-        <h1>Lịch Ta - ứng dụng lịch âm Việt Nam và mã nhúng lịch Việt cho website</h1>
-        <p class="lta-lead">Lịch Ta là công cụ tra lịch âm Việt Nam chạy nhanh trên nền PHP, tập trung vào các nhu cầu thực tế: xem lịch hôm nay, xem lịch tháng, đổi ngày âm dương, đọc thông tin Can Chi - tiết khí và nhúng lịch âm vào website.</p>
+        <h1>Về Lịch Ta</h1>
+        <p class="lta-lead">Lịch Ta là ứng dụng xem lịch âm Việt Nam tinh gọn, tập trung vào trải nghiệm đọc và tốc độ hiển thị.</p>
+        <p>Ứng dụng cung cấp các tính năng cốt lõi:</p>
+        <ul class="lta-about-features"><li>Xem lịch âm hôm nay, chi tiết Can Chi, nạp âm, tiết khí.</li><li>Lịch tháng trực quan, có bộ lọc ngũ hành và Đổng Công.</li><li>Đổi ngày âm dương nhanh chóng, hỗ trợ tháng nhuận.</li><li>Thư viện Thông Thư tham khảo kiến thức cổ lịch.</li></ul>
+        <h2>Mã nhúng cho Website</h2>
+        <p>Lịch Ta cung cấp mã nhúng (widget) hoàn toàn miễn phí, cho phép bạn chèn lịch Việt Nam vào website của mình dễ dàng thông qua iframe hoặc đoạn mã JavaScript siêu nhẹ. <a href="<?= lta_h($viewUrl('embed', $selected)) ?>">Lấy mã nhúng →</a></p>
+        <p class="lta-about-credit">© <?= date('Y') ?> Lịch Ta. Phát triển với tâm huyết.</p>
+        <details class="lta-about-more"><summary>Tìm hiểu thêm về ứng dụng và cách tính lịch</summary>
 
         <h2>Lịch Ta giải quyết nhu cầu gì?</h2>
         <p>Nhiều website Việt Nam cần một block lịch âm gọn, dễ đọc và có thể đặt ngay trong trang mà không phải tự xây dựng thuật toán lịch. Lịch Ta cung cấp giao diện xem ngày trực tiếp cho người dùng cuối và một widget nhúng cho chủ website. Công cụ này phù hợp với website doanh nghiệp, blog văn hóa, trang phong thủy, cổng thông tin địa phương, landing page bất động sản, trang sự kiện và các hệ thống nội bộ cần hiển thị lịch Việt.</p>
@@ -990,6 +1018,7 @@ $faqJson = [
 
         <h2>Định hướng phát triển</h2>
         <p>Lịch Ta ưu tiên tính dễ dùng, tốc độ tải nhanh, giao diện mobile rõ ràng và nội dung hữu ích cho người tìm kiếm lịch âm Việt Nam. Các phần ngày tốt xấu được trình bày như thông tin tham khảo văn hóa, không khẳng định thay cho tư vấn chuyên môn, pháp lý, y tế, tài chính hoặc quyết định cá nhân quan trọng.</p>
+        </details>
     </section>
     <?php endif; ?>
 
@@ -1042,10 +1071,10 @@ $faqJson = [
     </footer>
 </main>
 <nav class="lta-mobile-nav" aria-label="Điều hướng di động">
-    <a class="<?= $view === 'today' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('today', $selected)) ?>"><span aria-hidden="true">⌂</span>Hôm nay</a>
-    <a class="<?= $view === 'month' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true">□</span>Tháng</a>
-    <a class="<?= $view === 'convert' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('convert', $selected)) ?>"><span aria-hidden="true">⇄</span>Đổi ngày</a>
-    <a class="<?= $view === 'almanac' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('almanac', $selected)) ?>"><span aria-hidden="true">☷</span>Thông Thư</a>
+    <a class="<?= $view === 'today' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('today', $selected)) ?>"><span aria-hidden="true"><?= $uiIcon('home') ?></span>Hôm nay</a>
+    <a class="<?= $view === 'month' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('month', $selected)) ?>"><span aria-hidden="true"><?= $uiIcon('calendar') ?></span>Tháng</a>
+    <a class="<?= $view === 'convert' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('convert', $selected)) ?>"><span aria-hidden="true"><?= $uiIcon('convert') ?></span>Đổi ngày</a>
+    <a class="<?= $view === 'almanac' ? 'is-active' : '' ?>" href="<?= lta_h($viewUrl('almanac', $selected)) ?>"><span aria-hidden="true"><?= $uiIcon('almanac') ?></span>Thông Thư</a>
 </nav>
 <div class="lta-mobile-menu" id="lta-mobile-menu" data-lta-mobile-menu hidden>
     <button class="lta-mobile-menu-backdrop" type="button" tabindex="-1" aria-label="Đóng menu" data-lta-menu-close></button>
