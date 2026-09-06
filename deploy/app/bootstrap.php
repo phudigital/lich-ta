@@ -27,8 +27,9 @@ const LTA_MONTHS = [
 
 const LTA_WEEKDAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 const LTA_WEEKDAYS_FULL = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-const LTA_APP_VERSION = '1.2.3';
+const LTA_APP_VERSION = '1.2.5';
 const LTA_CACHE_VERSION = 2;
+const LTA_MONTH_CACHE_YEAR_RADIUS = 5;
 
 const LTA_STEMS_VI = [
     'Giap' => 'Giáp',
@@ -535,8 +536,30 @@ function lta_month_cache_file(int $month, int $year): string
     return lta_cache_months_dir() . '/' . sprintf('%04d-%02d.php', $year, $month);
 }
 
+/** @return array{start: int, end: int} */
+function lta_month_cache_year_window(): array
+{
+    $currentYear = (int) (new DateTimeImmutable('now', new DateTimeZone('Asia/Ho_Chi_Minh')))->format('Y');
+
+    return [
+        'start' => $currentYear - LTA_MONTH_CACHE_YEAR_RADIUS,
+        'end' => $currentYear + LTA_MONTH_CACHE_YEAR_RADIUS,
+    ];
+}
+
+function lta_can_cache_month(int $month, int $year): bool
+{
+    $window = lta_month_cache_year_window();
+
+    return $month >= 1 && $month <= 12 && $year >= $window['start'] && $year <= $window['end'];
+}
+
 function lta_read_month_cache(int $month, int $year): ?array
 {
+    if (!lta_can_cache_month($month, $year)) {
+        return null;
+    }
+
     $file = lta_month_cache_file($month, $year);
     if (!is_file($file)) {
         return null;
@@ -552,6 +575,10 @@ function lta_read_month_cache(int $month, int $year): ?array
 
 function lta_write_month_cache(int $month, int $year, array $days): void
 {
+    if (!lta_can_cache_month($month, $year)) {
+        return;
+    }
+
     $dir = lta_cache_months_dir();
     if (!is_dir($dir) && !mkdir($dir, 0775, true) && !is_dir($dir)) {
         return;
@@ -573,6 +600,27 @@ function lta_write_month_cache(int $month, int $year, array $days): void
     if (file_put_contents($tmp, $php, LOCK_EX) !== false) {
         rename($tmp, $file);
     }
+}
+
+function lta_prune_month_cache(): int
+{
+    $dir = lta_cache_months_dir();
+    if (!is_dir($dir) || !is_writable($dir)) {
+        return 0;
+    }
+
+    $removed = 0;
+    foreach (glob($dir . '/*.php') ?: [] as $file) {
+        if (preg_match('/\\/(\\d{4})-(\\d{2})\\.php$/', $file, $matches) !== 1) {
+            continue;
+        }
+
+        if (!lta_can_cache_month((int) $matches[2], (int) $matches[1]) && unlink($file)) {
+            $removed++;
+        }
+    }
+
+    return $removed;
 }
 
 function lta_compute_day_info(array $date): array

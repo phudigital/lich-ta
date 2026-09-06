@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.2.5 - 2026-09-06
+
+- Giới hạn cache tháng tự sinh trong cửa sổ 5 năm trước đến 5 năm sau năm hiện tại.
+- Script precompute mặc định dọn cache ngoài cửa sổ rồi tạo cache cho toàn bộ 11 năm cần thiết.
+
 ## v1.2.2 - 2026-04-30
 
 - Loại bỏ domain `app.pdl.vn/lich-ta` khỏi logic runtime, canonical URL và mã nhúng.

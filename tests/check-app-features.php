@@ -42,6 +42,11 @@ assertSameAppValue(null, lta_solar_from_lunar_input(30, 2, 2026, 1), 'Invalid le
 $cachedApril = lta_month_days(4, 2026);
 assertSameAppValue(30, count($cachedApril), 'Month cache day count failed');
 assertSameAppValue('Đại Lâm Mộc', $cachedApril[25]['fortune']['napAm'], 'Month cache fortune failed');
+$cacheWindow = lta_month_cache_year_window();
+assertSameAppValue(true, lta_can_cache_month(1, $cacheWindow['start']), 'Cache start year should be included');
+assertSameAppValue(true, lta_can_cache_month(12, $cacheWindow['end']), 'Cache end year should be included');
+assertSameAppValue(false, lta_can_cache_month(1, $cacheWindow['start'] - 1), 'Cache year before window should be excluded');
+assertSameAppValue(false, lta_can_cache_month(12, $cacheWindow['end'] + 1), 'Cache year after window should be excluded');
 
 $popup = lta_popup_text(['day' => 25, 'month' => 6, 'year' => 2019]);
 assertContainsText('Thứ Ba 25/6/2019 -+- Ngày 23 tháng 5 âm lịch', $popup, 'Popup heading failed');

@@ -53,7 +53,13 @@ The app writes month cache files under:
 app/cache/months/
 ```
 
-Make that directory writable by the PHP-FPM user. You can also precompute cache files after upload:
+Make that directory writable by the PHP-FPM user. The application only writes cache files from five years before through five years after the current year. After upload, run the default command once to remove stale cache files and precompute that 11-year window:
+
+```bash
+php bin/precompute-cache.php
+```
+
+To precompute one specific month or year inside that window:
 
 ```bash
 php bin/precompute-cache.php 2026

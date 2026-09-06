@@ -11,7 +11,13 @@ if (PHP_SAPI !== 'cli') {
 
 $targets = array_slice($argv, 1);
 if ($targets === []) {
-    $targets = [(string) (int) date('Y')];
+    $window = lta_month_cache_year_window();
+    $removed = lta_prune_month_cache();
+    if ($removed > 0) {
+        fwrite(STDOUT, "Removed {$removed} out-of-window cache file(s).\n");
+    }
+
+    $targets = array_map('strval', range($window['start'], $window['end']));
 }
 
 foreach ($targets as $target) {
@@ -37,6 +43,10 @@ function lta_precompute_month(int $month, int $year): void
 {
     if ($month < 1 || $month > 12 || $year < 1800 || $year > 2199) {
         fwrite(STDERR, "Skip out-of-range month: {$year}-{$month}\n");
+        return;
+    }
+    if (!lta_can_cache_month($month, $year)) {
+        fwrite(STDERR, "Skip month outside the rolling cache window: {$year}-{$month}\n");
         return;
     }
 
