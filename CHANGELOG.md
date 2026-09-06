@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.3.3 - 2026-09-06
+
+- Màu thẻ Hôm nay, nhãn nạp âm, icon phong thủy, nút tra cứu và trạng thái hover/focus thay đổi theo ngũ hành của ngày đang xem.
+- Dùng bảng màu ngũ hành hiện có, bỏ các màu xanh lá, tím và vàng cố định trên các thành phần của trang Hôm nay.
+
 ## v1.3.2 - 2026-09-06
 
 - Thay hình tròn nền trên thẻ Hôm nay bằng icon phong thủy bát quái và âm dương dạng SVG.
