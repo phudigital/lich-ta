@@ -23,7 +23,7 @@ body[data-view=about] .lta-lead { font-size:18px; font-weight:500; line-height:1
 .lta-home .lta-panel { border-color:var(--lta-line); }
 .lta-today-column { display:grid; gap:24px; min-width:0; }
 .lta-today-panel { overflow:hidden; display:block; }
-.lta-today-panel::before { content:''; position:absolute; width:160px; height:160px; border-radius:50%; right:16px; top:16px; background:#1e293b; opacity:.06; pointer-events:none; }
+.lta-today-panel::before { content:''; position:absolute; width:160px; height:160px; right:16px; top:16px; background:url('fengshui.svg') center / contain no-repeat; opacity:.1; pointer-events:none; }
 .lta-eyebrow { display:table; border-radius:999px; background:#ffe4e6; color:#be123c; padding:4px 12px; font-size:12px; font-weight:700; letter-spacing:.05em; margin:0 0 16px; }
 .lta-today-hero { display:flex; align-items:center; gap:24px; }
 .lta-today-hero>span { width:160px; height:160px; flex:none; border-radius:16px; background:linear-gradient(135deg,#10b981,#065f46); color:white; font-size:72px; font-weight:900; box-shadow:0 10px 15px #a7f3d066; }

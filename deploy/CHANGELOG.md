@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.3.2 - 2026-09-06
+
+- Thay hình tròn nền trên thẻ Hôm nay bằng icon phong thủy bát quái và âm dương dạng SVG.
+
 ## v1.3.1 - 2026-09-06
 
 - Sửa bố cục thực tế theo prototype: header toàn chiều rộng, bốn mục chính, logo LT, font Inter và breakpoint 1024px.
