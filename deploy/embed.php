@@ -24,8 +24,8 @@ $next = lta_next_month($month, $year);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lịch Ta Widget</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Noto+Serif:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/site.css?v=<?= lta_h(LTA_APP_VERSION) ?>">
-    <link rel="stylesheet" href="assets/prototype.css?v=<?= lta_h(LTA_APP_VERSION) ?>">
 </head>
 <body class="lta-embed-body">
 <main class="lta-widget" data-lta-widget>
@@ -65,6 +65,6 @@ $next = lta_next_month($month, $year);
         <pre data-lta-modal-content></pre>
     </section>
 </div>
-<script src="assets/site.js"></script>
+<script src="assets/site.js?v=<?= lta_h(LTA_APP_VERSION) ?>"></script>
 </body>
 </html>

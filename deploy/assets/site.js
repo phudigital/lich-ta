@@ -147,6 +147,11 @@
                 return;
             }
             event.preventDefault();
+            var modalLink = modal ? modal.querySelector('[data-lta-modal-link]') : null;
+            if (modalLink) {
+                modalLink.href = day.href;
+                modalLink.hidden = document.body.classList.contains('lta-embed-body');
+            }
             openModal(day.getAttribute('data-popup') || day.textContent.trim(), day.getAttribute('data-popup-title') || 'Chi tiết ngày');
             return;
         }
@@ -499,4 +504,49 @@
 
         postEmbedHeight();
     }
+
+    document.querySelectorAll('[data-lta-swipe]').forEach(function (leaf) {
+        var startX = 0;
+        var startY = 0;
+        var tracking = false;
+
+        leaf.addEventListener('touchstart', function (event) {
+            if (event.touches.length !== 1 || event.target.closest('a, button, input, select')) {
+                tracking = false;
+                return;
+            }
+            tracking = true;
+            startX = event.touches[0].clientX;
+            startY = event.touches[0].clientY;
+        }, { passive: true });
+
+        leaf.addEventListener('touchmove', function (event) {
+            if (!tracking) {
+                return;
+            }
+            var dx = event.touches[0].clientX - startX;
+            var dy = event.touches[0].clientY - startY;
+            if (Math.abs(dx) > Math.abs(dy)) {
+                leaf.style.setProperty('--swipe-x', Math.max(-60, Math.min(60, dx / 3)) + 'px');
+            }
+        }, { passive: true });
+
+        leaf.addEventListener('touchend', function (event) {
+            if (!tracking) {
+                return;
+            }
+            tracking = false;
+            leaf.style.removeProperty('--swipe-x');
+            var dx = event.changedTouches[0].clientX - startX;
+            var dy = event.changedTouches[0].clientY - startY;
+            if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) {
+                return;
+            }
+            var url = leaf.getAttribute(dx < 0 ? 'data-next-url' : 'data-prev-url');
+            if (url) {
+                leaf.classList.add(dx < 0 ? 'is-leaving-next' : 'is-leaving-prev');
+                window.location.href = url;
+            }
+        });
+    });
 })();

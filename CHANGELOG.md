@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.4.0 - 2026-11-10
+
+- Thiết kế lại toàn bộ giao diện theo concept "Tờ lịch bloc": nền giấy ấm, chữ mực, son đỏ làm màu thương hiệu duy nhất; font Be Vietnam Pro và Noto Serif hỗ trợ tiếng Việt đầy đủ.
+- Trang Hôm nay thành một tờ lịch: số ngày serif lớn, ngày âm "Mùng/tháng Giêng/Chạp", hàng Can Chi ngày/tháng/năm, nhãn Hoàng/Hắc đạo, Đổng Công và tiết khí; màu tờ lịch vẫn theo ngũ hành ngày.
+- Giờ hoàng đạo hiển thị sẵn dạng lưới 12 giờ, giờ tốt được tô vàng.
+- Mobile: vuốt trái/phải trên tờ lịch để đổi ngày, menu đáy mới, popup ngày dạng bottom sheet có nút "Xem chi tiết ngày", vùng chạm tối thiểu 44px.
+- Lịch tháng: chấm Đổng Công trên từng ô, vạch màu ngũ hành, cột Chủ nhật đỏ, chú giải dưới lịch; bộ lọc gọn hơn trên mobile.
+- Gộp `site.css` + `prototype.css` thành một hệ thống style mobile-first duy nhất (index và embed không còn tải `prototype.css`).
+
 ## v1.3.3 - 2026-09-06
 
 - Màu thẻ Hôm nay, nhãn nạp âm, icon phong thủy, nút tra cứu và trạng thái hover/focus thay đổi theo ngũ hành của ngày đang xem.
