@@ -294,6 +294,11 @@
         if (doc.body && doc.body.getAttribute('data-day-element')) {
             document.body.setAttribute('data-day-element', doc.body.getAttribute('data-day-element') || '');
         }
+        var nextTheme = doc.querySelector('meta[name="theme-color"]');
+        var currentTheme = document.querySelector('meta[name="theme-color"]');
+        if (nextTheme && currentTheme) {
+            currentTheme.setAttribute('content', nextTheme.getAttribute('content') || '');
+        }
     }
 
     function replaceMonthWorkspace(html, url, pushState) {

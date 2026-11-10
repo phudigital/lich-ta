@@ -1,10 +1,21 @@
 /* ==========================================================================
-   Lịch Ta — "Tờ lịch bloc" design system (v1.4)
-   Mobile-first. Giấy ấm · mực · son đỏ. Màu ngũ hành chỉ dùng cho dữ liệu.
-   Breakpoints: 560px (phablet), 768px (tablet), 1024px (desktop).
+   Lịch Ta — Concept "Lịch bloc" (v1.5)
+
+   Một ngôn ngữ duy nhất cho mọi trang:
+   1. Tờ lịch  (.lta-sheet)       — gáy màu, lỗ đóng gáy, các tờ xếp chồng phía sau.
+   2. Đường xé (.lta-perf)        — răng cưa ngăn phần nhập / phần kết quả.
+   3. Con dấu  (.lta-stamp)       — kết luận ngày được "đóng dấu" lên tờ lịch.
+   4. Mini-lịch (.lta-mini-leaf, .lta-logo) — biểu tượng chung cho logo và ngày.
+
+   MÀU CHỦ ĐẠO = NGŨ HÀNH CỦA NGÀY ĐANG XEM: mọi màu thương hiệu dùng --accent*,
+   được gán từ body[data-day-element]. Đỏ (--red) chỉ dành cho Chủ nhật & ngày lễ.
+   Tốt / Cân nhắc / Chưa tốt dùng màu ngữ nghĩa cố định.
+
+   Mobile-first. Breakpoints: 560px · 768px · 1024px.
    ========================================================================== */
 
 :root {
+    /* Giấy & mực */
     --paper: #f5efe3;
     --paper-2: #ede4d1;
     --surface: #fffcf6;
@@ -16,19 +27,29 @@
     --line: #e7dcc8;
     --line-strong: #d6c7ab;
 
-    --son: #b42318;
-    --son-strong: #8c1a12;
-    --son-soft: #fbe8e2;
-    --gold: #9a6a12;
-    --gold-strong: #6f4b0b;
-    --gold-soft: #f8ecd0;
-    --gold-line: #e9d29d;
+    /* Màu chủ đạo — mặc định Thổ, ghi đè theo ngũ hành ngày bên dưới */
+    --accent: #a0701f;
+    --accent-strong: #6e4c14;
+    --accent-deep: #4f360d;
+    --accent-soft: #f7eedb;
+    --accent-line: #e6d2a8;
+
+    /* Quy ước lịch: Chủ nhật & ngày lễ */
+    --red: #b42318;
+    --red-soft: #fbe8e2;
+    --red-line: #f1c6bc;
+
+    /* Ngữ nghĩa */
     --good: #2e7347;
     --good-soft: #e4f1e7;
-    --warn: #a2660a;
-    --warn-soft: #f8ecd6;
-    --bad: #b42318;
-    --bad-soft: #fbe8e2;
+    --good-line: #c4e0cc;
+    --mixed: #a2660a;
+    --mixed-dot: #d39a2c;
+    --mixed-soft: #f8ecd6;
+    --mixed-line: #ecd4a6;
+    --bad: #6f665c;
+    --bad-soft: #eeeae4;
+    --bad-line: #d9d2c8;
 
     --font-ui: "Be Vietnam Pro", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --font-display: "Noto Serif", Georgia, "Times New Roman", serif;
@@ -38,18 +59,108 @@
     --radius-sm: 12px;
     --shadow: 0 1px 2px rgba(70, 48, 15, 0.06), 0 14px 34px -20px rgba(70, 48, 15, 0.28);
     --shadow-lift: 0 2px 4px rgba(70, 48, 15, 0.08), 0 22px 44px -22px rgba(70, 48, 15, 0.38);
+    --stack:
+        0 1px 0 var(--line),
+        0 5px 0 -2px var(--surface-2),
+        0 6px 0 -2px var(--line-strong),
+        0 10px 0 -4px var(--surface-2),
+        0 11px 0 -4px var(--line-strong),
+        0 24px 38px -22px rgba(70, 48, 15, 0.38);
     --topbar-h: 60px;
     --mobile-nav-h: 64px;
-
-    /* Ngũ hành ngày đang xem (mặc định: Thổ ấm) */
-    --home-element: #a0701f;
-    --home-element-strong: #6e4c14;
-    --home-element-soft: #f7eedb;
-    --home-element-line: #e6d2a8;
 
     color-scheme: light;
     font-family: var(--font-ui);
 }
+
+/* Ngũ hành ngày → màu chủ đạo toàn site */
+body[data-day-element="Kim"] {
+    --accent: #6b7280;
+    --accent-strong: #3f4651;
+    --accent-deep: #2b3038;
+    --accent-soft: #eef0f2;
+    --accent-line: #d5d9de;
+}
+
+body[data-day-element="Mộc"] {
+    --accent: #2f7d4f;
+    --accent-strong: #1f5a37;
+    --accent-deep: #143d25;
+    --accent-soft: #e6f2ea;
+    --accent-line: #c5e0cf;
+}
+
+body[data-day-element="Thủy"] {
+    --accent: #2369a0;
+    --accent-strong: #174a73;
+    --accent-deep: #0f3352;
+    --accent-soft: #e5eff7;
+    --accent-line: #c3d8ea;
+}
+
+body[data-day-element="Hỏa"] {
+    --accent: #c2410c;
+    --accent-strong: #8a2e0a;
+    --accent-deep: #611f06;
+    --accent-soft: #fbebe2;
+    --accent-line: #f0c9b5;
+}
+
+body[data-day-element="Thổ"] {
+    --accent: #a0701f;
+    --accent-strong: #6e4c14;
+    --accent-deep: #4f360d;
+    --accent-soft: #f7eedb;
+    --accent-line: #e6d2a8;
+}
+
+/* Màu dữ liệu cho từng ô ngày / thẻ (không phải màu thương hiệu) */
+.lta-element-kim {
+    --day-element: #6b7280;
+    --day-element-strong: #3f4651;
+    --day-element-soft: #eef0f2;
+    --day-element-line: #d5d9de;
+}
+
+.lta-element-moc {
+    --day-element: #2f7d4f;
+    --day-element-strong: #1f5a37;
+    --day-element-soft: #e6f2ea;
+    --day-element-line: #c5e0cf;
+}
+
+.lta-element-thuy {
+    --day-element: #2369a0;
+    --day-element-strong: #174a73;
+    --day-element-soft: #e5eff7;
+    --day-element-line: #c3d8ea;
+}
+
+.lta-element-hoa {
+    --day-element: #c2410c;
+    --day-element-strong: #8a2e0a;
+    --day-element-soft: #fbebe2;
+    --day-element-line: #f0c9b5;
+}
+
+.lta-element-tho {
+    --day-element: #a0701f;
+    --day-element-strong: #6e4c14;
+    --day-element-soft: #f7eedb;
+    --day-element-line: #e6d2a8;
+}
+
+/* Tương thích tên biến cũ */
+.lta-home {
+    --home-element: var(--accent);
+    --home-element-strong: var(--accent-strong);
+    --home-element-soft: var(--accent-soft);
+    --home-element-line: var(--accent-line);
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
 
 *,
 *::before,
@@ -72,9 +183,10 @@ body {
     max-width: 100%;
     overflow-x: hidden;
     background:
-        radial-gradient(1200px 600px at 100% -10%, rgba(180, 35, 24, 0.06), transparent 60%),
-        radial-gradient(900px 500px at -10% 0%, rgba(154, 106, 18, 0.07), transparent 60%),
+        radial-gradient(1100px 560px at 100% -8%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 62%),
+        radial-gradient(900px 480px at -10% 0%, color-mix(in srgb, var(--accent) 6%, transparent), transparent 60%),
         var(--paper);
+    background-attachment: fixed;
     color: var(--ink);
     font-family: var(--font-ui);
     font-size: 15px;
@@ -123,7 +235,7 @@ img {
 }
 
 :is(a, button, input, select, summary):focus-visible {
-    outline: 2px solid var(--son);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
     border-radius: 8px;
 }
@@ -141,60 +253,238 @@ h3 {
     height: 22px;
 }
 
-/* --------------------------------------------------------------------------
-   Element palettes (data colour only)
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   CONCEPT COMPONENTS
+   ========================================================================== */
 
-.lta-element-kim,
-.lta-home[data-home-element="Kim"] {
-    --day-element: #6b7280;
-    --day-element-strong: #3f4651;
-    --day-element-soft: #eef0f2;
-    --day-element-line: #d5d9de;
+/* 1. Tờ lịch -------------------------------------------------------------- */
+
+.lta-sheet {
+    padding: 0 !important;
+    overflow: hidden;
+    border-color: var(--line);
+    box-shadow: var(--stack);
+    margin-bottom: 10px;
 }
 
-.lta-element-moc,
-.lta-home[data-home-element="Mộc"] {
-    --day-element: #2f7d4f;
-    --day-element-strong: #1f5a37;
-    --day-element-soft: #e6f2ea;
-    --day-element-line: #c5e0cf;
+.lta-sheet-head {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+    padding: 24px 18px 16px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 40%),
+        var(--accent-strong);
+    color: #fff;
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.18);
 }
 
-.lta-element-thuy,
-.lta-home[data-home-element="Thủy"] {
-    --day-element: #2369a0;
-    --day-element-strong: #174a73;
-    --day-element-soft: #e5eff7;
-    --day-element-line: #c3d8ea;
+/* hàng lỗ đóng gáy */
+.lta-sheet-head::before {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 14px;
+    right: 14px;
+    height: 10px;
+    background: radial-gradient(circle at 50% 50%, var(--paper) 0 3.5px, rgba(0, 0, 0, 0.32) 4px, transparent 5px) center / 44px 10px repeat-x;
+    pointer-events: none;
 }
 
-.lta-element-hoa,
-.lta-home[data-home-element="Hỏa"] {
-    --day-element: #c2410c;
-    --day-element-strong: #8a2e0a;
-    --day-element-soft: #fbebe2;
-    --day-element-line: #f0c9b5;
+.lta-sheet-head > div {
+    min-width: 0;
 }
 
-.lta-element-tho,
-.lta-home[data-home-element="Thổ"] {
-    --day-element: #a0701f;
-    --day-element-strong: #6e4c14;
-    --day-element-soft: #f7eedb;
-    --day-element-line: #e6d2a8;
+.lta-sheet-head .lta-eyebrow {
+    margin: 0 0 2px;
+    color: rgba(255, 255, 255, 0.82);
 }
 
-.lta-home[data-home-element] {
-    --home-element: var(--day-element);
-    --home-element-strong: var(--day-element-strong);
-    --home-element-soft: var(--day-element-soft);
-    --home-element-line: var(--day-element-line);
+.lta-sheet-head h1,
+.lta-sheet-head h2 {
+    margin: 0;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    font-weight: 700;
+    line-height: 1.2;
 }
 
-/* --------------------------------------------------------------------------
+.lta-sheet-head > span {
+    flex: none;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.lta-sheet-head .lta-brand small {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.lta-sheet-head .lta-brand strong {
+    color: #fff;
+}
+
+.lta-sheet-body {
+    padding: 18px;
+}
+
+.lta-sheet-intro {
+    margin: 0 0 16px;
+    color: var(--muted);
+}
+
+/* 2. Đường xé ------------------------------------------------------------- */
+
+.lta-perf {
+    position: relative;
+    border-top: 2px dashed var(--line-strong);
+}
+
+.lta-perf::before,
+.lta-perf::after {
+    content: "";
+    position: absolute;
+    top: -11px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--paper);
+    box-shadow: inset 0 0 0 1px var(--line);
+    z-index: 1;
+}
+
+.lta-perf::before {
+    left: -11px;
+}
+
+.lta-perf::after {
+    right: -11px;
+}
+
+/* 3. Con dấu -------------------------------------------------------------- */
+
+.lta-stamp {
+    --stamp: var(--bad);
+    display: inline-grid;
+    justify-items: center;
+    gap: 1px;
+    padding: 5px 9px 6px;
+    border: 2px solid var(--stamp);
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 2px var(--surface), inset 0 0 0 3px var(--stamp);
+    background: color-mix(in srgb, var(--surface) 70%, transparent);
+    color: var(--stamp);
+    line-height: 1.05;
+    text-align: center;
+    white-space: nowrap;
+    transform: rotate(-10deg);
+    mix-blend-mode: multiply;
+}
+
+.lta-stamp small {
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.lta-stamp b {
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.lta-stamp.is-good {
+    --stamp: var(--good);
+}
+
+.lta-stamp.is-mixed {
+    --stamp: var(--mixed);
+}
+
+.lta-stamp.is-bad,
+.lta-stamp.is-unknown {
+    --stamp: var(--bad);
+}
+
+/* 4. Mini-lịch & logo ----------------------------------------------------- */
+
+.lta-mini-leaf,
+.lta-logo {
+    position: relative;
+    display: inline-grid;
+    grid-template-rows: auto 1fr;
+    flex: none;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--accent-line);
+    text-align: center;
+}
+
+.lta-mini-leaf {
+    width: 64px;
+    height: 70px;
+    border-radius: 12px;
+    box-shadow: 0 3px 0 -1px var(--surface-2), 0 4px 0 -1px var(--line-strong), 0 10px 18px -12px rgba(70, 48, 15, 0.5);
+}
+
+.lta-mini-leaf em {
+    display: block;
+    padding: 9px 0 3px;
+    background:
+        radial-gradient(circle at 50% 4px, var(--paper) 0 2px, transparent 2.5px) center top / 20px 8px repeat-x,
+        var(--accent-strong);
+    color: #fff;
+    font-size: 0.62rem;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.lta-mini-leaf b {
+    display: grid;
+    place-items: center;
+    color: var(--accent-strong);
+    font-family: var(--font-display);
+    font-size: 1.85rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.lta-logo {
+    width: 36px;
+    height: 40px;
+    border-radius: 9px;
+    color: var(--accent-strong);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    place-items: center;
+    box-shadow: 0 2px 0 -1px var(--surface-2), 0 3px 0 -1px var(--line-strong);
+}
+
+.lta-logo i {
+    align-self: stretch;
+    justify-self: stretch;
+    height: 11px;
+    background:
+        radial-gradient(circle at 50% 5px, var(--paper) 0 1.6px, transparent 2px) center top / 12px 11px repeat-x,
+        var(--accent-strong);
+}
+
+/* ==========================================================================
    Top bar
-   -------------------------------------------------------------------------- */
+   ========================================================================== */
 
 .lta-topbar {
     position: sticky;
@@ -206,8 +496,9 @@ h3 {
     gap: 16px;
     height: var(--topbar-h);
     padding: 0 16px;
-    background: rgba(245, 239, 227, 0.86);
-    border-bottom: 1px solid rgba(214, 199, 171, 0.6);
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    border-top: 3px solid var(--accent-strong);
+    border-bottom: 1px solid color-mix(in srgb, var(--line-strong) 60%, transparent);
     backdrop-filter: saturate(1.4) blur(14px);
     -webkit-backdrop-filter: saturate(1.4) blur(14px);
 }
@@ -221,11 +512,6 @@ h3 {
 
 .lta-brand span {
     min-width: 0;
-}
-
-.lta-brand img {
-    flex: 0 0 auto;
-    display: block;
 }
 
 .lta-brand strong,
@@ -248,21 +534,8 @@ h3 {
     margin-top: 2px;
 }
 
-.lta-logo {
-    display: grid;
-    place-items: center;
-    flex: none;
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: var(--son);
-    color: #fff7ee;
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    box-shadow: inset 0 0 0 2px var(--son), inset 0 0 0 3.5px rgba(255, 247, 238, 0.55), 0 6px 14px -6px rgba(180, 35, 24, 0.6);
-    transform: rotate(-4deg);
+.lta-brand .lta-logo {
+    display: inline-grid;
 }
 
 .lta-nav {
@@ -282,12 +555,12 @@ h3 {
 }
 
 .lta-mobile-menu-toggle:active {
-    background: var(--paper-2);
+    background: var(--accent-soft);
 }
 
-/* --------------------------------------------------------------------------
-   Shell & generic panel
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   Shell & secondary cards
+   ========================================================================== */
 
 .lta-shell {
     width: 100%;
@@ -306,12 +579,17 @@ h3 {
     box-shadow: var(--shadow);
 }
 
+/* thẻ phụ: một dải màu chủ đạo mảnh như mép giấy ghim */
+.lta-panel:not(.lta-sheet) {
+    box-shadow: inset 0 3px 0 var(--accent-line), var(--shadow);
+}
+
 .lta-eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     margin: 0 0 10px;
-    color: var(--son);
+    color: var(--accent-strong);
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -356,13 +634,13 @@ h3 {
 }
 
 .lta-card-head > a {
-    color: var(--son);
+    color: var(--accent-strong);
     font-weight: 600;
 }
 
-/* --------------------------------------------------------------------------
-   TODAY — the calendar leaf
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   HÔM NAY — tờ lịch chính
+   ========================================================================== */
 
 .lta-home {
     display: grid;
@@ -376,9 +654,6 @@ h3 {
 }
 
 .lta-leaf {
-    padding: 0;
-    overflow: hidden;
-    border-color: var(--home-element-line);
     transform: translateX(var(--swipe-x, 0));
     transition: transform 0.25s ease, opacity 0.25s ease;
     touch-action: pan-y;
@@ -401,43 +676,11 @@ h3 {
     bottom: 64px;
     width: 190px;
     height: 190px;
-    background: var(--home-element);
+    background: var(--accent);
     -webkit-mask: url("fengshui.svg") center / contain no-repeat;
     mask: url("fengshui.svg") center / contain no-repeat;
     opacity: 0.07;
     pointer-events: none;
-}
-
-.lta-leaf-head {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 18px 18px 14px;
-    background: var(--home-element-strong);
-    color: #fff;
-}
-
-/* binding rings of a tear-off calendar */
-.lta-leaf-head::before,
-.lta-leaf-head::after {
-    content: "";
-    position: absolute;
-    top: 7px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--paper);
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
-}
-
-.lta-leaf-head::before {
-    left: 30%;
-}
-
-.lta-leaf-head::after {
-    right: 30%;
 }
 
 .lta-leaf-head .lta-eyebrow {
@@ -445,25 +688,24 @@ h3 {
     color: #fff;
 }
 
-.lta-leaf-head > span {
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    opacity: 0.85;
-}
-
 .lta-today-hero {
     display: grid;
     grid-template-columns: 108px minmax(0, 1fr);
     align-items: center;
     gap: 14px;
-    padding: 16px 18px 6px;
+    padding: 18px 18px 8px;
+}
+
+.lta-leaf-date {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    justify-self: center;
 }
 
 .lta-leaf-number {
     display: block;
-    color: var(--home-element-strong);
+    color: var(--accent-strong);
     font-family: var(--font-display);
     font-size: 4.1rem;
     font-weight: 700;
@@ -471,6 +713,11 @@ h3 {
     letter-spacing: -0.04em;
     text-align: center;
     font-variant-numeric: lining-nums;
+}
+
+.lta-leaf-date .lta-stamp {
+    position: relative;
+    margin-top: 2px;
 }
 
 .lta-leaf-meta {
@@ -495,12 +742,12 @@ h3 {
 .lta-leaf-lunar {
     margin: 10px 0 0;
     padding-left: 10px;
-    border-left: 3px solid var(--son);
+    border-left: 3px solid var(--accent);
 }
 
 .lta-leaf-lunar strong {
     display: block;
-    color: var(--son);
+    color: var(--accent-strong);
     font-family: var(--font-display);
     font-size: 1.25rem;
     line-height: 1.2;
@@ -514,33 +761,10 @@ h3 {
 }
 
 .lta-leaf-canchi {
-    position: relative;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin: 14px 0 0;
+    margin: 18px 0 0;
     padding: 14px 10px;
-    border-top: 2px dashed var(--line-strong);
-}
-
-/* perforation notches */
-.lta-leaf-canchi::before,
-.lta-leaf-canchi::after {
-    content: "";
-    position: absolute;
-    top: -10px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--paper);
-    border: 1px solid var(--home-element-line);
-}
-
-.lta-leaf-canchi::before {
-    left: -10px;
-}
-
-.lta-leaf-canchi::after {
-    right: -10px;
 }
 
 .lta-leaf-canchi div {
@@ -590,37 +814,37 @@ h3 {
     font-weight: 600;
 }
 
-.lta-element-badge {
-    background: var(--day-element-soft, var(--home-element-soft)) !important;
-    border-color: var(--day-element-line, var(--home-element-line)) !important;
-    color: var(--day-element-strong, var(--home-element-strong)) !important;
+.lta-leaf-tags .lta-element-badge {
+    background: var(--day-element-soft, var(--accent-soft));
+    border-color: var(--day-element-line, var(--accent-line));
+    color: var(--day-element-strong, var(--accent-strong));
 }
 
 .lta-element-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--day-element, var(--home-element));
+    background: var(--day-element, var(--accent));
 }
 
-.lta-quality.is-good,
-.lta-quality.is-dong-good {
+.lta-leaf-tags .lta-quality.is-good,
+.lta-leaf-tags .lta-quality.is-dong-good {
     background: var(--good-soft);
-    border-color: #c4e0cc;
+    border-color: var(--good-line);
     color: var(--good);
 }
 
-.lta-quality.is-bad,
-.lta-quality.is-dong-bad {
+.lta-leaf-tags .lta-quality.is-bad,
+.lta-leaf-tags .lta-quality.is-dong-bad {
     background: var(--bad-soft);
-    border-color: #f1c6bc;
+    border-color: var(--bad-line);
     color: var(--bad);
 }
 
-.lta-quality.is-dong-mixed {
-    background: var(--warn-soft);
-    border-color: #ecd4a6;
-    color: var(--warn);
+.lta-leaf-tags .lta-quality.is-dong-mixed {
+    background: var(--mixed-soft);
+    border-color: var(--mixed-line);
+    color: var(--mixed);
 }
 
 .lta-day-nav {
@@ -644,7 +868,7 @@ h3 {
     color: var(--ink-2);
     font-size: 0.88rem;
     font-weight: 600;
-    transition: background 0.15s ease;
+    transition: background 0.15s ease, color 0.15s ease;
 }
 
 .lta-day-nav a:first-child {
@@ -657,22 +881,22 @@ h3 {
 
 .lta-day-nav a:hover,
 .lta-day-nav a:active {
-    background: var(--paper-2);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
 }
 
 .lta-day-nav .lta-day-nav-today {
     padding: 0 18px;
-    background: var(--home-element-soft);
-    color: var(--home-element-strong);
-    border: 1px solid var(--home-element-line);
-}
-
-.lta-day-nav .lta-day-nav-today:hover {
-    background: var(--home-element-strong);
+    background: var(--accent-strong);
     color: #fff;
 }
 
-/* Hours */
+.lta-day-nav .lta-day-nav-today:hover {
+    background: var(--accent-deep);
+    color: #fff;
+}
+
+/* Giờ hoàng đạo */
 
 .lta-hour-grid {
     display: grid;
@@ -688,9 +912,9 @@ h3 {
     display: grid;
     gap: 1px;
     padding: 9px 4px;
-    border: 1px solid var(--line);
+    border: 1px dashed var(--line-strong);
     border-radius: var(--radius-sm);
-    background: var(--surface-2);
+    background: transparent;
     text-align: center;
     color: var(--faint);
 }
@@ -707,9 +931,9 @@ h3 {
 }
 
 .lta-hour-grid li.is-good {
-    border-color: var(--gold-line);
-    background: var(--gold-soft);
-    color: var(--gold-strong);
+    border: 1px solid var(--accent-line);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
 }
 
 .lta-hour-grid li.is-good strong {
@@ -724,12 +948,12 @@ h3 {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--gold);
+    background: var(--accent);
 }
 
-/* --------------------------------------------------------------------------
-   Forms (lookup, converter, month picker)
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   Forms
+   ========================================================================== */
 
 .lta-date-lookup {
     display: grid;
@@ -788,12 +1012,12 @@ h3 {
 
 .lta-toggle input:checked + span {
     background: var(--surface);
-    color: var(--ink);
+    color: var(--accent-strong);
     box-shadow: 0 1px 3px rgba(70, 48, 15, 0.14);
 }
 
 .lta-toggle input:focus-visible + span {
-    outline: 2px solid var(--son);
+    outline: 2px solid var(--accent);
     outline-offset: 1px;
 }
 
@@ -870,8 +1094,8 @@ input::-webkit-inner-spin-button {
 }
 
 :is(.lta-picker, .lta-converter, .lta-date-lookup, .lta-month-filters) :is(input, select):focus {
-    border-color: var(--son);
-    box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.14);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
     outline: none;
 }
 
@@ -890,7 +1114,7 @@ input::-webkit-inner-spin-button {
 .lta-lunar-leap input {
     width: 18px;
     height: 18px;
-    accent-color: var(--son);
+    accent-color: var(--accent-strong);
 }
 
 .lta-lunar-leap span {
@@ -906,17 +1130,18 @@ input::-webkit-inner-spin-button {
     min-height: 48px;
     border: 0;
     border-radius: var(--radius-sm);
-    background: var(--ink);
-    color: #fffaf1;
+    background: var(--accent-strong);
+    color: #fff;
     font-weight: 700;
     letter-spacing: 0.01em;
+    box-shadow: 0 8px 16px -10px var(--accent-strong);
     transition: background 0.15s ease, transform 0.1s ease;
 }
 
 .lta-date-fields button:hover,
 .lta-converter button:hover,
 .lta-picker button:hover {
-    background: var(--son);
+    background: var(--accent-deep);
 }
 
 .lta-date-fields button:active,
@@ -929,15 +1154,15 @@ input::-webkit-inner-spin-button {
     margin: 0;
     padding: 10px 12px;
     border-radius: var(--radius-sm);
-    background: var(--bad-soft);
-    color: var(--bad);
+    background: var(--red-soft);
+    color: var(--red);
     font-size: 0.88rem;
     font-weight: 600;
 }
 
-/* --------------------------------------------------------------------------
-   Detail panel (facts + collapsibles)
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   Detail panel
+   ========================================================================== */
 
 .lta-detail-panel {
     align-self: start;
@@ -1018,8 +1243,8 @@ input::-webkit-inner-spin-button {
     flex: none;
     width: 9px;
     height: 9px;
-    border-right: 2px solid var(--muted);
-    border-bottom: 2px solid var(--muted);
+    border-right: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
     transform: translateY(-2px) rotate(45deg);
     transition: transform 0.2s ease;
 }
@@ -1028,8 +1253,12 @@ input::-webkit-inner-spin-button {
     transform: translateY(2px) rotate(-135deg);
 }
 
+.lta-collapse[open] summary {
+    color: var(--accent-strong);
+}
+
 .lta-collapse summary:hover {
-    background: var(--surface-2);
+    background: var(--accent-soft);
 }
 
 .lta-collapse > p,
@@ -1054,7 +1283,7 @@ input::-webkit-inner-spin-button {
 
 .lta-collapse > article {
     padding-top: 12px;
-    border-top: 1px solid var(--line);
+    border-top: 1px dashed var(--line-strong);
 }
 
 .lta-collapse > article > span {
@@ -1097,8 +1326,8 @@ input::-webkit-inner-spin-button {
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: var(--paper-2);
-    color: var(--ink-2);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
     font-size: 0.68rem;
     font-weight: 700;
     font-style: italic;
@@ -1107,38 +1336,24 @@ input::-webkit-inner-spin-button {
 }
 
 .lta-info-link:hover {
-    background: var(--son);
+    background: var(--accent-strong);
     color: #fff;
 }
 
 .lta-detail-link {
     display: inline-flex;
     margin: 12px 0 14px;
-    color: var(--son);
+    color: var(--accent-strong);
     font-size: 0.88rem;
     font-weight: 700;
 }
-
-/* month aside hero */
 
 .lta-date-hero {
     display: grid;
     grid-template-columns: 64px minmax(0, 1fr);
     align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-}
-
-.lta-date-hero > span {
-    display: grid;
-    place-items: center;
-    height: 64px;
-    border-radius: var(--radius);
-    background: var(--ink);
-    color: #fffaf1;
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 700;
+    gap: 14px;
+    margin-bottom: 14px;
 }
 
 .lta-date-hero strong {
@@ -1154,7 +1369,7 @@ input::-webkit-inner-spin-button {
 }
 
 .lta-lunar-result b {
-    color: var(--son);
+    color: var(--accent-strong);
     font-family: var(--font-display);
 }
 
@@ -1162,9 +1377,9 @@ input::-webkit-inner-spin-button {
     padding: 0;
 }
 
-/* --------------------------------------------------------------------------
-   MONTH
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   LỊCH THÁNG
+   ========================================================================== */
 
 .lta-workspace {
     display: grid;
@@ -1180,12 +1395,12 @@ input::-webkit-inner-spin-button {
 .lta-workspace.is-month-loading .lta-calendar-panel::after {
     content: "";
     position: absolute;
-    top: 22px;
-    right: 22px;
+    top: 26px;
+    right: 50%;
     width: 18px;
     height: 18px;
-    border: 2px solid var(--line-strong);
-    border-top-color: var(--son);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #fff;
     border-radius: 50%;
     animation: lta-spin 0.7s linear infinite;
 }
@@ -1196,29 +1411,8 @@ input::-webkit-inner-spin-button {
     }
 }
 
-.lta-calendar-panel {
-    padding: 14px 10px;
-}
-
-.lta-panel-head {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 12px;
-    margin: 0 4px 14px;
-}
-
-.lta-panel-head .lta-eyebrow {
-    margin-bottom: 4px;
-}
-
-.lta-panel-head h1,
-.lta-panel-head h2 {
-    margin: 0;
-    font-family: var(--font-display);
+.lta-panel-head h1 {
     font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1.15;
 }
 
 .lta-month-actions {
@@ -1250,14 +1444,28 @@ input::-webkit-inner-spin-button {
 }
 
 .lta-month-actions a:hover {
-    background: var(--surface);
-    color: var(--son);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+}
+
+.lta-sheet-head .lta-month-actions {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+.lta-sheet-head .lta-month-actions a {
+    color: #fff;
+}
+
+.lta-sheet-head .lta-month-actions a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
 }
 
 .lta-month-controls {
     display: grid;
     gap: 10px;
-    margin: 0 4px 14px;
+    margin: 0 0 14px;
 }
 
 .lta-picker {
@@ -1278,6 +1486,10 @@ input::-webkit-inner-spin-button {
     gap: 8px;
 }
 
+.lta-calendar-panel .lta-sheet-body {
+    padding: 14px 10px;
+}
+
 .lta-calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -1295,7 +1507,7 @@ input::-webkit-inner-spin-button {
 }
 
 .lta-weekday:first-child {
-    color: var(--son);
+    color: var(--red);
 }
 
 .lta-day {
@@ -1352,17 +1564,12 @@ a.lta-day:active {
     display: none;
 }
 
-/* Sunday column */
+/* Chủ nhật */
 .lta-calendar-grid > .lta-day:nth-child(7n + 8) .lta-solar-day {
-    color: var(--son);
+    color: var(--red);
 }
 
-/* first lunar day of month */
-.lta-day:is([aria-label]) .lta-lunar-day:not(:empty) {
-    font-variant-numeric: tabular-nums;
-}
-
-/* Đổng Công dot */
+/* Chấm Đổng Công */
 .lta-day[data-dong-cong]::after {
     content: "";
     position: absolute;
@@ -1378,12 +1585,12 @@ a.lta-day:active {
 }
 
 .lta-day[data-dong-cong="mixed"]::after {
-    background: #d39a2c;
+    background: var(--mixed-dot);
 }
 
 .lta-day[data-dong-cong="bad"]::after {
     background: transparent;
-    box-shadow: inset 0 0 0 1.5px #c9a9a0;
+    box-shadow: inset 0 0 0 1.5px var(--faint);
 }
 
 .lta-event-dot {
@@ -1393,41 +1600,41 @@ a.lta-day:active {
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: var(--son);
+    background: var(--red);
 }
 
 .lta-day.has-event .lta-lunar-day {
-    color: var(--son);
+    color: var(--red);
 }
 
 .lta-day.is-tet {
-    background: var(--son-soft);
-    border-color: #f1c6bc;
+    background: var(--red-soft);
+    border-color: var(--red-line);
 }
 
 .lta-day.is-today {
-    border-color: var(--son);
-    box-shadow: inset 0 0 0 1px var(--son), inset 0 -3px 0 var(--day-element-line, transparent);
+    border-color: var(--accent-strong);
+    box-shadow: inset 0 0 0 1px var(--accent-strong), inset 0 -3px 0 var(--day-element-line, transparent);
 }
 
 .lta-day.is-today .lta-solar-day {
-    color: var(--son);
+    color: var(--accent-strong);
 }
 
 .lta-day.is-selected {
-    background: var(--ink);
-    border-color: var(--ink);
-    box-shadow: 0 8px 18px -8px rgba(34, 28, 21, 0.6), inset 0 -3px 0 var(--day-element, transparent);
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
+    box-shadow: 0 8px 18px -8px var(--accent-strong);
 }
 
 .lta-day.is-selected .lta-solar-day,
 .lta-day.is-selected .lta-lunar-day,
 .lta-day.is-selected .lta-nap-label {
-    color: #fffaf1;
+    color: #fff !important;
 }
 
 .lta-day.is-selected:hover {
-    background: var(--ink);
+    background: var(--accent-deep);
 }
 
 .lta-day.is-nap-dim {
@@ -1435,12 +1642,12 @@ a.lta-day:active {
 }
 
 .lta-day.is-nap-match {
-    border-color: var(--day-element, var(--son));
+    border-color: var(--day-element, var(--accent));
     background: var(--day-element-soft, var(--surface));
 }
 
 .lta-day.is-selected.is-nap-match {
-    background: var(--ink);
+    background: var(--accent-strong);
 }
 
 .lta-calendar-legend {
@@ -1473,27 +1680,25 @@ a.lta-day:active {
 }
 
 .lta-calendar-legend .is-mixed {
-    background: #d39a2c;
+    background: var(--mixed-dot);
 }
 
 .lta-calendar-legend .is-bad {
-    box-shadow: inset 0 0 0 1.5px #c9a9a0;
+    box-shadow: inset 0 0 0 1.5px var(--faint);
 }
 
 .lta-calendar-legend .is-today {
     width: 14px;
     height: 12px;
     border-radius: 4px;
-    box-shadow: inset 0 0 0 2px var(--son);
+    box-shadow: inset 0 0 0 2px var(--accent-strong);
 }
 
 .lta-calendar-legend .is-event {
     width: 6px;
     height: 6px;
-    background: var(--son);
+    background: var(--red);
 }
-
-/* Tooltip (desktop hover) */
 
 .lta-day-tooltip {
     position: absolute;
@@ -1519,8 +1724,6 @@ a.lta-day:active {
     }
 }
 
-/* Legacy nạp âm filter buttons */
-
 .lta-element-filter {
     display: flex;
     flex-wrap: wrap;
@@ -1541,8 +1744,8 @@ a.lta-day:active {
 }
 
 .lta-element-filter button.is-active {
-    background: var(--ink);
-    border-color: var(--ink);
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
     color: #fff;
 }
 
@@ -1551,57 +1754,32 @@ a.lta-day:active {
     height: 16px;
 }
 
-/* --------------------------------------------------------------------------
-   CONVERT
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   ĐỔI NGÀY — tờ lịch có cuống xé
+   ========================================================================== */
 
 .lta-lower-grid {
     display: grid;
     gap: 14px;
 }
 
-#convert > .lta-panel {
+.lta-convert-sheet {
     width: 100%;
     max-width: 640px;
-    margin: 0 auto;
-    display: grid;
-    gap: 18px;
-}
-
-.lta-convert-heading {
-    text-align: center;
-}
-
-.lta-convert-heading .lta-eyebrow {
-    justify-content: center;
-}
-
-.lta-convert-heading h1 {
-    margin: 0;
-    font-family: var(--font-display);
-    font-size: 1.7rem;
-    font-weight: 700;
-}
-
-.lta-convert-heading p:last-child {
-    margin: 6px 0 0;
-    color: var(--muted);
+    margin: 0 auto 10px;
 }
 
 .lta-convert-result {
-    position: relative;
-    padding: 22px 18px;
-    border: 1px solid var(--gold-line);
-    border-radius: var(--radius-lg);
+    padding: 24px 18px 22px;
     background:
-        repeating-linear-gradient(0deg, transparent 0 27px, rgba(154, 106, 18, 0.06) 27px 28px),
-        var(--gold-soft);
+        repeating-linear-gradient(0deg, transparent 0 27px, color-mix(in srgb, var(--accent) 8%, transparent) 27px 28px),
+        var(--accent-soft);
     text-align: center;
 }
 
 .lta-convert-result > p {
     margin: 0;
-    color: var(--gold-strong);
+    color: var(--accent-strong);
     font-size: 0.85rem;
     font-weight: 600;
 }
@@ -1609,7 +1787,7 @@ a.lta-day:active {
 .lta-converted-date {
     display: block;
     margin: 6px 0;
-    color: var(--son);
+    color: var(--accent-strong);
     font-family: var(--font-display);
     font-size: clamp(2.2rem, 11vw, 3.2rem);
     font-weight: 700;
@@ -1621,26 +1799,26 @@ a.lta-day:active {
 .lta-convert-result a {
     display: inline-flex;
     align-items: center;
-    min-height: 40px;
+    min-height: 42px;
     margin-top: 12px;
-    padding: 0 16px;
+    padding: 0 18px;
     border-radius: 999px;
     background: var(--surface);
-    border: 1px solid var(--gold-line);
-    color: var(--ink);
+    border: 1px solid var(--accent-line);
+    color: var(--accent-strong);
     font-size: 0.86rem;
     font-weight: 700;
 }
 
 .lta-convert-result a:hover {
-    background: var(--ink);
-    border-color: var(--ink);
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
     color: #fff;
 }
 
-/* --------------------------------------------------------------------------
-   Articles, SEO, almanac library
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   Bài viết, SEO, Thông Thư
+   ========================================================================== */
 
 .lta-page-article,
 .lta-seo-content,
@@ -1650,17 +1828,11 @@ a.lta-day:active {
 
 .lta-page-article {
     max-width: 880px;
-    margin: 0 auto;
-    padding: 22px 18px;
+    margin: 0 auto 10px;
 }
 
-.lta-page-article h1,
-.lta-lower-grid h1 {
-    margin: 0 0 10px;
-    font-family: var(--font-display);
-    font-size: 1.85rem;
-    font-weight: 700;
-    line-height: 1.2;
+.lta-page-article > .lta-sheet-body {
+    padding: 20px 18px 26px;
 }
 
 .lta-page-article h2,
@@ -1688,10 +1860,11 @@ a.lta-day:active {
 
 .lta-page-article a:not([class]),
 .lta-seo-content a:not([class]) {
-    color: var(--son);
+    color: var(--accent-strong);
     font-weight: 600;
     text-decoration: underline;
-    text-decoration-thickness: 1px;
+    text-decoration-color: var(--accent-line);
+    text-decoration-thickness: 2px;
     text-underline-offset: 3px;
 }
 
@@ -1709,8 +1882,8 @@ a.lta-day:active {
     margin: 2px 2px 0 0;
     padding: 1px 8px;
     border-radius: 999px;
-    background: var(--paper-2);
-    color: var(--ink-2);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
     font-size: 0.74rem;
     font-weight: 600;
     vertical-align: 1px;
@@ -1719,11 +1892,10 @@ a.lta-day:active {
 .lta-citation-link::before {
     content: "↗";
     margin-right: 4px;
-    color: var(--son);
 }
 
 .lta-citation-link:hover {
-    background: var(--ink);
+    background: var(--accent-strong);
     color: #fff;
 }
 
@@ -1745,6 +1917,11 @@ a.lta-day:active {
     border: 1px solid var(--line);
     border-radius: var(--radius);
     background: var(--surface-2);
+}
+
+.lta-method-grid article h3 {
+    color: var(--accent-strong);
+    font-family: var(--font-display);
 }
 
 .lta-seo-grid article p,
@@ -1854,9 +2031,9 @@ a.lta-day:active {
 
 .lta-year-map {
     padding: 16px;
-    border-left: 3px solid var(--son);
+    border-left: 3px solid var(--accent);
     border-radius: 0 var(--radius) var(--radius) 0;
-    background: var(--surface-2);
+    background: var(--accent-soft);
 }
 
 .lta-year-map h3 {
@@ -1867,17 +2044,30 @@ a.lta-day:active {
     margin: 0;
 }
 
+/* Thông Thư: các trang trong một cuốn lịch, có lề kẻ đôi */
 .lta-almanac-library {
     max-width: 960px;
 }
 
 .lta-library-section {
+    position: relative;
     margin-top: 18px;
-    padding: 18px;
+    padding: 18px 18px 18px 26px;
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     background: var(--surface-2);
     scroll-margin-top: calc(var(--topbar-h) + 64px);
+}
+
+.lta-library-section::before {
+    content: "";
+    position: absolute;
+    top: 16px;
+    bottom: 16px;
+    left: 12px;
+    width: 4px;
+    border-left: 1px solid var(--accent-line);
+    border-right: 1px solid var(--accent-line);
 }
 
 .lta-library-section > h2 {
@@ -1894,8 +2084,8 @@ a.lta-day:active {
     width: 36px;
     height: 36px;
     border-radius: 10px;
-    background: var(--son-soft);
-    color: var(--son);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
     font-family: var(--font-ui);
     font-size: 1rem;
 }
@@ -1943,24 +2133,29 @@ a.lta-day:active {
     font-weight: 600;
 }
 
+.lta-source-links a:hover {
+    border-color: var(--accent-line);
+    color: var(--accent-strong);
+}
+
 .lta-library-more {
     display: inline-flex;
     margin-top: 4px;
-    color: var(--son);
+    color: var(--accent-strong);
     font-weight: 700;
     font-size: 0.9rem;
 }
 
 .lta-library-toc {
     position: sticky;
-    top: calc(var(--topbar-h) + 6px);
+    top: calc(var(--topbar-h) - 3px);
     z-index: 5;
     display: flex;
     gap: 6px;
     margin: 22px -18px 0;
     padding: 10px 18px;
     overflow-x: auto;
-    background: rgba(255, 252, 246, 0.94);
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
     border-block: 1px solid var(--line);
     backdrop-filter: blur(10px);
     scrollbar-width: none;
@@ -1983,8 +2178,8 @@ a.lta-day:active {
 }
 
 .lta-library-toc a:hover {
-    background: var(--ink);
-    border-color: var(--ink);
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
     color: #fff;
 }
 
@@ -2079,8 +2274,8 @@ a.lta-day:active {
 }
 
 .lta-data-table th {
-    background: var(--surface-2);
-    color: var(--muted);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
     font-size: 0.72rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -2103,41 +2298,39 @@ a.lta-day:active {
     margin: 12px 0;
 }
 
+/* thẻ sao: tờ lịch nhỏ, nhãn đóng dấu */
 .lta-star-card,
 .lta-lucnham-grid article {
+    position: relative;
     padding: 14px;
     border: 1px solid var(--line);
     border-radius: var(--radius);
     background: var(--surface);
-}
-
-.lta-star-card.is-good,
-.lta-lucnham-grid article.is-good {
-    border-color: #c4e0cc;
-    box-shadow: inset 3px 0 0 var(--good);
+    box-shadow: 0 3px 0 -1px var(--surface-2), 0 4px 0 -1px var(--line);
 }
 
 .lta-star-card.is-good > span,
 .lta-lucnham-grid article.is-good > span {
-    background: var(--good-soft);
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px var(--good);
     color: var(--good);
-}
-
-.lta-star-card.is-bad,
-.lta-lucnham-grid article.is-bad {
-    border-color: #f1c6bc;
-    box-shadow: inset 3px 0 0 var(--bad);
+    transform: rotate(-4deg);
 }
 
 .lta-star-card.is-bad > span,
 .lta-lucnham-grid article.is-bad > span {
-    background: var(--bad-soft);
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px var(--bad);
     color: var(--bad);
+    transform: rotate(-4deg);
 }
 
-.lta-star-card.is-mixed,
-.lta-lucnham-grid article.is-mixed {
-    box-shadow: inset 3px 0 0 #d39a2c;
+.lta-star-card.is-mixed > span,
+.lta-lucnham-grid article.is-mixed > span {
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px var(--mixed);
+    color: var(--mixed);
+    transform: rotate(-4deg);
 }
 
 .lta-star-card h3,
@@ -2163,8 +2356,8 @@ a.lta-day:active {
 .lta-data-warning {
     padding: 12px 14px;
     border-radius: var(--radius-sm);
-    background: var(--warn-soft);
-    color: var(--warn);
+    background: var(--mixed-soft);
+    color: var(--mixed);
     font-size: 0.88rem;
 }
 
@@ -2197,16 +2390,16 @@ a.lta-day:active {
     top: 15px;
     width: 12px;
     height: 7px;
-    border-left: 2px solid var(--son);
-    border-bottom: 2px solid var(--son);
+    border-left: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
     transform: rotate(-45deg);
 }
 
 .lta-about-credit {
     padding: 14px;
     border-radius: var(--radius);
-    background: var(--surface-2);
-    color: var(--muted);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
     text-align: center;
     font-size: 0.88rem;
 }
@@ -2216,7 +2409,7 @@ a.lta-day:active {
 }
 
 .lta-about-more summary {
-    color: var(--son);
+    color: var(--accent-strong);
     font-weight: 700;
     cursor: pointer;
 }
@@ -2226,6 +2419,10 @@ a.lta-day:active {
     border: 1px solid var(--line);
     border-radius: var(--radius);
     background: var(--surface-2);
+}
+
+.lta-faq details[open] summary {
+    color: var(--accent-strong);
 }
 
 .lta-faq summary {
@@ -2239,9 +2436,9 @@ a.lta-day:active {
     padding: 0 16px 14px;
 }
 
-/* --------------------------------------------------------------------------
-   Embed page
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   Trang Mã nhúng
+   ========================================================================== */
 
 .lta-embed-preview {
     margin: 16px 0;
@@ -2266,7 +2463,7 @@ a.lta-day:active {
 }
 
 .lta-embed-preview-head strong {
-    color: var(--ink);
+    color: var(--accent-strong);
 }
 
 .lta-embed-preview iframe {
@@ -2303,7 +2500,7 @@ a.lta-day:active {
 
 .lta-segmented button.is-active {
     background: var(--surface);
-    color: var(--ink);
+    color: var(--accent-strong);
     box-shadow: 0 1px 3px rgba(70, 48, 15, 0.14);
 }
 
@@ -2312,17 +2509,17 @@ pre {
     padding: 16px;
     overflow-x: auto;
     border-radius: var(--radius);
-    background: var(--ink);
-    color: #f3e9d6;
+    background: var(--accent-deep);
+    color: #f6efe2;
     font-size: 0.82rem;
     line-height: 1.6;
     white-space: pre-wrap;
     word-break: break-all;
 }
 
-/* --------------------------------------------------------------------------
+/* ==========================================================================
    Footer
-   -------------------------------------------------------------------------- */
+   ========================================================================== */
 
 .lta-footer {
     display: flex;
@@ -2331,19 +2528,19 @@ pre {
     gap: 6px 18px;
     margin-top: 28px;
     padding: 18px 0 4px;
-    border-top: 1px solid var(--line);
+    border-top: 2px dashed var(--line-strong);
     color: var(--muted);
     font-size: 0.82rem;
     font-weight: 500;
 }
 
 .lta-footer a:hover {
-    color: var(--son);
+    color: var(--accent-strong);
 }
 
-/* --------------------------------------------------------------------------
-   Mobile bottom nav + menu sheet
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   Mobile nav & bottom sheets
+   ========================================================================== */
 
 .lta-mobile-nav {
     position: fixed;
@@ -2355,7 +2552,7 @@ pre {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     height: calc(var(--mobile-nav-h) + env(safe-area-inset-bottom, 0px));
     padding: 0 6px env(safe-area-inset-bottom, 0px);
-    background: rgba(255, 252, 246, 0.94);
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
     border-top: 1px solid var(--line);
     backdrop-filter: saturate(1.4) blur(14px);
     -webkit-backdrop-filter: saturate(1.4) blur(14px);
@@ -2389,12 +2586,12 @@ pre {
 }
 
 .lta-mobile-nav a.is-active {
-    color: var(--ink);
+    color: var(--accent-strong);
 }
 
 .lta-mobile-nav a.is-active span {
-    background: var(--son-soft);
-    color: var(--son);
+    background: var(--accent-strong);
+    color: #fff;
 }
 
 .lta-mobile-menu {
@@ -2427,21 +2624,21 @@ pre {
     }
 }
 
-.lta-mobile-menu-card {
+.lta-mobile-menu-card,
+.lta-modal-card {
     position: relative;
-    display: grid;
-    gap: 6px;
     width: 100%;
     max-height: 85vh;
     overflow-y: auto;
-    padding: 22px 16px calc(18px + env(safe-area-inset-bottom, 0px));
     border-radius: 24px 24px 0 0;
     background: var(--surface);
+    border-top: 6px solid var(--accent-strong);
     box-shadow: var(--shadow-lift);
     animation: lta-sheet 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.lta-mobile-menu-card::before {
+.lta-mobile-menu-card::before,
+.lta-modal-card::before {
     content: "";
     position: absolute;
     top: 8px;
@@ -2451,6 +2648,12 @@ pre {
     border-radius: 4px;
     background: var(--line-strong);
     transform: translateX(-50%);
+}
+
+.lta-mobile-menu-card {
+    display: grid;
+    gap: 6px;
+    padding: 22px 16px calc(18px + env(safe-area-inset-bottom, 0px));
 }
 
 .lta-mobile-menu-card h2 {
@@ -2481,8 +2684,8 @@ pre {
     width: 40px;
     height: 40px;
     border-radius: 12px;
-    background: var(--paper-2);
-    color: var(--ink-2);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
     font-size: 0.86rem;
     font-weight: 700;
 }
@@ -2499,8 +2702,8 @@ pre {
 }
 
 .lta-mobile-menu-card > a.is-active span {
-    background: var(--son-soft);
-    color: var(--son);
+    background: var(--accent-strong);
+    color: #fff;
 }
 
 .lta-mobile-menu-close,
@@ -2522,11 +2725,9 @@ pre {
 
 .lta-mobile-menu-close:hover,
 .lta-modal-close:hover {
-    background: var(--ink);
+    background: var(--accent-strong);
     color: #fff;
 }
-
-/* Modal (day popup) — bottom sheet on mobile */
 
 .lta-modal {
     position: fixed;
@@ -2538,27 +2739,7 @@ pre {
 }
 
 .lta-modal-card {
-    position: relative;
-    width: 100%;
-    max-height: 85vh;
-    overflow-y: auto;
     padding: 24px 18px calc(18px + env(safe-area-inset-bottom, 0px));
-    border-radius: 24px 24px 0 0;
-    background: var(--surface);
-    box-shadow: var(--shadow-lift);
-    animation: lta-sheet 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.lta-modal-card::before {
-    content: "";
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    width: 40px;
-    height: 4px;
-    border-radius: 4px;
-    background: var(--line-strong);
-    transform: translateX(-50%);
 }
 
 .lta-modal-card h2 {
@@ -2584,18 +2765,18 @@ pre {
     min-height: 48px;
     margin-top: 16px;
     border-radius: var(--radius-sm);
-    background: var(--ink);
-    color: #fffaf1;
+    background: var(--accent-strong);
+    color: #fff;
     font-weight: 700;
 }
 
 .lta-modal-link:hover {
-    background: var(--son);
+    background: var(--accent-deep);
 }
 
-/* --------------------------------------------------------------------------
-   Embed widget (embed.php)
-   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   Widget nhúng (embed.php)
+   ========================================================================== */
 
 .lta-embed-body {
     padding: 0;
@@ -2604,12 +2785,33 @@ pre {
 
 .lta-widget {
     display: grid;
-    gap: 10px;
-    padding: 12px;
+    gap: 0;
+    margin: 0 !important;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
     background: var(--surface);
 }
 
-.lta-widget-head,
+.lta-widget-head {
+    padding: 22px 14px 12px;
+}
+
+.lta-widget-head .lta-month-actions {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+.lta-widget-head .lta-month-actions a {
+    color: #fff;
+    min-width: 36px;
+    height: 36px;
+}
+
+.lta-widget-head .lta-month-actions a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
 .lta-widget-title,
 .lta-widget-detail {
     display: flex;
@@ -2618,8 +2820,10 @@ pre {
     gap: 10px;
 }
 
-.lta-brand-small strong {
-    font-size: 1rem;
+.lta-widget-month {
+    display: grid;
+    gap: 8px;
+    padding: 12px;
 }
 
 .lta-widget-title strong {
@@ -2628,14 +2832,9 @@ pre {
 }
 
 .lta-widget-title span {
-    color: var(--son);
+    color: var(--accent-strong);
     font-size: 0.82rem;
     font-weight: 600;
-}
-
-.lta-widget-month {
-    display: grid;
-    gap: 8px;
 }
 
 .lta-widget .lta-day {
@@ -2647,10 +2846,8 @@ pre {
 }
 
 .lta-widget-detail {
-    padding: 12px 14px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--surface-2);
+    padding: 14px 16px;
+    background: var(--accent-soft);
 }
 
 .lta-widget-detail div {
@@ -2663,10 +2860,11 @@ pre {
     font-family: var(--font-display);
     font-size: 1.3rem;
     font-weight: 700;
+    color: var(--accent-strong);
 }
 
 .lta-widget-detail strong {
-    color: var(--son);
+    color: var(--ink);
 }
 
 .lta-widget-detail p {
@@ -2683,7 +2881,6 @@ pre {
 @media (max-width: 559px) {
     .lta-panel-head {
         flex-wrap: wrap;
-        align-items: center;
     }
 
     .lta-panel-head > div:first-child {
@@ -2705,6 +2902,10 @@ pre {
 
     .lta-day-nav a[aria-label] span {
         font-size: 0.88rem;
+    }
+
+    .lta-convert-heading > span {
+        display: none;
     }
 }
 
@@ -2740,14 +2941,40 @@ pre {
         padding: 22px;
     }
 
+    .lta-sheet-head {
+        padding: 26px 24px 18px;
+    }
+
+    .lta-sheet-body {
+        padding: 22px 24px;
+    }
+
+    .lta-sheet-head h1,
+    .lta-sheet-head h2 {
+        font-size: 1.75rem;
+    }
+
     .lta-today-hero {
         grid-template-columns: 160px minmax(0, 1fr);
-        gap: 20px;
-        padding: 22px 24px 8px;
+        gap: 22px;
+        padding: 24px 24px 10px;
     }
 
     .lta-leaf-number {
         font-size: 7rem;
+    }
+
+    .lta-leaf-date .lta-stamp {
+        margin-top: 6px;
+        padding: 6px 11px 7px;
+    }
+
+    .lta-stamp small {
+        font-size: 0.58rem;
+    }
+
+    .lta-stamp b {
+        font-size: 0.95rem;
     }
 
     .lta-leaf-meta h1 {
@@ -2756,10 +2983,6 @@ pre {
 
     .lta-leaf-lunar strong {
         font-size: 1.5rem;
-    }
-
-    .lta-leaf-head {
-        padding: 20px 24px 16px;
     }
 
     .lta-leaf-tags {
@@ -2778,7 +3001,7 @@ pre {
         grid-template-columns: repeat(6, minmax(0, 1fr));
     }
 
-    .lta-calendar-panel {
+    .lta-calendar-panel .lta-sheet-body {
         padding: 20px 16px;
     }
 
@@ -2825,6 +3048,10 @@ pre {
         height: 140px;
     }
 
+    .lta-convert-result {
+        padding: 28px 24px 26px;
+    }
+
     .lta-modal {
         align-items: center;
         padding: 24px;
@@ -2859,13 +3086,16 @@ pre {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .lta-page-article {
-        padding: 36px 44px;
+    .lta-page-article > .lta-sheet-head {
+        padding: 30px 44px 22px;
     }
 
-    .lta-page-article h1,
-    .lta-lower-grid h1 {
-        font-size: 2.3rem;
+    .lta-page-article > .lta-sheet-body {
+        padding: 32px 44px 40px;
+    }
+
+    .lta-page-article .lta-sheet-head h1 {
+        font-size: 2.1rem;
     }
 
     .lta-library-toc {
@@ -2874,15 +3104,11 @@ pre {
     }
 
     .lta-library-section {
-        padding: 24px;
+        padding: 24px 24px 24px 34px;
     }
 
-    .lta-convert-heading h1 {
-        font-size: 2.1rem;
-    }
-
-    #convert > .lta-panel {
-        padding: 32px;
+    .lta-library-section::before {
+        left: 16px;
     }
 
     .lta-day {
@@ -2932,7 +3158,7 @@ pre {
         padding: 4px;
         border: 1px solid var(--line);
         border-radius: 999px;
-        background: rgba(255, 252, 246, 0.7);
+        background: color-mix(in srgb, var(--surface) 70%, transparent);
     }
 
     .lta-nav a {
@@ -2950,7 +3176,7 @@ pre {
 
     .lta-nav a span {
         display: inline-grid;
-        color: var(--faint);
+        color: var(--accent);
     }
 
     .lta-nav .lta-icon {
@@ -2959,17 +3185,17 @@ pre {
     }
 
     .lta-nav a:hover {
-        background: var(--paper-2);
-        color: var(--ink);
+        background: var(--accent-soft);
+        color: var(--accent-strong);
     }
 
     .lta-nav a.is-active {
-        background: var(--ink);
-        color: #fffaf1;
+        background: var(--accent-strong);
+        color: #fff;
     }
 
     .lta-nav a.is-active span {
-        color: #f3c9b9;
+        color: rgba(255, 255, 255, 0.75);
     }
 
     .lta-nav .lta-nav-extra {
@@ -2998,7 +3224,7 @@ pre {
 
     .lta-today-hero {
         grid-template-columns: 200px minmax(0, 1fr);
-        padding: 26px 30px 10px;
+        padding: 28px 30px 12px;
     }
 
     .lta-leaf-number {
@@ -3009,7 +3235,7 @@ pre {
         font-size: 2rem;
     }
 
-    .lta-leaf-head,
+    .lta-sheet-head,
     .lta-leaf-tags {
         padding-inline: 30px;
     }
@@ -3024,12 +3250,11 @@ pre {
         align-items: start;
     }
 
-    .lta-calendar-panel {
-        padding: 24px;
+    .lta-calendar-panel .lta-sheet-body {
+        padding: 22px 24px 24px;
     }
 
-    .lta-panel-head h1,
-    .lta-panel-head h2 {
+    .lta-panel-head h1 {
         font-size: 2rem;
     }
 

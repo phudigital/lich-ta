@@ -27,11 +27,11 @@ $next = lta_next_month($month, $year);
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Noto+Serif:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/site.css?v=<?= lta_h(LTA_APP_VERSION) ?>">
 </head>
-<body class="lta-embed-body">
-<main class="lta-widget" data-lta-widget>
-    <header class="lta-widget-head">
+<body class="lta-embed-body" data-day-element="<?= lta_h($dayInfo['fortune']['napAmElement']) ?>">
+<main class="lta-widget lta-sheet" data-lta-widget>
+    <header class="lta-sheet-head lta-widget-head">
         <a class="lta-brand lta-brand-small" href="index.php" target="_blank" rel="noopener">
-            <img src="assets/lich-ta-mark.svg" alt="" width="34" height="34">
+            <span class="lta-logo" aria-hidden="true"><i></i>Ta</span>
             <span><strong>Lịch Ta</strong><small>Âm lịch Việt Nam · v<?= lta_h(LTA_APP_VERSION) ?></small></span>
         </a>
         <div class="lta-month-actions">
@@ -49,7 +49,7 @@ $next = lta_next_month($month, $year);
         <?= lta_render_calendar($cells, true) ?>
     </section>
 
-    <section class="lta-widget-detail">
+    <section class="lta-widget-detail lta-perf">
         <div>
             <span><?= (int) $dayInfo['solar']['day'] ?>/<?= (int) $dayInfo['solar']['month'] ?></span>
             <strong><?= lta_h($dayInfo['canChi']['day']) ?></strong>

@@ -240,7 +240,7 @@ $faqJson = [
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="assets/favicon.svg">
     <link rel="manifest" href="site.webmanifest">
-    <meta name="theme-color" content="#f5efe3">
+    <meta name="theme-color" content="<?= lta_h(['Kim' => '#3f4651', 'Mộc' => '#1f5a37', 'Thủy' => '#174a73', 'Hỏa' => '#8a2e0a', 'Thổ' => '#6e4c14'][$dayInfo['fortune']['napAmElement']] ?? '#6e4c14') ?>">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="vi_VN">
     <meta property="og:site_name" content="Lịch Ta">
@@ -265,7 +265,7 @@ $faqJson = [
 <body data-view="<?= lta_h($view) ?>" data-day-element="<?= lta_h($dayInfo['fortune']['napAmElement']) ?>">
     <header class="lta-topbar">
         <a class="lta-brand" href="./" aria-label="Lịch Ta">
-            <b class="lta-logo" aria-hidden="true">Ta</b>
+            <span class="lta-logo" aria-hidden="true"><i></i>Ta</span>
             <span>
                 <strong>Lịch Ta</strong>
                 <small>Âm lịch Việt Nam · v<?= lta_h(LTA_APP_VERSION) ?></small>
@@ -287,13 +287,16 @@ $faqJson = [
     <?php if ($view === 'today'): ?>
     <section class="lta-home" id="today" data-home-element="<?= lta_h($dayInfo['fortune']['napAmElement']) ?>">
         <div class="lta-today-column">
-            <article class="lta-panel lta-today-panel lta-leaf" data-lta-swipe data-prev-url="<?= lta_h(lta_date_url((int) $prevDay->format('j'), (int) $prevDay->format('n'), (int) $prevDay->format('Y'))) ?>" data-next-url="<?= lta_h(lta_date_url((int) $nextDay->format('j'), (int) $nextDay->format('n'), (int) $nextDay->format('Y'))) ?>">
-                <header class="lta-leaf-head">
+            <article class="lta-panel lta-sheet lta-today-panel lta-leaf" data-lta-swipe data-prev-url="<?= lta_h(lta_date_url((int) $prevDay->format('j'), (int) $prevDay->format('n'), (int) $prevDay->format('Y'))) ?>" data-next-url="<?= lta_h(lta_date_url((int) $nextDay->format('j'), (int) $nextDay->format('n'), (int) $nextDay->format('Y'))) ?>">
+                <header class="lta-sheet-head lta-leaf-head">
                     <p class="lta-eyebrow"><?= $selected['day'] === $today['day'] && $selected['month'] === $today['month'] && $selected['year'] === $today['year'] ? 'Hôm nay' : 'Ngày đang xem' ?></p>
                     <span>Tháng <?= (int) $dayInfo['solar']['month'] ?> · <?= (int) $dayInfo['solar']['year'] ?></span>
                 </header>
                 <div class="lta-today-hero">
-                    <span class="lta-leaf-number"><?= (int) $dayInfo['solar']['day'] ?></span>
+                    <div class="lta-leaf-date">
+                        <span class="lta-leaf-number"><?= (int) $dayInfo['solar']['day'] ?></span>
+                        <span class="lta-stamp is-<?= lta_h($dayInfo['fortune']['dongCong']['level']) ?>" title="Đổng Công: <?= lta_h($dayInfo['fortune']['dongCong']['label']) ?>"><small>Đổng Công</small><b><?= lta_h($dayInfo['fortune']['dongCong']['label']) ?></b></span>
+                    </div>
                     <div class="lta-leaf-meta">
                         <h1><?= lta_h($dayInfo['weekdayFull']) ?><small><?= (int) $dayInfo['solar']['day'] ?>/<?= (int) $dayInfo['solar']['month'] ?>/<?= (int) $dayInfo['solar']['year'] ?></small></h1>
                         <p class="lta-leaf-lunar">
@@ -302,7 +305,7 @@ $faqJson = [
                         </p>
                     </div>
                 </div>
-                <dl class="lta-leaf-canchi">
+                <dl class="lta-leaf-canchi lta-perf">
                     <div><dt>Ngày</dt><dd><?= lta_h($dayInfo['canChi']['day']) ?></dd></div>
                     <div><dt>Tháng</dt><dd><?= lta_h($dayInfo['canChi']['month']) ?></dd></div>
                     <div><dt>Năm</dt><dd><?= lta_h($dayInfo['canChi']['year']) ?></dd></div>
@@ -310,7 +313,6 @@ $faqJson = [
                 <ul class="lta-leaf-tags" aria-label="Tóm tắt ngày">
                     <li class="lta-element-badge"><span class="lta-element-dot" aria-hidden="true"></span><?= lta_h($dayInfo['fortune']['napAmElement']) ?> · <?= lta_h($dayInfo['fortune']['napAm']) ?></li>
                     <li class="lta-quality <?= lta_h($dayQualityClass) ?>"><?= lta_h($dayQuality) ?><?= $dayInfo['fortune']['hoangHacDaoStar'] !== null ? ' · ' . lta_h($dayInfo['fortune']['hoangHacDaoStar']) : '' ?></li>
-                    <li class="lta-quality is-dong-<?= lta_h($dayInfo['fortune']['dongCong']['level']) ?>">Đổng Công: <?= lta_h($dayInfo['fortune']['dongCong']['label']) ?></li>
                     <li>Tiết <?= lta_h($dayInfo['term']) ?></li>
                 </ul>
                 <nav class="lta-day-nav" aria-label="Chọn ngày">
@@ -425,8 +427,8 @@ $faqJson = [
 
     <?php if ($view === 'month'): ?>
     <section class="lta-workspace" id="calendar" data-nap-am-tool data-month-app data-month="<?= (int) $month ?>" data-year="<?= (int) $year ?>">
-        <div class="lta-panel lta-calendar-panel">
-            <div class="lta-panel-head">
+        <div class="lta-panel lta-sheet lta-calendar-panel">
+            <div class="lta-sheet-head lta-panel-head">
                 <div>
                     <p class="lta-eyebrow">Lịch tháng</p>
                     <h1><?= lta_h(LTA_MONTHS[$month]) ?> năm <?= (int) $year ?></h1>
@@ -438,6 +440,7 @@ $faqJson = [
                 </div>
             </div>
 
+            <div class="lta-sheet-body">
             <div class="lta-month-controls">
                 <form class="lta-picker" method="get" action="" data-month-picker>
                     <input name="view" type="hidden" value="month">
@@ -489,12 +492,13 @@ $faqJson = [
                 <li><i class="is-today"></i>Hôm nay</li>
                 <li><i class="is-event"></i>Ngày lễ</li>
             </ul>
+            </div>
         </div>
 
         <aside class="lta-panel lta-detail-panel" aria-label="Chi tiết ngày">
             <p class="lta-eyebrow">Ngày đang chọn</p>
             <div class="lta-date-hero">
-                <span><?= (int) $dayInfo['solar']['day'] ?></span>
+                <span class="lta-mini-leaf" aria-hidden="true"><em>Th. <?= (int) $dayInfo['solar']['month'] ?></em><b><?= (int) $dayInfo['solar']['day'] ?></b></span>
                 <div>
                     <strong><?= lta_h($dayInfo['weekdayFull']) ?>, <?= (int) $dayInfo['solar']['day'] ?>/<?= (int) $dayInfo['solar']['month'] ?>/<?= (int) $dayInfo['solar']['year'] ?></strong>
                     <p class="lta-lunar-result"><b><?= lta_h($lunarDayLabel((int) $dayInfo['lunar']['day'])) ?></b> <?= lta_h($lunarMonthLabel((int) $dayInfo['lunar']['month'])) ?><?= (int) $dayInfo['lunar']['leap'] === 1 ? ' nhuận' : '' ?> · <?= (int) $dayInfo['lunar']['day'] ?>/<?= (int) $dayInfo['lunar']['month'] ?>/<?= (int) $dayInfo['lunar']['year'] ?></p>
@@ -688,12 +692,16 @@ $faqJson = [
 
     <?php if ($view === 'convert'): ?>
     <section class="lta-lower-grid" id="convert">
-        <div class="lta-panel">
-            <div class="lta-convert-heading">
-            <p class="lta-eyebrow">Công cụ</p>
-            <h1>Đổi ngày âm dương</h1>
-            <p>Chuyển đổi nhanh chóng giữa dương lịch và âm lịch Việt Nam</p>
-            </div>
+        <div class="lta-panel lta-sheet lta-convert-sheet">
+            <header class="lta-sheet-head lta-convert-heading">
+                <div>
+                    <p class="lta-eyebrow">Công cụ</p>
+                    <h1>Đổi ngày âm dương</h1>
+                </div>
+                <span>Dương ⇄ Âm</span>
+            </header>
+            <div class="lta-sheet-body">
+            <p class="lta-sheet-intro">Chuyển đổi nhanh giữa dương lịch và âm lịch Việt Nam, có hỗ trợ tháng nhuận.</p>
             <form class="lta-converter" method="get" action="" data-date-form>
                 <input name="view" type="hidden" value="convert">
                 <fieldset class="lta-toggle">
@@ -716,7 +724,8 @@ $faqJson = [
                     <p class="lta-form-error"><?= lta_h($dateInputError) ?></p>
                 <?php endif; ?>
             </form>
-        <aside class="lta-convert-result" aria-label="Kết quả đổi ngày">
+            </div>
+        <aside class="lta-convert-result lta-perf" aria-label="Kết quả đổi ngày">
             <p>Kết quả (<?= $dateInputMode === 'lunar' ? 'Dương lịch' : 'Âm lịch' ?>)</p>
             <?php $resultDate = $dateInputMode === 'lunar' ? $dayInfo['solar'] : $dayInfo['lunar']; ?>
             <strong class="lta-converted-date"><?= sprintf('%02d/%02d/%04d', $resultDate['day'], $resultDate['month'], $resultDate['year']) ?><?= $dateInputMode !== 'lunar' && $dayInfo['lunar']['leap'] ? ' nhuận' : '' ?></strong>
@@ -729,9 +738,14 @@ $faqJson = [
 
     <?php if ($view === 'embed'): ?>
     <section class="lta-lower-grid" id="embed">
-        <div class="lta-panel">
-            <p class="lta-eyebrow">Nhúng vào website</p>
-            <h1>Code nhúng lịch Việt cho website</h1>
+        <div class="lta-panel lta-sheet">
+            <header class="lta-sheet-head">
+                <div>
+                    <p class="lta-eyebrow">Nhúng vào website</p>
+                    <h1>Code nhúng lịch Việt cho website</h1>
+                </div>
+            </header>
+            <div class="lta-sheet-body">
             <p class="lta-lead">Lịch Ta cung cấp mã nhúng lịch âm Việt Nam gọn nhẹ cho landing page, website doanh nghiệp, blog phong thủy, trang tin địa phương hoặc hệ thống nội bộ cần hiển thị lịch Việt.</p>
             <div class="lta-embed-preview">
                 <div class="lta-embed-preview-head">
@@ -747,6 +761,7 @@ $faqJson = [
                 </div>
                 <pre data-code-panel="iframe"><code><?= lta_h($iframeCode) ?></code></pre>
                 <pre data-code-panel="script" hidden><code><?= lta_h($scriptCode) ?></code></pre>
+            </div>
             </div>
         </div>
         <aside class="lta-panel lta-seo-aside">
@@ -803,9 +818,14 @@ $faqJson = [
     <?php endif; ?>
 
     <?php if ($view === 'almanac'): ?>
-    <section class="lta-panel lta-page-article lta-almanac-library">
-        <p class="lta-eyebrow">Thư viện</p>
-        <h1>Thông Thư Lịch Việt</h1>
+    <section class="lta-panel lta-sheet lta-page-article lta-almanac-library">
+        <header class="lta-sheet-head">
+            <div>
+                <p class="lta-eyebrow">Thư viện</p>
+                <h1>Thông Thư Lịch Việt</h1>
+            </div>
+        </header>
+        <div class="lta-sheet-body">
         <p class="lta-lead">Tài liệu tham khảo về cách xem ngày tốt xấu, các vì sao, trực, và các quy tắc cổ lịch được áp dụng trong Lịch Ta.</p>
         <article class="lta-library-section lta-library-overview">
             <h2><span><?= $uiIcon('almanac') ?></span>Nhị Thập Bát Tú</h2>
@@ -1033,13 +1053,19 @@ $faqJson = [
             <h2>Lưu ý khi sử dụng</h2>
             <p>Các thông tin ngày tốt xấu trên Lịch Ta chỉ mang tính chất tham khảo văn hóa và tra cứu truyền thống. Nội dung này không phải lời khuyên bắt buộc, không thay thế tư vấn chuyên môn, pháp lý, y tế, tài chính hoặc quyết định cá nhân quan trọng. Khi cần dùng cho việc lớn, bạn nên đối chiếu thêm nhiều nguồn và tự chịu trách nhiệm với lựa chọn của mình.</p>
         </section>
+        </div>
     </section>
     <?php endif; ?>
 
     <?php if ($view === 'about'): ?>
-    <section class="lta-panel lta-page-article">
-        <p class="lta-eyebrow">Giới thiệu sản phẩm</p>
-        <h1>Về Lịch Ta</h1>
+    <section class="lta-panel lta-sheet lta-page-article">
+        <header class="lta-sheet-head">
+            <div>
+                <p class="lta-eyebrow">Giới thiệu sản phẩm</p>
+                <h1>Về Lịch Ta</h1>
+            </div>
+        </header>
+        <div class="lta-sheet-body">
         <p class="lta-lead">Lịch Ta là ứng dụng xem lịch âm Việt Nam tinh gọn, tập trung vào trải nghiệm đọc và tốc độ hiển thị.</p>
         <p>Ứng dụng cung cấp các tính năng cốt lõi:</p>
         <ul class="lta-about-features"><li>Xem lịch âm hôm nay, chi tiết Can Chi, nạp âm, tiết khí.</li><li>Lịch tháng trực quan, có bộ lọc ngũ hành và Đổng Công.</li><li>Đổi ngày âm dương nhanh chóng, hỗ trợ tháng nhuận.</li><li>Thư viện Thông Thư tham khảo kiến thức cổ lịch.</li></ul>
@@ -1062,13 +1088,19 @@ $faqJson = [
         <h2>Định hướng phát triển</h2>
         <p>Lịch Ta ưu tiên tính dễ dùng, tốc độ tải nhanh, giao diện mobile rõ ràng và nội dung hữu ích cho người tìm kiếm lịch âm Việt Nam. Các phần ngày tốt xấu được trình bày như thông tin tham khảo văn hóa, không khẳng định thay cho tư vấn chuyên môn, pháp lý, y tế, tài chính hoặc quyết định cá nhân quan trọng.</p>
         </details>
+        </div>
     </section>
     <?php endif; ?>
 
     <?php if ($view === 'terms'): ?>
-    <section class="lta-panel lta-page-article">
-        <p class="lta-eyebrow">Điều khoản sử dụng</p>
-        <h1>Điều khoản sử dụng Lịch Ta</h1>
+    <section class="lta-panel lta-sheet lta-page-article">
+        <header class="lta-sheet-head">
+            <div>
+                <p class="lta-eyebrow">Điều khoản sử dụng</p>
+                <h1>Điều khoản sử dụng Lịch Ta</h1>
+            </div>
+        </header>
+        <div class="lta-sheet-body">
         <p class="lta-lead">Khi truy cập, tra cứu hoặc nhúng Lịch Ta vào website, bạn đồng ý sử dụng thông tin trong phạm vi tham khảo và tôn trọng giới hạn của công cụ.</p>
 
         <h2>1. Phạm vi thông tin</h2>
@@ -1082,13 +1114,19 @@ $faqJson = [
 
         <h2>4. Thay đổi dịch vụ</h2>
         <p>Lịch Ta có thể được cập nhật giao diện, thuật toán, dữ liệu ngày lễ, endpoint nhúng hoặc nội dung mô tả để cải thiện độ ổn định và trải nghiệm người dùng. Các thay đổi sẽ được triển khai theo hướng hạn chế phá vỡ mã nhúng hiện có.</p>
+        </div>
     </section>
     <?php endif; ?>
 
     <?php if ($view === 'privacy'): ?>
-    <section class="lta-panel lta-page-article">
-        <p class="lta-eyebrow">Chính sách bảo mật</p>
-        <h1>Chính sách bảo mật Lịch Ta</h1>
+    <section class="lta-panel lta-sheet lta-page-article">
+        <header class="lta-sheet-head">
+            <div>
+                <p class="lta-eyebrow">Chính sách bảo mật</p>
+                <h1>Chính sách bảo mật Lịch Ta</h1>
+            </div>
+        </header>
+        <div class="lta-sheet-body">
         <p class="lta-lead">Lịch Ta được xây dựng theo hướng thu thập tối thiểu. Công cụ tra cứu lịch và mã nhúng không yêu cầu người dùng tạo tài khoản để xem thông tin cơ bản.</p>
 
         <h2>Dữ liệu truy cập</h2>
@@ -1102,6 +1140,7 @@ $faqJson = [
 
         <h2>Liên hệ và cập nhật</h2>
         <p>Nếu bạn vận hành website có nhúng Lịch Ta và cần điều chỉnh cách hiển thị, vui lòng kiểm tra trang mã nhúng hoặc cập nhật lên đoạn code mới nhất. Chính sách này có thể được cập nhật khi sản phẩm bổ sung tính năng mới.</p>
+        </div>
     </section>
     <?php endif; ?>
 

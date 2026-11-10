@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.5.0 - 2026-11-10
+
+- Chốt một concept xuyên suốt "Lịch bloc" với bốn thành phần dùng chung cho mọi trang: tờ lịch (gáy màu, lỗ đóng gáy, xếp chồng), đường xé, con dấu và mini-lịch.
+- Màu chủ đạo toàn site theo ngũ hành của ngày đang xem: gáy tờ lịch, logo, thanh trên cùng, menu, nút, link, giờ hoàng đạo, ô ngày được chọn và `theme-color` của trình duyệt; tự đổi khi chuyển tháng không tải lại trang.
+- Đỏ chỉ còn dùng cho Chủ nhật và ngày lễ; Tốt (xanh ngọc), Cân nhắc (hổ phách), Chưa tốt (tro) là màu ngữ nghĩa cố định.
+- Hôm nay: con dấu Đổng Công đóng dưới số ngày. Lịch tháng, Đổi ngày, Thông Thư, Mã nhúng, Giới thiệu, Điều khoản, Bảo mật và widget nhúng đều dùng tờ lịch có gáy; Đổi ngày có cuống kết quả xé rời; ngày đang chọn dùng mini-lịch; logo mới dạng mini-lịch.
+
 ## v1.4.0 - 2026-11-10
 
 - Thiết kế lại toàn bộ giao diện theo concept "Tờ lịch bloc": nền giấy ấm, chữ mực, son đỏ làm màu thương hiệu duy nhất; font Be Vietnam Pro và Noto Serif hỗ trợ tiếng Việt đầy đủ.
